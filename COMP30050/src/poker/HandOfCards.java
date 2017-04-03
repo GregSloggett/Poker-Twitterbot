@@ -1,5 +1,7 @@
 package poker;
 
+import java.util.Random;
+
 public class HandOfCards {
 	
 	/*
@@ -19,7 +21,7 @@ public class HandOfCards {
 	/*
 	 * Internal fields of hand
 	 */
-	private static final int CARDS_HELD = 5;
+	public static final int CARDS_HELD = 5;
 	private PlayingCard[] cardArray;
 	private DeckOfCards deck;
 	
@@ -34,6 +36,60 @@ public class HandOfCards {
 			cardArray[i] = this.deck.dealNext();
 		}
 		sort();
+	}
+	
+	
+	
+	public int discard() throws InterruptedException{
+		int numCardsDiscarded = 0;
+		Random rand = new Random();
+		
+		//Random number in the range [0,99]
+		int randomNumber = rand.nextInt(100);
+		
+		for(int card=0;card<CARDS_HELD;card++){
+			PlayingCard nextCard = deck.dealNext();
+			/*
+			 * If there are no more cards to deal from the deck or
+			 * the shuffled cards that were returned to the deck.
+			 */
+			if(nextCard==null){
+				break;
+			}
+			/*
+			 * The higher our discard probability, the higher the chance that
+			 * it will be higher than the random number between 0 and 99. This
+			 * also takes into account the two outside cases of 0 and 100. If the 
+			 * discard probability is 0, then it will never be greater than 
+			 * the random number between 0 and 99, so it will never be discarded.
+			 * If the discard probability is 100, it will always be greater than
+			 * the random number, so it always will be discarded.
+			 */
+			if(getDiscardProbability(card) > randomNumber){
+				replaceCardFromDeck(card);
+				numCardsDiscarded++;
+			}
+			//If we've already discarded 3 cards from the hand.
+			if(numCardsDiscarded == 3){
+				break;
+			}
+		}
+		
+		//After placing a new card in the hand, we must sort the hand again.
+		sort();
+		return numCardsDiscarded;
+	}
+	
+	/**
+	 * Discards a card at the given index back to the deck and replaces it with a new one
+	 * @throws InterruptedException 
+	 */
+	private void replaceCardFromDeck(int index) throws InterruptedException{
+		if (index >= 0 && index < cardArray.length){
+			deck.returnCard(cardArray[index]);
+			cardArray[index] = deck.dealNext();
+			sort();
+		}
 	}
 	
 	/**
