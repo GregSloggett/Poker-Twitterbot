@@ -2,7 +2,7 @@ package poker;
 
 public class PokerPlayer {
 	private DeckOfCards deck;
-	private HandOfCards hand;
+	protected HandOfCards hand;
 
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		deck = inputDeck;
@@ -14,7 +14,7 @@ public class PokerPlayer {
 	 * no discard is possible. I use this in my main to stop the discards in the case
 	 * where none are possible.
 	 */
-	private boolean noPossibleDiscardsLeft(){
+	protected boolean noPossibleDiscardsLeft(){
 		boolean noPossibleDiscards = false;
 		int totalDiscardProbability = 0;
 		for(int i=0;i<HandOfCards.CARDS_HELD;i++){
@@ -34,7 +34,7 @@ public class PokerPlayer {
 	 * it is simply used so that I can show the before and after of removing
 	 * iterating through the hand and removing/adding cards.
 	 */
-	private String getHandType(){
+	protected String getHandType(){
 		String handType = "";
 
 		if(hand.isFlush()){
