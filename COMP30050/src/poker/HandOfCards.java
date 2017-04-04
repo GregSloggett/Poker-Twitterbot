@@ -19,6 +19,11 @@ public class HandOfCards {
 	public static final int HIGH_HAND_DEFAULT = 100000000;
 	
 	/*
+	 * Set to true to show game values in toString() method, useful for testing
+	 */
+	public static final boolean SHOW_GAME_VALUES = false;
+	
+	/*
 	 * Internal fields of hand
 	 */
 	public static final int CARDS_HELD = 5;
@@ -117,7 +122,11 @@ public class HandOfCards {
 	public String toString(){
 		String output = "";
 		for (int i=0; i<cardArray.length; i++){
-			output += cardArray[i] +"(" + cardArray[i].getGameValue() + ")" + " ";
+			output += cardArray[i];
+			if (SHOW_GAME_VALUES) {
+				output += "(" + cardArray[i].getGameValue() + ")" + " ";
+			}
+			output += " ";
 		}
 		return output;
 	}

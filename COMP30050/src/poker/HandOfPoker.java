@@ -17,6 +17,7 @@ public class HandOfPoker {
 		this.players = players;
 		this.ante = ante;
 		this.UI = UI;
+		this.deck = deck;
 		
 		try {
 			gameLoop();
@@ -51,14 +52,14 @@ public class HandOfPoker {
 	 * @throws InterruptedException 
 	 */
 	private void dealHandsUntilOpen() throws InterruptedException {
-		while (checkOpen() == false){
+		do {
 			deck.shuffle();
 			deck.reset();
 			UI.printout("Dealing hands...");
 			for (int i=0; i<players.size(); i++){
 				players.get(i).dealNewHand();
 			}
-		}
+		} while (checkOpen() == false);
 	}
 	
 	/**
@@ -71,7 +72,7 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
-				UI.printout("Player "+ i + " says I can open!");
+				UI.printout("Player "+ i + " says I can open!\n");
 				break;
 			}
 		}
@@ -104,6 +105,7 @@ public class HandOfPoker {
 	 */
 	private int takeBets() {
 		int totalBets =0;
+		UI.printout("## Place your bets!");
 		for (int i=0; i<players.size(); i++){
 			// End Result should be: bets += players.get(i).getBet();
 			Random rand = new Random();
@@ -135,7 +137,7 @@ public class HandOfPoker {
 	private void showCards() {
 		for (int i=0; i<players.size(); i++){
 			UI.printout("Player " + i + " says read em' and weep!");
-			UI.printout(players.get(i).hand.toString());
+			UI.printout("~~ " + players.get(i).hand.toString());
 		}
 		
 	}
@@ -144,9 +146,12 @@ public class HandOfPoker {
 	 * Shows the pot to the interface
 	 */
 	private void displayPot(){
-		UI.printout("The pot has " + pot + " chips to play for.");
+		UI.printout("\nThe pot has " + pot + " chips to play for.\n");
 	}
-
+	
+	/*
+	 * Initialises and plays two separate instances of a hand of poker 
+	 */
 	public static void main(String[] args) throws InterruptedException {
 		DeckOfCards deck = new DeckOfCards();
 		OutputTerminal console = new OutputTerminal();
@@ -159,7 +164,16 @@ public class HandOfPoker {
 			players.add(computerPlayer);			
 		}
 		
+		// First hand of poker
 		new HandOfPoker(players, ante, deck, console);
+		console.printout("\n\n\n" +
+				"~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
+				"\n\n\n"
+				);
+		
+		// Second hand
+		new HandOfPoker(players, ante, deck, console);
+		console.printout("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	}
 
 }
