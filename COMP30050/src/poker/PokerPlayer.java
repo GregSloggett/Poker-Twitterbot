@@ -70,7 +70,12 @@ public class PokerPlayer {
 
 		return handType;
 	}
-
+	
+	public void dealNewHand() throws InterruptedException{
+		hand = new HandOfCards(deck);
+	}
+	
+	
 	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
 		/*
