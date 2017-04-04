@@ -6,5 +6,12 @@ public class HumanPokerPlayer extends PokerPlayer {
 		super(inputDeck);
 		// TODO Auto-generated constructor stub
 	}
+	
+	OutputTerminal output = 
+	
+	public boolean Fold(){
+		
+		
+	}
 
 }
