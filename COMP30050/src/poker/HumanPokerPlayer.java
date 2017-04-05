@@ -18,7 +18,7 @@ public class HumanPokerPlayer extends PokerPlayer {
 	public void discard() throws InterruptedException {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
-		System.out.println("hello alan");
+		
 
 		output.printout("Do you want to replace some of your cards??\n If so type Y for yes or N for no");
 		String Answer = output.readInString();

@@ -10,7 +10,7 @@ public class OutputTerminal {
 	
 	public void printout(String Output){
 		System.out.println(Output);
-		System.out.println("hello alan");
+		
 		
 	}
 	
