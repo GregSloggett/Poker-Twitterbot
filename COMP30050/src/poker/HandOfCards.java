@@ -100,7 +100,7 @@ public class HandOfCards {
 	/**
 	 * Uses a bubble sort to sort the cards by game value in the hand from high game value to low
 	 */
-	private void sort(){
+	protected void sort(){
 		boolean swapped = true;
 		while (swapped) {
 			swapped = false;

@@ -35,18 +35,14 @@ public class HumanPokerPlayer extends PokerPlayer {
 			}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
 				output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
 				ArrayList<Integer> discardedCard = new ArrayList<Integer>();
-				int cardcheck = 0;
-				int[] discarded = new int[amountToDiscard];
-				for(int i =0; i<amountToDiscard;i++){
-					discarded[i] = output.readInSingleInt();
-					if(discarded[i] >0 && discarded[i] <=5){
-						cardcheck+=1;
-					}
-				}
-				if(cardcheck == amountToDiscard){
+
+				discardedCard = output.readinMultipleInt();
+
+				if(discardedCard.size() == amountToDiscard){
 					for(int i = 0; i<amountToDiscard; i++){
-						this.hand.replaceCardFromDeck(discarded[i]-1);
+						this.hand.replaceCardFromDeck(discardedCard.get(i)-1);
 					}
+					this.hand.sort();
 					
 				}else{
 					output.printout("Sorry one of the card positions you entered is invalid");

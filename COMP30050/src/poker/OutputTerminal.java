@@ -27,17 +27,16 @@ public class OutputTerminal {
 		return input;
 	}
 
-	public int[] readinMultipleInt(){
+	public ArrayList<Integer> readinMultipleInt(){
 		Scanner reader = new Scanner(System.in);
+				
+		String input = reader.nextLine();		
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
 
-		
-		String input = reader.nextLine();
-		String[] numberStr= input.split(" ");
-		
-		int[] numbers = new int[numberStr.length];
-		
-		for(int i=0;i<numberStr.length;i++){
-			numbers[i] = Integer.parseInt(numberStr[i]);
+		for(int i=0;i<input.length();i++){
+			if(Character.getNumericValue(input.charAt(i)) >0 && Character.getNumericValue(input.charAt(i)) <=5){
+				numbers.add(Character.getNumericValue(input.charAt(i)));
+			}
 		}
 		return numbers;
 	}

@@ -20,6 +20,13 @@ public class GameOfPoker {
 		
 		//HandOfPoker(players, ante, console)
 		
+		boolean playerWin = false;
+		boolean playerLose = false;
+		boolean continueGame = true;
+		
+		while(!playerWin && !playerLose && continueGame){
+			
+		}
 		
 	}
 
