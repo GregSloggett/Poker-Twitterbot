@@ -9,16 +9,11 @@ public class HumanPokerPlayer extends PokerPlayer {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	
 	OutputTerminal output = new OutputTerminal();
-	
-	
 
 	public void discard() throws InterruptedException {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
-		
 
 		output.printout("Do you want to replace some of your cards??\n If so type Y for yes or N for no");
 		String Answer = output.readInString();
