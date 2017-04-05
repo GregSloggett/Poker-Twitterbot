@@ -119,7 +119,7 @@ public class HandOfPoker {
 			}
 			
 			totalBets += bet;
-			UI.printout("Player " + i + " bets " + bet);
+			UI.printout("Player " + i + " bets " + bet + "\n");
 			
 		}
 		return totalBets;

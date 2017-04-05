@@ -5,7 +5,6 @@ import java.util.Random;
 
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerType;
-	private int handGameValue = this.hand.getGameValue()/100000000;
 	private boolean hasPotBeenRaised = false;
 	
 	public AutomatedPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
@@ -25,6 +24,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return playerType;
 	}
 
+	/*
+	 * Retrieves the bet value the player wishes to bet.
+	 */
 	public int getBet(){
 		int betValue = 0;
 		
@@ -38,13 +40,11 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return betValue;
 	}
 
+	/*
+	 * Retrieves the bet value for the first round of betting.
+	 */
 	private int getFirstRoundBet() {
-		
-		int calculationOne = (handGameValue * this.playerType)/2;
-		int calculationTwo = calculationOne*playerPot;
-		int betValue = calculationTwo * 1/(playerPot/2);
-		
-		System.out.println("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
+		int betValue = getBetValueCalculation();
 		
 		if(HandOfPoker.highBet == 0){
 			return betValue;
@@ -65,6 +65,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return betValue;	*/	
 	}
 	
+	/*
+	 * Retrieves the bet value for the second round of betting
+	 * Yet to be implemented.
+	 */
 	private int getSecondRoundBet() {
 		int betValue = 0;
 		betValue = this.playerType;
@@ -72,18 +76,44 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return betValue;		
 	}
 	
+	/*
+	 * Uses the HandGameValue(HGV), the PlayerType(PT) & the Pot Size(PS) to calculate
+	 * a betting value for the hand: ((HGV * PT/2) * PS) * 1/(PS/2).
+	 */
+	private int getBetValueCalculation(){
+		int handGameValue = this.hand.getGameValue()/100000000;
+		
+		int calculationOne = (handGameValue * this.playerType)/2;
+		int calculationTwo = calculationOne * playerPot;
+		int betValue = calculationTwo * 1/(playerPot/2);
+		
+		System.out.println("Hand: " + hand.toString() + hand.getGameValue() + "\nPT = " + playerType + "       HGV = " + handGameValue + "        PS = " + playerPot);
+		System.out.println("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
+		
+		return betValue;
+	}
+	
+	/*
+	 * Calls the high bet if the betValue for the hand is within a small range of the high bet
+	 */
 	private int see(int betValue){
 		betValue = HandOfPoker.highBet;
 		System.out.println("I call " + betValue + " chips.");
 		return betValue;
 	}
 
+	/*
+	 * Raises the betting if the value of the hand is greater than the high bet by 2 or more.
+	 */
 	private int raise(int betValue){
 		int raiseValue = betValue - HandOfPoker.highBet;
 		System.out.println("I raise the betting by " + raiseValue + " chips.");
 		return betValue;
 	}
 
+	/*
+	 * Folds if the value of the hand is lower significantly than the value of the high bet.
+	 */
 	private int fold(int betValue){
 		betValue = 0;
 		System.out.println("I fold my hand.");
