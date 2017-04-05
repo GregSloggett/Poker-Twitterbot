@@ -89,11 +89,11 @@ public class HandOfCards {
 	 * Discards a card at the given index back to the deck and replaces it with a new one
 	 * @throws InterruptedException 
 	 */
-	private void replaceCardFromDeck(int index) throws InterruptedException{
+	public void replaceCardFromDeck(int index) throws InterruptedException{
 		if (index >= 0 && index < cardArray.length){
 			deck.returnCard(cardArray[index]);
 			cardArray[index] = deck.dealNext();
-			sort();
+			
 		}
 	}
 	
