@@ -6,9 +6,11 @@ import java.util.Random;
 public class HandOfPoker {
 	
 	final private static int OPENING_HAND = HandOfCards.ONE_PAIR_DEFAULT;
-	
+	public static int highBet = 0;
+
 	ArrayList<PokerPlayer> players;
-	int ante, pot;
+	int ante;
+	public static int pot;
 	OutputTerminal UI;
 	DeckOfCards deck;
 	
@@ -36,6 +38,7 @@ public class HandOfPoker {
 		pot += collectAntes();
 		displayPot();
 		pot += takeBets();
+		highBet = 0;
 		displayPot();
 		// TODO: if >1 player not folded
 		discardCards();
@@ -108,8 +111,13 @@ public class HandOfPoker {
 		UI.printout("## Place your bets!");
 		for (int i=0; i<players.size(); i++){
 			// End Result should be: bets += players.get(i).getBet();
-			Random rand = new Random();
-			int bet = rand.nextInt(2);
+			//Random rand = new Random();
+
+			int bet = players.get(i).getBet();
+			if(bet > highBet){  //should be reset after each round of betting
+				highBet = bet;
+			}
+			
 			totalBets += bet;
 			UI.printout("Player " + i + " bets " + bet);
 			

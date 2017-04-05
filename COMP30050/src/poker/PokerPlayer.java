@@ -3,10 +3,16 @@ package poker;
 public class PokerPlayer {
 	private DeckOfCards deck;
 	protected HandOfCards hand;
-
+	protected int playerPot;
+	protected int roundPot;
+	protected int highBet;
+	
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		deck = inputDeck;
 		hand = new HandOfCards(deck);
+		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;
+		roundPot = HandOfPoker.pot;
+		highBet = HandOfPoker.highBet;
 	}
 
 	/*
@@ -75,6 +81,9 @@ public class PokerPlayer {
 		hand = new HandOfCards(deck);
 	}
 	
+	public int getBet() {
+		return 0;
+	}
 	
 	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
@@ -115,5 +124,6 @@ public class PokerPlayer {
 
 		}
 	}
+
 
 }

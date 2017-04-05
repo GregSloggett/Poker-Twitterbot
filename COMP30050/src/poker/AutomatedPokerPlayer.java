@@ -1,51 +1,93 @@
 package poker;
 
-public class AutomatedPokerPlayer extends PokerPlayer {
 
+import java.util.Random;
+
+public class AutomatedPokerPlayer extends PokerPlayer {
+	private int playerType;
+	private int handGameValue = this.hand.getGameValue()/100000000;
+	private boolean hasPotBeenRaised = false;
+	
 	public AutomatedPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		super(inputDeck);
+		playerType = randomPokerPlayerType();
 	}
 	
-	public static void main(String[] args) throws InterruptedException {	
-		int numTestsToRun = 100;
-		/*
-		 * Here I run tests of 100 random hands that start as a random hand and discards
-		 * and replenishes cards until every card in the hand has a discard
-		 * probability of 0 (no more changes possible), or no more cards can be dealt.
-		 */
-		for(int k=0;k<numTestsToRun;k++){
-			DeckOfCards deck = new DeckOfCards();
-			PokerPlayer player = new PokerPlayer(deck);
-			HandOfCards hand = player.hand;
+	/*      
+	 * Selects a random strategy for an automated poker player ranging from risky to conservative.
+	 * This produces a random value between 0 & 4, where 0 is conservative and 4 is risky, 1 is 
+	 * slightly conservative, 3 is slightly risky, and 2 is balanced. 
+	 */
+	private int randomPokerPlayerType(){		
+		Random rand = new Random();
+		int playerType = rand.nextInt(5) + 1;
+		
+		return playerType;
+	}
 
-			//This stores a string representation of the hand of cards before discarding
-			String handBeforeDiscarding = hand.toString();
-
-			//This is the hand type before discarding.
-			String startingHandType = player.getHandType();
-
-			int totalCardsDiscarded = 0;
-			int roundsOfDiscards = 0;
-
-			/*
-			 * Stop discarding cards when there are no possible discards left. 
-			 */
-			while(!(player.noPossibleDiscardsLeft()) && roundsOfDiscards <50){
-				totalCardsDiscarded += hand.discard();
-				roundsOfDiscards++;
-			}
-			//This stores a String with the hand type (high hand, flush, etc.) of the hand after discarding
-			String newHandType = player.getHandType();
-
-			System.out.println("Test Number " + (k+1)+ ":");
-			System.out.println("----------------------------------------------------------------------------------------");
-			System.out.println("Went from a " +startingHandType+ " to a "+newHandType + " by discarding "+totalCardsDiscarded+ " cards in "+roundsOfDiscards+" rounds of discards.");
-			System.out.println(handBeforeDiscarding + "  --->  " + hand);
-			System.out.println("----------------------------------------------------------------------------------------\n");
-
+	public int getBet(){
+		int betValue = 0;
+		
+		if(GameOfPoker.ROUND_NUMBER < 1){
+			betValue = getFirstRoundBet();
 		}
+		else{
+			betValue = getSecondRoundBet();
+		}
+		
+		return betValue;
 	}
 
-
+	private int getFirstRoundBet() {
+		
+		int calculationOne = (handGameValue * this.playerType)/2;
+		int calculationTwo = calculationOne*playerPot;
+		int betValue = calculationTwo * 1/(playerPot/2);
+		
+		System.out.println("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
+		
+		if(HandOfPoker.highBet == 0){
+			return betValue;
+		}
+		if(betValue < HandOfPoker.highBet-2){
+			return fold(betValue);
+		}
+		else if(betValue >= HandOfPoker.highBet + 2 && hasPotBeenRaised  != true){
+			return raise(betValue);
+		}
+		else{
+			return see(betValue);
+		}
+		
+	/*	System.out.print("Player Type = " + this.playerType);
+		System.out.println(" |||| Hand Game Value = " + handGameValue);
+		System.out.println(betValue + " betValue ");
+		return betValue;	*/	
+	}
 	
+	private int getSecondRoundBet() {
+		int betValue = 0;
+		betValue = this.playerType;
+		
+		return betValue;		
+	}
+	
+	private int see(int betValue){
+		betValue = HandOfPoker.highBet;
+		System.out.println("I call " + betValue + " chips.");
+		return betValue;
+	}
+
+	private int raise(int betValue){
+		int raiseValue = betValue - HandOfPoker.highBet;
+		System.out.println("I raise the betting by " + raiseValue + " chips.");
+		return betValue;
+	}
+
+	private int fold(int betValue){
+		betValue = 0;
+		System.out.println("I fold my hand.");
+		
+		return betValue;
+	}
 }
