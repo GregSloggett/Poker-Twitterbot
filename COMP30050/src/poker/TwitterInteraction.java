@@ -49,7 +49,9 @@ public class TwitterInteraction {
 			//This is what happens when a status with our hashtag is detected
 			public void onStatus(Status status) {
 				try {
-					twitter.updateStatus("@"+status.getUser().getScreenName()+", you have posted our hashtag to play poker."); 	   
+					StatusUpdate replyStatus = new StatusUpdate("You have posted our hashtag to play poker.");
+					replyStatus.setInReplyToStatusId(status.getId());
+					twitter.updateStatus(replyStatus);
 				} catch (TwitterException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
