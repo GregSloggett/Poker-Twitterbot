@@ -35,7 +35,6 @@ public class HumanPokerPlayer extends PokerPlayer {
 			}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
 				output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
 				ArrayList<Integer> discardedCard = new ArrayList<Integer>();
-
 				discardedCard = output.readinMultipleInt();
 
 				if(discardedCard.size() == amountToDiscard){
