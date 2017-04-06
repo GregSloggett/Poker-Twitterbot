@@ -90,8 +90,10 @@ public class HumanPokerPlayer extends PokerPlayer {
 		String callResponse = "Call";
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
-		
-		output.printout("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of the words");
+		if(HandOfPoker.pot == 0){
+			this.openingBet();
+		}else{
+		output.printout("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to contiue");
 		String Answer = output.readInString();
 		if(Answer.equalsIgnoreCase(callResponse)){
 			output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
@@ -106,8 +108,11 @@ public class HumanPokerPlayer extends PokerPlayer {
 			this.Fold();
 			currentBet = 0;
 		}
-		
-		
+		else{
+			output.printout("Sorry that isnt a valid response");
+			this.inHandBet();
+		}
+		}
 		
 		return bet;
 	}
