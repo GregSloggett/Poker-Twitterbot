@@ -89,6 +89,18 @@ public class HumanPokerPlayer extends PokerPlayer {
 		return bet;
 	}
 	
+	public boolean isAskToDiscard() {
+		return askToDiscard;
+	}
+
+
+	
+	
+	public void setAskToDiscard(boolean askToDiscard) {
+		this.askToDiscard = askToDiscard;
+	}
+
+
 	public int inHandBet(){
 		int bet = 0;
 		String callResponse = "Call";
