@@ -10,14 +10,18 @@ public class HumanPokerPlayer extends PokerPlayer {
 	}
 	
 	public int currentBet =0;
-	public boolean hasBetted = false;
+	public boolean askToDiscard = false;
+	public boolean betting = false;
+	public boolean folding = false;
+	
+	
 
 	OutputTerminal output = new OutputTerminal();
 
 	public void discard() throws InterruptedException {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
-
+		askToDiscard = true;
 		output.printout("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
 		String Answer = output.readInString();
 
@@ -73,7 +77,7 @@ public class HumanPokerPlayer extends PokerPlayer {
 		if (Answer.equalsIgnoreCase(betResponse)){
 			output.printout("How much do you wanna bet?");
 			bet = output.readinMultipleInt().get(0);
-			hasBetted = true;
+			
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
