@@ -1,9 +1,19 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 public class HumanPokerPlayer extends PokerPlayer {
-
+	TwitterInteraction twitter;
+	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
+		super(inputDeck);
+		twitter = t;
+		// TODO Auto-generated constructor stub
+	}
+	
 	public HumanPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		super(inputDeck);
 		// TODO Auto-generated constructor stub
@@ -18,33 +28,44 @@ public class HumanPokerPlayer extends PokerPlayer {
 
 	OutputTerminal output = new OutputTerminal();
 
-	public void discard() throws InterruptedException {
+	public void discard() throws InterruptedException, TwitterException {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
 		askToDiscard = true;
-		output.printout("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
-		String Answer = output.readInString();
+		//output.printout("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
+		//String Answer = output.readInString();
+		System.out.println("getting here 1");
+		twitter.updateStatus("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
+		System.out.println("getting here 2");
+		String Answer = twitter.waitForTweet();
 
 		if (Answer.equalsIgnoreCase(positiveResponse)) {
-			output.printout("OK how many cards do you need to change you can discard up to 3 cards");
-			int amountToDiscard = output.readInSingleInt();
-
+			//output.printout("OK how many cards do you need to change you can discard up to 3 cards");
+			twitter.updateStatus("OK how many cards do you need to change you can discard up to 3 cards");
+			//int amountToDiscard = output.readInSingleInt();
+			int amountToDiscard = Integer.parseInt(twitter.waitForTweet());
 			if (amountToDiscard == 1) {
-				output.printout("which card do you want to discard? 1 is the first card up to 5 the rightmost card");
-				int discardedCard = output.readinMultipleInt().get(0);
+				//output.printout("which card do you want to discard? 1 is the first card up to 5 the rightmost card");
+				twitter.updateStatus("which card do you want to discard? 1 is the first card up to 5 the rightmost card");
+				//int discardedCard = output.readinMultipleInt().get(0);
+				String discardedCardString = twitter.waitForTweet();
+				int discardedCard = readinMultipleInt(discardedCardString).get(0);
 				if (discardedCard > 0 && discardedCard <= 5) {
 					this.hand.replaceCardFromDeck(discardedCard - 1);
 				} else {
-					output.printout("Sorry this isnt a valid card..");
+					//output.printout("Sorry this isnt a valid card..");
+					twitter.updateStatus("Sorry this isnt a valid card..");
 					this.discard();
 				}
 
 			}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
-				output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
+				//output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
+				twitter.updateStatus("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
 				ArrayList<Integer> discardedCard = new ArrayList<Integer>();
 
-				discardedCard = output.readinMultipleInt();
-
+				String discardedCardString = twitter.waitForTweet();
+				//discardedCard = output.readinMultipleInt();
+				discardedCard = readinMultipleInt(discardedCardString);
 				if(discardedCard.size() == amountToDiscard){
 					for(int i = 0; i<amountToDiscard; i++){
 						this.hand.replaceCardFromDeck(discardedCard.get(i)-1);
@@ -52,26 +73,41 @@ public class HumanPokerPlayer extends PokerPlayer {
 					this.hand.sort();
 					
 				}else{
-					output.printout("Sorry one of the card positions you entered is invalid");
+					//output.printout("Sorry one of the card positions you entered is invalid");
+					twitter.updateStatus("Sorry one of the card positions you entered is invalid");
 					this.discard();
-					
 				}
 				
 			}else{
-				output.printout("Sorry you can only remove between 1 and 3 cards");
+				//output.printout("Sorry you can only remove between 1 and 3 cards");
+				twitter.updateStatus("Sorry you can only remove between 1 and 3 cards");
 				this.discard();
 			}
 		}else if(Answer.equalsIgnoreCase(negativeResponse)){
-			output.printout("OK lets continue...");
+			//output.printout("OK lets continue...");
+			twitter.updateStatus("OK lets continue...");
 		}
 	}
 	
+	public ArrayList<Integer> readinMultipleInt(String input){	
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		for(int i=0;i<input.length();i++){
+			if(Character.getNumericValue(input.charAt(i)) >0 && Character.getNumericValue(input.charAt(i)) <=5){
+				numbers.add(Character.getNumericValue(input.charAt(i)));
+			}
+		}
+		if(numbers.size() == 0){
+			numbers.add(-1);
+		}
+		return numbers;
+	}
 	
 	public int openingBet(){
 		String betResponse = "Bet";
 		String checkResponse = "Check";
 		
 		output.printout("Do you want to open betting? \n tweet 'Bet' to bet or 'Check' to check");
+		
 		String Answer = output.readInString();
 		int bet =0;
 		if (Answer.equalsIgnoreCase(betResponse)){
@@ -155,6 +191,25 @@ public class HumanPokerPlayer extends PokerPlayer {
 
 		return isFold;
 	}
+	
+	public void run() throws InterruptedException{
+
+		DeckOfCards deck = new DeckOfCards();
+		HumanPokerPlayer human = new HumanPokerPlayer(deck);
+
+		System.out.println(human.hand);
+		try {
+			System.out.println("discarding");
+			human.discard();
+			System.out.println("discarded");
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(human.hand);
+
+		human.Fold();
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -162,7 +217,12 @@ public class HumanPokerPlayer extends PokerPlayer {
 		HumanPokerPlayer human = new HumanPokerPlayer(deck);
 
 		System.out.println(human.hand);
-		human.discard();
+		try {
+			human.discard();
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(human.hand);
 
 		human.Fold();

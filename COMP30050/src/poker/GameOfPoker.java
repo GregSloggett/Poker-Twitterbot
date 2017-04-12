@@ -4,6 +4,16 @@ import java.util.ArrayList;
 
 public class GameOfPoker {
 
+	public String playerName = "";
+	private DeckOfCards deck;
+	public HumanPokerPlayer humanPlayer;
+	
+	public GameOfPoker(String username) throws InterruptedException{
+		playerName = username;
+		deck = new DeckOfCards();
+		humanPlayer = new HumanPokerPlayer(deck);
+	}
+	
 	public static final int PLAYER_POT_DEFAULT = 20;
 	public static final int ROUND_NUMBER = 0;
 	
