@@ -27,7 +27,7 @@ public class HandOfCards {
 	 * Internal fields of hand
 	 */
 	public static final int CARDS_HELD = 5;
-	private PlayingCard[] cardArray;
+	public PlayingCard[] cardArray;
 	private DeckOfCards deck;
 	
 	/*
