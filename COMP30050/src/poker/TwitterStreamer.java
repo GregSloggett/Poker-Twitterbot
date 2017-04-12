@@ -20,6 +20,7 @@ public class TwitterStreamer {
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
 	static Status latestTweet;
+	Thread thread;
 
 	public static void StartHashtagStream() {
 		TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
@@ -29,11 +30,12 @@ public class TwitterStreamer {
 			//This is what happens when a status with our hashtag is detected
 			public void onStatus(Status status) {
 
-				try {			
+				try {		
+					String userNickname = status.getUser().getScreenName();
 					if(status.getText().contains("#FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
-							String userNickname = status.getUser().getScreenName();
+							
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game!");
@@ -51,12 +53,14 @@ public class TwitterStreamer {
 							String nick = status.getUser().getScreenName();
 							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
 							HumanPokerPlayer p = new HumanPokerPlayer(d,t);
-							p.run();
+							//p.run();
+							Thread thread = new Thread(p);
+							thread.start();
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{
 							System.out.println("4");
-							StatusUpdate replyStatus = new StatusUpdate("You're already playing a running game.");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You're already playing a running game.");
 							System.out.println("5");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("6");
@@ -69,7 +73,7 @@ public class TwitterStreamer {
 							System.out.println("1");
 							System.out.println(status.getUser().getScreenName());
 
-							StatusUpdate replyStatus = new StatusUpdate("You have posted the hashtag to leave a poker game. Thanks for playing!");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted the hashtag to leave a poker game. Thanks for playing!");
 							replyStatus.setInReplyToStatusId(status.getId());
 							twitter.updateStatus(replyStatus);
 							System.out.println("2");
@@ -78,7 +82,7 @@ public class TwitterStreamer {
 						}
 						else{
 							System.out.println("4");
-							StatusUpdate replyStatus = new StatusUpdate("You're aren't currently playing a poker game. To start a new game post a tweet with the hashtag 'FOAKDeal'");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You aren't currently playing a poker game. To start a new game post a tweet with the hashtag 'FOAKDeal'");
 							System.out.println("5");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("6");
