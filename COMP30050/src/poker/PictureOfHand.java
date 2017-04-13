@@ -32,7 +32,7 @@ public class PictureOfHand {
         		
         		String filename = hand.cardArray[i].toString()+".png" ;
         		File file = new File(filename);
-        		BufferedImage img1 = ImageIO.read(file);
+        		BufferedImage img1 = ImageIO.read(PictureOfHand.class.getResource("/PlayingCards/"+filename));
         		Scaled1 = img1.getScaledInstance(150, 200, 1);
         		
         		if(i == 0){
