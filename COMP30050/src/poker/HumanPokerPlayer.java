@@ -30,7 +30,22 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		this.splitPot = splitPot;
 	}
 
+	/**
+	 * Should return the value of the bet for the human player.
+	 */
+	public int getBet(){
+		return 0;
+	}
 	
+	/**
+	 * Should return whether or not the player wants to show his/her cards at the end of the round.
+	 * The PokerPlayer that won the hand is past in to be used to check if a player has won.
+	 * In many cases a player will only show his/her hand if they won a hand of poker.
+	 * @return
+	 */
+	public boolean showCards(PokerPlayer handWinner){
+		return false;
+	}
 
 
 

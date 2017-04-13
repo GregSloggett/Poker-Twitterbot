@@ -8,7 +8,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerBluffProbability;
 	private boolean hasRaised = false;
 	private int betCalculationValue = 15;
-	private boolean wonRound = false;
 	
 	OutputTerminal output = new OutputTerminal();
 	
@@ -84,7 +83,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	
 	/**
 	 * Uses the HandGameValue(HGV), the PlayerType(PT) & the Pot Size(PS) to calculate
-	 * a betting value for the hand: ((HGV * PT/2) * PS) * 1/(PS/2).
+	 * a betting value for the hand: (PT * HGV) / (15 - PT)
 	 */
 	private int getBetValueCalculation(){
 		int handGameValue = this.hand.getGameValue()/100000000;
