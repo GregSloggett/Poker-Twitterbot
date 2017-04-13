@@ -5,14 +5,17 @@ import java.util.Random;
 
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerType;
+	private int playerBluffProbability;
 	private boolean hasRaised = false;
 	private int betCalculationValue = 15;
+	private boolean wonRound = false;
 	
 	OutputTerminal output = new OutputTerminal();
 	
 	public AutomatedPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		super(inputDeck);
 		playerType = randomPokerPlayerType();
+		playerBluffProbability = getBluffProbability();
 	}
 	
 	/**      
@@ -21,29 +24,31 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * slightly conservative, 4 is slightly risky, and 3 is balanced. 
 	 */
 	private int randomPokerPlayerType(){		
-		Random rand = new Random();
-		int playerType = rand.nextInt(5) + 1;
-
+		playerType = getRandomValue(5);
 		return playerType;
 	}
 
 	/**
+	 * Selects a bluff probability that affects whether a player will fold, raise, see etc.
+	 */
+	private int getBluffProbability(){
+		playerBluffProbability = getRandomValue(100);
+		return playerBluffProbability;
+	}
+	
+	/**
+	 * Produces a random integer value in the range passed in as a parameter,
+	 * from one up to and including the range value.
+	 */
+	private int getRandomValue(int range){	
+		Random rand = new Random();
+		return rand.nextInt(range) + 1;
+	}
+	
+	/**
 	 * Retrieves the bet value the player wishes to bet.
 	 */
 	public int getBet(){
-		int betValue = 0;
-		
-		betValue = getRoundBet();
-		
-		return betValue;
-	}
-
-	/**
-	 * Retrieves the bet value for the first round of betting. 
-	 * This does not include the round pot in its calculations
-	 * as it is the first round of betting.
-	 */
-	private int getRoundBet() {
 		int betValue = getBetValueCalculation();
 		boolean roundRaised = false;
 		if(HandOfPoker.highBet == 0){
@@ -62,6 +67,16 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 				return raise(betValue);
 			}
 		}
+		else if(playerBluffProbability > 75){
+			hasRaised = true;
+			if(roundRaised == true){
+				return reRaise(HandOfPoker.highBet+betValue);
+			}
+			else{
+				roundRaised = true;
+				return raise(HandOfPoker.highBet+betValue);
+			}
+		}
 		else{
 			return see(betValue);
 		}
@@ -76,9 +91,17 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));
 		
-		//uncomment to show stats behind bet value
-		//output.printout("Hand: " + hand.toString() + hand.getGameValue() + "\nPT = " + playerType + "       HGV = " + handGameValue + "        PS = " + playerPot);
-		//output.printout("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
+		
+		 /* 
+		  * uncomment to show stats behind bet value
+		  */
+	/*
+		if(playerBluffProbability > 75){
+			output.printout("I bluffed");
+		}
+		output.printout("Hand: " + hand.toString() + hand.getGameValue() + "\nPT = " + playerType + "       HGV = " + handGameValue + "        PS = " + playerPot);
+		output.printout("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
+	*/
 		
 		return betValue;
 	}
@@ -136,5 +159,40 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			output.printout("I fold.");
 		}
 		return betValue;
+	}
+	
+	/**
+	 * Determines if the poker player won this hand of poker
+	 * @param handWinner
+	 * @return
+	 */
+	private boolean didWinThisHand(PokerPlayer handWinner){
+		if (this.hand.getGameValue() == handWinner.hand.getGameValue()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public boolean showCards(PokerPlayer handWinner){
+		boolean wonRound = didWinThisHand(handWinner);
+		
+		if(playerBluffProbability > 75 && wonRound == true){
+			output.printout("I bluffed and I won! Here is my hand: " + this.hand + "\n");
+			return true;
+		}
+		else if(wonRound == true){
+			output.printout("here is my winning hand: " + this.hand + "\n");
+			return true;
+		}
+		else if(wonRound == false){
+			output.printout("I choose not to show my hand.\n");
+			return false;
+		}
+		else{
+			output.printout("here is my hand: \n" + this.hand + "\n");
+			return true;
+		}
 	}
 }

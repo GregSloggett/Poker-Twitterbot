@@ -147,11 +147,26 @@ public class HandOfPoker {
 	 * Shows all hands remaining in the game
 	 */
 	private void showCards() {
-		for (int i=0; i<players.size(); i++){
-			UI.printout("Player " + i + " says read em' and weep!");
-			UI.printout("~~ " + players.get(i).hand.toString());
-		}
+		PokerPlayer handWinner = getHandWinner();
 		
+		for (int i=0; i<players.size(); i++){
+			UI.printout("Player " + i + " says ");
+			players.get(i).showCards(handWinner);
+		}
+	}
+	
+	/**
+	 * Determines the winner of this hand of poker.
+	 * @return
+	 */
+	private PokerPlayer getHandWinner(){
+		PokerPlayer winningPlayer = players.get(0);
+		for(int i=1; i<players.size(); i++){
+			if(players.get(i).hand.getGameValue()>winningPlayer.hand.getGameValue()){
+				winningPlayer = players.get(i);
+			}
+		}
+		return winningPlayer;
 	}
 	
 	/**

@@ -85,6 +85,10 @@ public class PokerPlayer {
 		return 0;
 	}
 	
+	public boolean showCards(PokerPlayer handWinner){
+		return false;
+	}
+	
 	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
 		/*
