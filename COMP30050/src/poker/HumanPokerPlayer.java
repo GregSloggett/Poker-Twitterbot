@@ -21,8 +21,16 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	public int currentBet =0;
 	public boolean askToDiscard = false;
-	public boolean betting = false;
-	public boolean folding = false;
+	public boolean splitPot = false;
+	public boolean isSplitPot() {
+		return splitPot;
+	}
+
+	public void setSplitPot(boolean splitPot) {
+		this.splitPot = splitPot;
+	}
+
+	
 
 
 
@@ -109,6 +117,17 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		return numbers;
 	}
+	
+	public boolean validBet(int bet){
+		
+		boolean validBet = false;
+		
+		if(bet<playerPot){
+			validBet = true;
+		}
+		
+		return validBet;
+	}
 
 	public int openingBet(){
 		String betResponse = "Bet";
@@ -121,7 +140,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		if (Answer.equalsIgnoreCase(betResponse)){
 			output.printout("How much do you wanna bet?");
 			bet = output.readinMultipleInt().get(0);
-
+			if(!validBet(bet)){
+				output.printout("sorry you dont have this amount to bet");
+				this.openingBet();
+			}
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
@@ -150,10 +172,15 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String callResponse = "Call";
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
+		
+		if(playerPot< HandOfPoker.highBet){
+			output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
+			splitPot = true;
+		}
 		if(HandOfPoker.pot == 0){
 			this.openingBet();
 		}else{
-			output.printout("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to contiue");
+			output.printout("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to continue");
 			String Answer = output.readInString();
 			if(Answer.equalsIgnoreCase(callResponse)){
 				output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
@@ -164,6 +191,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				bet = output.readinMultipleInt().get(0);
 				bet = bet + (HandOfPoker.highBet - currentBet);
 				currentBet = bet;
+				if(!validBet(currentBet)){
+					output.printout("Sorry you dont have the money to make this bet");
+					this.inHandBet();
+				}
 			}else if(Answer.equalsIgnoreCase(FoldResponse)){
 				this.Fold();
 				currentBet = 0;
