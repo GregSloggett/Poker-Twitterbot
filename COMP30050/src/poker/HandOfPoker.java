@@ -119,8 +119,12 @@ public class HandOfPoker {
 			}
 			
 			totalBets += bet;
-			UI.printout("Player " + i + " bets " + bet + "\n");
-			
+			if(bet == 0){
+				UI.printout("Player " + i + " folds.\n");
+			}
+			else{
+				UI.printout("Player " + i + " bets " + bet + "\n");
+			}
 		}
 		return totalBets;
 	}
