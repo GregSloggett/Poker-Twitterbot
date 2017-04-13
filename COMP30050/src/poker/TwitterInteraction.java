@@ -71,7 +71,7 @@ public class TwitterInteraction {
 	public static String waitForTweet() throws TwitterException, InterruptedException{
 		boolean waiting = true;
 		while(waiting){
-			Thread.sleep(10000);
+			Thread.sleep(30000);
 			ArrayList<Status> replies = getDiscussion();
 			System.out.println(replies.size());
 
@@ -148,6 +148,7 @@ public class TwitterInteraction {
 		//Query query = new Query("from:PokerFOAK");
 		//QueryResult result = twitter.search(query);
 		//System.out.println("count : "+result.getTweets().size());
+		
 		List<Status> statuses = twitter.getUserTimeline(username);
 		ArrayList<Status> replies = new ArrayList<Status>();
 		System.out.println("latest tweet:"+latestTweet.getText());

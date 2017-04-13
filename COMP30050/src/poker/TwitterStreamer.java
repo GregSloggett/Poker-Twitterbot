@@ -2,6 +2,8 @@ package poker;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
@@ -20,6 +22,8 @@ public class TwitterStreamer {
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
 	static Status latestTweet;
+	private static final int NUMTHREADS = 30;
+	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	Thread thread;
 
 	public static void StartHashtagStream() {
@@ -54,8 +58,9 @@ public class TwitterStreamer {
 							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
 							HumanPokerPlayer p = new HumanPokerPlayer(d,t);
 							//p.run();
-							Thread thread = new Thread(p);
-							thread.start();
+							//Thread thread = new Thread(p);
+							//thread.start();
+							executor.execute(p);
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{

@@ -130,6 +130,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		if(numbers.size() == 0){
 			numbers.add(-1);
 		}
+		System.out.println("Testing reading in multiple integers:");
+		for(int i=0;i<numbers.size();i++){
+			System.out.println("number "+i+"---> "+numbers.get(i));
+		}
 		return numbers;
 	}
 	
