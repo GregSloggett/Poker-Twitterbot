@@ -21,7 +21,6 @@ public class TwitterStreamer {
 	static Twitter twitter = TwitterFactory.getSingleton();
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
-	static Status latestTweet;
 	private static final int NUMTHREADS = 30;
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	Thread thread;
@@ -45,7 +44,7 @@ public class TwitterStreamer {
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game!");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("replyStatus is replying to tweet: "+replyStatus.getInReplyToStatusId());
-							latestTweet = twitter.updateStatus(replyStatus);
+							Status latestTweet = twitter.updateStatus(replyStatus);
 							
 							System.out.println("2");
 							usersPlayingGames.put(status.getUser().getScreenName(), true);
@@ -61,7 +60,6 @@ public class TwitterStreamer {
 							//Thread thread = new Thread(p);
 							//thread.start();
 							executor.execute(p);
-							p = null;
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{
@@ -145,4 +143,10 @@ public class TwitterStreamer {
 	public static void main(String[] args) {
 		StartHashtagStream();
 	}
+	
+	
+	
+	
+	
+	
 }

@@ -13,16 +13,21 @@ import javax.imageio.ImageIO;
 import twitter4j.*;
 
 public class TwitterInteraction {
-	static Twitter twitter;
-	static Status latestTweet;
-	static String username;
-	static Status firstTweet;
+	Twitter twitter;
+	Status latestTweet;
+	String username;
+	Status firstTweet;
 	static int hashCode = 0;
 	public TwitterInteraction(Twitter t, Status tweet, String nick){
 		twitter = t;
 		firstTweet = tweet;
 		latestTweet = tweet;
 		username = nick;
+		hashCode = this.hashCode();
+	}
+
+	public TwitterInteraction(Twitter t){
+		twitter = t;
 		hashCode = this.hashCode();
 	}
 
@@ -35,13 +40,18 @@ public class TwitterInteraction {
 	 * @param status
 	 * @throws TwitterException
 	 */
-	public static void updateStatus(String status) throws TwitterException{
+	public void updateStatus(String status) throws TwitterException{
 		System.out.println("getting 2");
 		StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+status);
 		replyStatus.setInReplyToStatusId(latestTweet.getId());
-		latestTweet = twitter.updateStatus(replyStatus);
+		latestTweet = update(replyStatus);
 		System.out.println("getting 3");
 	}
+
+	public Status update(StatusUpdate a) throws TwitterException{
+		return this.twitter.updateStatus(a);
+	}
+
 
 	/** Pass this method a string and an image file,
 	 * and it will post a status of the string with
@@ -50,10 +60,10 @@ public class TwitterInteraction {
 	 * @param image
 	 * @throws TwitterException
 	 */
-	public static void updateStatusWithTextAndImage(String string, File image) throws TwitterException{
+	public  void updateStatusWithTextAndImage(String string, File image) throws TwitterException{
 		StatusUpdate status = new StatusUpdate(string);
 		status.setMedia(image);
-		latestTweet = twitter.updateStatus(status);
+		latestTweet = update(status);
 	}
 
 
@@ -63,7 +73,7 @@ public class TwitterInteraction {
 	 * images into the project, it'd be the same process for an image
 	 * loaded from file.
 	 */
-	private static void testStatusWithTextAndImage() throws IOException, TwitterException{
+	private void testStatusWithTextAndImage() throws IOException, TwitterException{
 		URL url = new URL("https://www.drupal.org/files/issues/sample_7.png");
 		BufferedImage image = ImageIO.read(url);
 		File file = new File("image.png");
@@ -72,7 +82,7 @@ public class TwitterInteraction {
 		updateStatusWithTextAndImage("Testing png",file);
 	}
 
-	public static String waitForTweet() throws TwitterException, InterruptedException{
+	public  String waitForTweet() throws TwitterException, InterruptedException{
 		boolean waiting = true;
 		while(waiting){
 			Thread.yield();
@@ -150,7 +160,7 @@ public class TwitterInteraction {
 		return returnString;
 	}
 
-	private static ArrayList<Status> getDiscussion() throws TwitterException{
+	private ArrayList<Status> getDiscussion() throws TwitterException{
 		//Query query = new Query("from:PokerFOAK");
 		//QueryResult result = twitter.search(query);
 		//System.out.println("count : "+result.getTweets().size());
@@ -179,10 +189,15 @@ public class TwitterInteraction {
 
 
 
+	public void setDetails(Status tweet, String name){
+		latestTweet = tweet;
+		username = name;
+		firstTweet = tweet;
+	}
 
 
 	public static void main(String[] args) throws TwitterException, IOException {
-		
+
 
 	}
 
