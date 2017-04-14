@@ -61,6 +61,7 @@ public class TwitterStreamer {
 							//Thread thread = new Thread(p);
 							//thread.start();
 							executor.execute(p);
+							p = null;
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{

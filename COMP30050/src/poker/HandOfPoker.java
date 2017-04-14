@@ -1,7 +1,6 @@
 package poker;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class HandOfPoker {
 	
@@ -75,7 +74,7 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
-				UI.printout("Player "+ i + " says I can open!\n");
+				UI.printout("Player "+ players.get(i).playerName + " says I can open!\n");
 				break;
 			}
 		}
@@ -94,7 +93,7 @@ public class HandOfPoker {
 		int antesTotal =0;
 		for (int i=0; i<players.size(); i++){
 			antesTotal += ante; // player.takeAnte(ante);
-			UI.printout("Player " + i + " paid " + ante + " chips for deal.");
+			UI.printout(players.get(i).playerName + " paid " + ante + " chips for deal.");
 		}
 		return antesTotal;
 	}
@@ -120,10 +119,10 @@ public class HandOfPoker {
 			
 			totalBets += bet;
 			if(bet == 0){
-				UI.printout("Player " + i + " folds.\n");
+				UI.printout(players.get(i).playerName + " folds.\n");
 			}
 			else{
-				UI.printout("Player " + i + " bets " + bet + "\n");
+				UI.printout(players.get(i).playerName + " bets " + bet + "\n");
 			}
 		}
 		return totalBets;
@@ -138,7 +137,7 @@ public class HandOfPoker {
 	private void discardCards() throws InterruptedException {
 		for (int i=0; i<players.size(); i++){
 			int discardedCount = players.get(i).hand.discard();
-			UI.printout("Player " + i + " discards " + discardedCount + "cards");
+			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
 		UI.printout("Players are redealt their cards.");
 	}
@@ -150,7 +149,7 @@ public class HandOfPoker {
 		PokerPlayer handWinner = getHandWinner();
 		
 		for (int i=0; i<players.size(); i++){
-			UI.printout("Player " + i + " says ");
+			UI.printout(players.get(i).playerName + " says ");
 			players.get(i).showCards(handWinner);
 		}
 	}
@@ -161,6 +160,7 @@ public class HandOfPoker {
 	 */
 	private PokerPlayer getHandWinner(){
 		PokerPlayer winningPlayer = players.get(0);
+		
 		for(int i=1; i<players.size(); i++){
 			if(players.get(i).hand.getGameValue()>winningPlayer.hand.getGameValue()){
 				winningPlayer = players.get(i);

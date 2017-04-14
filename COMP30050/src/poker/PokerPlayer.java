@@ -9,7 +9,6 @@ public abstract class PokerPlayer {
 	protected String playerName;
 	
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
-		//playerName = getPlayerName();
 		deck = inputDeck;
 		hand = new HandOfCards(deck);
 		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;

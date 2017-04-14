@@ -8,9 +8,11 @@ import twitter4j.TwitterException;
 
 public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	TwitterInteraction twitter;
+	private DeckOfCards a;
 	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
 		twitter = t;
+		a = inputDeck;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -290,19 +292,16 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		DeckOfCards deck = new DeckOfCards();
-		HumanPokerPlayer human;
 		try {
-			human = new HumanPokerPlayer(deck);
-			System.out.println(human.hand);
-			human.discard();
-		} catch (InterruptedException e1) {
+			discard();
+		} catch (InterruptedException e2) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (TwitterException e) {
+			e2.printStackTrace();
+		} catch (TwitterException e2) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e2.printStackTrace();
 		}
+		
 
 	}
 

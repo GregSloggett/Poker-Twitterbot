@@ -1,22 +1,53 @@
 package poker;
 
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Random;
+
 
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerType;
 	private int playerBluffProbability;
 	private boolean hasRaised = false;
 	private int betCalculationValue = 15;
+	public static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
+	public static final int FILE_OF_NAMES_LENGTH = 157;
 	
 	OutputTerminal output = new OutputTerminal();
 	
 	public AutomatedPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		super(inputDeck);
+		playerName = getPlayerName();
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
 	}
 	
+	/**
+	 * Retrieves a random name from the FILE_OF_NAMES for this 
+	 * automated poker player.
+	 * @return
+	 */
+	private String getPlayerName() {
+		String playerName = null;
+		try{
+			Random rand = new Random();
+			int number_line = rand.nextInt(FILE_OF_NAMES_LENGTH);
+			BufferedReader read = new BufferedReader(new FileReader(FILE_OF_NAMES));
+			String line;
+			for(int i=0; i<=number_line; i++){
+				line = read.readLine();
+				if(i==number_line){
+					playerName = line;
+				}
+			}
+			read.close();
+		}
+		catch (Exception e){
+			playerName = "Bot Player";
+		}
+		return playerName;
+	}
+
 	/**      
 	 * Selects a random strategy for an automated poker player ranging from risky to conservative.
 	 * This produces a random value between 1 & 5, where 1 is conservative and 5 is risky, 2 is 

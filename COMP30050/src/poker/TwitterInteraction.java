@@ -16,10 +16,14 @@ public class TwitterInteraction {
 	static Twitter twitter;
 	static Status latestTweet;
 	static String username;
+	static Status firstTweet;
+	static int hashCode = 0;
 	public TwitterInteraction(Twitter t, Status tweet, String nick){
 		twitter = t;
+		firstTweet = tweet;
 		latestTweet = tweet;
 		username = nick;
+		hashCode = this.hashCode();
 	}
 
 	//static Twitter twitter = TwitterFactory.getSingleton();
@@ -71,7 +75,9 @@ public class TwitterInteraction {
 	public static String waitForTweet() throws TwitterException, InterruptedException{
 		boolean waiting = true;
 		while(waiting){
+			Thread.yield();
 			Thread.sleep(30000);
+			System.out.println(Thread.currentThread().getId());
 			ArrayList<Status> replies = getDiscussion();
 			System.out.println(replies.size());
 
@@ -148,14 +154,18 @@ public class TwitterInteraction {
 		//Query query = new Query("from:PokerFOAK");
 		//QueryResult result = twitter.search(query);
 		//System.out.println("count : "+result.getTweets().size());
-		
+		System.out.println("-------------------------------------------");
+		System.out.println("This is thread "+Thread.currentThread().getId());
+		System.out.println("Conversation with user: "+username);
+		System.out.println("This started with the tweet: "+firstTweet.getText());
+		System.out.println("Hashcode: "+hashCode);
+		System.out.println("-------------------------------------------");
 		List<Status> statuses = twitter.getUserTimeline(username);
 		ArrayList<Status> replies = new ArrayList<Status>();
 		System.out.println("latest tweet:"+latestTweet.getText());
 		for(Status s : statuses){
-			System.out.println("lll");
-			System.out.println(s.getInReplyToStatusId() + " || ");// + latestTweet.getId());
-			System.out.println("mmm");
+			System.out.println("Status from user's timeline: "+s.getText());
+			System.out.println(s.getInReplyToStatusId() + " || " + latestTweet.getId());
 			if( s.getInReplyToStatusId() == latestTweet.getId()){
 				System.out.println("the reply is: " + s.getText());
 				replies.add(s);
@@ -172,7 +182,7 @@ public class TwitterInteraction {
 
 
 	public static void main(String[] args) throws TwitterException, IOException {
-
+		
 
 	}
 
