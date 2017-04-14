@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -35,7 +37,7 @@ public class TwitterStreamer {
 
 				try {		
 					String userNickname = status.getUser().getScreenName();
-					if(status.getText().contains("#FOAKDeal")){
+					if(containsIgnoreCase(status.getText(),"FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
 							
@@ -72,7 +74,7 @@ public class TwitterStreamer {
 							System.out.println("7");
 						}
 					}
-					else if(status.getText().contains("#FOAKLeave")){
+					else if(containsIgnoreCase(status.getText(), "#FOAKLeave")){
 						if((usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
 							System.out.println(status.getUser().getScreenName());
@@ -132,13 +134,30 @@ public class TwitterStreamer {
 		FilterQuery filter = new FilterQuery();        
 
 		//These are the keywords it listens out for.
-		String keywords[] = {"#FOAKDeal","#FOAKLeave"};
+		String keywords[] = {"#FOAKDeal","#FOAKLeave","#FOAKDEAL","#FOAKLEAVE","#foakdeal", "#foakleave","#FOAKdeal","#FOAKleave"};
 
-		filter.track(keywords);        
+		filter.track(keywords);      
+		
 
 		twitterStream.addListener(statusListener);
 		twitterStream.filter(filter);          
 	}  
+	
+	public static boolean containsIgnoreCase(String str, String searchStr)     {
+	    if(str == null || searchStr == null) return false;
+
+	    final int length = searchStr.length();
+	    if (length == 0)
+	        return true;
+
+	    for (int i = str.length() - length; i >= 0; i--) {
+	        if (str.regionMatches(true, i, searchStr, 0, length))
+	            return true;
+	    }
+	    return false;
+	}
+	
+
 	
 	public static void main(String[] args) {
 		StartHashtagStream();

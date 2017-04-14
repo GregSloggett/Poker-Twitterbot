@@ -1,7 +1,10 @@
 package poker;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,10 +62,15 @@ public class TwitterInteraction {
 	 * @param string
 	 * @param image
 	 * @throws TwitterException
+	 * @throws IOException 
 	 */
-	public  void updateStatusWithTextAndImage(String string, File image) throws TwitterException{
-		StatusUpdate status = new StatusUpdate(string);
-		status.setMedia(image);
+	public  void updateStatusWithTextAndImage(String string, BufferedImage image) throws TwitterException, IOException{
+		StatusUpdate status = new StatusUpdate("@"+username+" "+string);
+		status.setInReplyToStatusId(latestTweet.getId());
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(image, "png", baos);
+		InputStream is = new ByteArrayInputStream(baos.toByteArray());
+		status.setMedia("filename",is);
 		latestTweet = update(status);
 	}
 
@@ -76,10 +84,10 @@ public class TwitterInteraction {
 	private void testStatusWithTextAndImage() throws IOException, TwitterException{
 		URL url = new URL("https://www.drupal.org/files/issues/sample_7.png");
 		BufferedImage image = ImageIO.read(url);
-		File file = new File("image.png");
-		ImageIO.write(image,"png",file);
+		//File file = new File("image.png");
+		//ImageIO.write(image,"png",file);
 
-		updateStatusWithTextAndImage("Testing png",file);
+		updateStatusWithTextAndImage("Testing png",image);
 	}
 
 	public  String waitForTweet() throws TwitterException, InterruptedException{
