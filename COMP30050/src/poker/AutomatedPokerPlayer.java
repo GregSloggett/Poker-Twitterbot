@@ -12,14 +12,17 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int betCalculationValue = 15;
 	public static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
 	public static final int FILE_OF_NAMES_LENGTH = 157;
+	private static TwitterInteraction twitter;
 	
 	OutputTerminal output = new OutputTerminal();
 	
-	public AutomatedPokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
+	public AutomatedPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
 		playerName = getPlayerName();
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
+		twitter = t;
+		
 	}
 	
 	/**
@@ -224,5 +227,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			output.printout("here is my hand: \n" + this.hand + "\n");
 			return true;
 		}
+	}
+	
+	public void testAppendString(){
+		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
 	}
 }

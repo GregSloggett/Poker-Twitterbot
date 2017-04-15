@@ -20,6 +20,8 @@ public class TwitterInteraction {
 	Status latestTweet;
 	String username;
 	Status firstTweet;
+	String compoundTweet = "";
+	
 	static int hashCode = 0;
 	public TwitterInteraction(Twitter t, Status tweet, String nick){
 		twitter = t;
@@ -193,16 +195,17 @@ public class TwitterInteraction {
 		return replies;
 	}
 
-
-
-
-
-	public void setDetails(Status tweet, String name){
-		latestTweet = tweet;
-		username = name;
-		firstTweet = tweet;
+	public void appendToCompoundTweet(String string){
+		compoundTweet += (string+"\n");
 	}
-
+	
+	public void postCompoundTweet() throws TwitterException{
+		StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+compoundTweet);
+		replyStatus.setInReplyToStatusId(latestTweet.getId());
+		System.out.println(compoundTweet+"\n\n");
+		latestTweet = update(replyStatus);
+		compoundTweet = "";
+	}
 
 	public static void main(String[] args) throws TwitterException, IOException {
 

@@ -12,6 +12,8 @@ public class HandOfPoker {
 	public static int pot;
 	OutputTerminal UI;
 	DeckOfCards deck;
+	TwitterInteraction twitter;
+
 	
 	
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, OutputTerminal UI){
@@ -19,6 +21,19 @@ public class HandOfPoker {
 		this.ante = ante;
 		this.UI = UI;
 		this.deck = deck;
+		
+		try {
+			gameLoop();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, TwitterInteraction t){
+		this.players = players;
+		this.ante = ante;
+		this.UI = UI;
+		this.twitter = t;
 		
 		try {
 			gameLoop();
@@ -209,6 +224,9 @@ public class HandOfPoker {
 			UI.printout("lol");
 		}
 	}
+	private TwitterInteraction getTwitter(){
+		return twitter;
+	}
 	
 	/**
 	 * Shows the pot to the interface
@@ -220,7 +238,7 @@ public class HandOfPoker {
 	/*
 	 * Initialises and plays two separate instances of a hand of poker 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public void main(String[] args) throws InterruptedException {
 		DeckOfCards deck = new DeckOfCards();
 		OutputTerminal console = new OutputTerminal();
 		int ante = 1;
@@ -228,7 +246,7 @@ public class HandOfPoker {
 		ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>(5);
 		
 		for(int i=0;i<5;i++){
-			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck);
+			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, twitter);
 			players.add(computerPlayer);			
 		}
 		

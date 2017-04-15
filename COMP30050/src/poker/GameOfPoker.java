@@ -2,16 +2,18 @@ package poker;
 
 import java.util.ArrayList;
 
-public class GameOfPoker {
+public class GameOfPoker{
 
 	public String playerName = "";
 	private DeckOfCards deck;
 	public HumanPokerPlayer humanPlayer;
+	private static TwitterInteraction twitter;
 	
-	public GameOfPoker(String username) throws InterruptedException{
+	public GameOfPoker(String username, TwitterInteraction t) throws InterruptedException{
 		playerName = username;
 		deck = new DeckOfCards();
 		humanPlayer = new HumanPokerPlayer(deck);
+		twitter = t;
 	}
 	
 	public static final int PLAYER_POT_DEFAULT = 40;
@@ -27,7 +29,7 @@ public class GameOfPoker {
 		players.add(humanPlayer);
 		
 		for(int i=0;i<5;i++){
-			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck);
+			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, twitter);
 			players.add(computerPlayer);			
 		}
 		

@@ -291,18 +291,16 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		try {
-			discard();
-		} catch (InterruptedException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (TwitterException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		twitter.appendToCompoundTweet("Testing Compound Tweet");
+		twitter.appendToCompoundTweet("This is coming from the HumanPokerPlayer class");
+		
+		//discard();
 		
 
+	}
+	
+	public void testAppendString(){
+		twitter.appendToCompoundTweet("This is from the HumanPokerPlayer Class");
 	}
 
 }

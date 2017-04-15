@@ -52,12 +52,13 @@ public class TwitterStreamer {
 							usersPlayingGames.put(status.getUser().getScreenName(), true);
 							System.out.println("3");
 							System.out.println(usersPlayingGames.containsKey(status.getUser().getScreenName()));
-							gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName()));
-							//waitForTweet(status);
 							DeckOfCards d = new DeckOfCards();
 							String nick = status.getUser().getScreenName();
 							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
 							HumanPokerPlayer p = new HumanPokerPlayer(d,t);
+							gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t));
+							//waitForTweet(status);
+							
 							//p.run();
 							//Thread thread = new Thread(p);
 							//thread.start();
@@ -159,8 +160,27 @@ public class TwitterStreamer {
 	
 
 	
-	public static void main(String[] args) {
-		StartHashtagStream();
+	public static void main(String[] args) throws InterruptedException, TwitterException {
+		//StartHashtagStream();
+		TwitterInteraction t = new TwitterInteraction(twitter,(twitter.updateStatus("Testing Compound Tweets in the next two tweets.")), "PokerFOAK");
+		DeckOfCards d = new DeckOfCards();
+		HumanPokerPlayer p = new HumanPokerPlayer(d,t);
+		AutomatedPokerPlayer a = new AutomatedPokerPlayer(d,t);
+		
+		Thread.sleep(15000);
+		
+		t.appendToCompoundTweet("This is from the TwitterStreamer Class");
+		p.testAppendString();
+		a.testAppendString();
+		t.postCompoundTweet();
+		
+		Thread.sleep(10000);
+		
+		t.appendToCompoundTweet("Testing that first compound tweet has been cleared");
+		t.appendToCompoundTweet("Compounding second tweet.");
+		t.appendToCompoundTweet("Posting.");
+		t.postCompoundTweet();
+		
 	}
 	
 	
