@@ -1,14 +1,15 @@
 package poker;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class HandOfPoker {
 	
 	final private static int OPENING_HAND = HandOfCards.ONE_PAIR_DEFAULT;
-	
+	public static int highBet = 0;
+
 	ArrayList<PokerPlayer> players;
-	int ante, pot;
+	int ante;
+	public static int pot;
 	OutputTerminal UI;
 	DeckOfCards deck;
 	
@@ -36,6 +37,7 @@ public class HandOfPoker {
 		pot += collectAntes();
 		displayPot();
 		pot += takeBets();
+		highBet = 0;
 		displayPot();
 		// TODO: if >1 player not folded
 		discardCards();
@@ -73,7 +75,7 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
-				UI.printout("Player "+ i + " says I can open!\n");
+				UI.printout("Player "+ players.get(i).playerName + " says I can open!\n");
 				break;
 			}
 		}
@@ -92,7 +94,7 @@ public class HandOfPoker {
 		int antesTotal =0;
 		for (int i=0; i<players.size(); i++){
 			antesTotal += ante; // player.takeAnte(ante);
-			UI.printout("Player " + i + " paid " + ante + " chips for deal.");
+			UI.printout(players.get(i).playerName + " paid " + ante + " chips for deal.");
 		}
 		return antesTotal;
 	}
@@ -109,11 +111,20 @@ public class HandOfPoker {
 		UI.printout("## Place your bets!");
 		for (int i=0; i<players.size(); i++){
 			// End Result should be: bets += players.get(i).getBet();
-			Random rand = new Random();
-			int bet = rand.nextInt(2);
-			totalBets += bet;
-			UI.printout("Player " + i + " bets " + bet);
+			//Random rand = new Random();
+
+			int bet = players.get(i).getBet();
+			if(bet > highBet){  //should be reset after each round of betting
+				highBet = bet;
+			}
 			
+			totalBets += bet;
+			if(bet == 0){
+				UI.printout(players.get(i).playerName + " folds.\n");
+			}
+			else{
+				UI.printout(players.get(i).playerName + " bets " + bet + "\n");
+			}
 		}
 		return totalBets;
 	}
@@ -127,7 +138,7 @@ public class HandOfPoker {
 	private void discardCards() throws InterruptedException {
 		for (int i=0; i<players.size(); i++){
 			int discardedCount = players.get(i).hand.discard();
-			UI.printout("Player " + i + " discards " + discardedCount + "cards");
+			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
 		UI.printout("Players are redealt their cards.");
 	}
@@ -136,11 +147,27 @@ public class HandOfPoker {
 	 * Shows all hands remaining in the game
 	 */
 	private void showCards() {
-		for (int i=0; i<players.size(); i++){
-			UI.printout("Player " + i + " says read em' and weep!");
-			UI.printout("~~ " + players.get(i).hand.toString());
-		}
+		PokerPlayer handWinner = getHandWinner();
 		
+		for (int i=0; i<players.size(); i++){
+			UI.printout(players.get(i).playerName + " says ");
+			players.get(i).showCards(handWinner);
+		}
+	}
+	
+	/**
+	 * Determines the winner of this hand of poker.
+	 * @return
+	 */
+	private PokerPlayer getHandWinner(){
+		PokerPlayer winningPlayer = players.get(0);
+		
+		for(int i=1; i<players.size(); i++){
+			if(players.get(i).hand.getGameValue()>winningPlayer.hand.getGameValue()){
+				winningPlayer = players.get(i);
+			}
+		}
+		return winningPlayer;
 	}
 	
 	/**

@@ -27,7 +27,7 @@ public class HandOfCards {
 	 * Internal fields of hand
 	 */
 	public static final int CARDS_HELD = 5;
-	private PlayingCard[] cardArray;
+	public PlayingCard[] cardArray;
 	private DeckOfCards deck;
 	
 	/*
@@ -89,18 +89,18 @@ public class HandOfCards {
 	 * Discards a card at the given index back to the deck and replaces it with a new one
 	 * @throws InterruptedException 
 	 */
-	private void replaceCardFromDeck(int index) throws InterruptedException{
+	public void replaceCardFromDeck(int index) throws InterruptedException{
 		if (index >= 0 && index < cardArray.length){
 			deck.returnCard(cardArray[index]);
 			cardArray[index] = deck.dealNext();
-			sort();
+			
 		}
 	}
 	
 	/**
 	 * Uses a bubble sort to sort the cards by game value in the hand from high game value to low
 	 */
-	private void sort(){
+	protected void sort(){
 		boolean swapped = true;
 		while (swapped) {
 			swapped = false;

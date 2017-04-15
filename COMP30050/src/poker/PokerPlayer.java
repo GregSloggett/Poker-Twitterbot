@@ -1,12 +1,19 @@
 package poker;
 
-public class PokerPlayer {
+public abstract class PokerPlayer {
 	private DeckOfCards deck;
 	protected HandOfCards hand;
-
+	protected int playerPot;
+	protected int roundPot;
+	protected int highBet;
+	protected String playerName;
+	
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		deck = inputDeck;
 		hand = new HandOfCards(deck);
+		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;
+		roundPot = HandOfPoker.pot;
+		highBet = HandOfPoker.highBet;
 	}
 
 	/*
@@ -75,17 +82,20 @@ public class PokerPlayer {
 		hand = new HandOfCards(deck);
 	}
 	
+	public abstract int getBet();
 	
-	public static void main(String[] args) throws InterruptedException {	
+	public abstract boolean showCards(PokerPlayer handWinner);
+	
+/*	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
 		/*
 		 * Here I run tests of 100 random hands that start as a random hand and discards
 		 * and replenishes cards until every card in the hand has a discard
 		 * probability of 0 (no more changes possible), or no more cards can be dealt.
-		 */
+		 *
 		for(int k=0;k<numTestsToRun;k++){
 			DeckOfCards deck = new DeckOfCards();
-			PokerPlayer player = new PokerPlayer(deck);
+			//PokerPlayer player = new PokerPlayer(deck);
 			HandOfCards hand = player.hand;
 
 			//This stores a string representation of the hand of cards before discarding
@@ -97,9 +107,9 @@ public class PokerPlayer {
 			int totalCardsDiscarded = 0;
 			int roundsOfDiscards = 0;
 
-			/*
+			*
 			 * Stop discarding cards when there are no possible discards left. 
-			 */
+			 *
 			while(!(player.noPossibleDiscardsLeft()) && roundsOfDiscards <50){
 				totalCardsDiscarded += hand.discard();
 				roundsOfDiscards++;
@@ -116,4 +126,5 @@ public class PokerPlayer {
 		}
 	}
 
+*/
 }
