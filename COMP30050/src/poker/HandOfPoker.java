@@ -44,6 +44,7 @@ public class HandOfPoker {
 		displayPot();
 		// TODO: if >1 player not folded
 		showCards();
+		awardWinner(calculateWinners());
 	}
 
 	/**
@@ -140,6 +141,46 @@ public class HandOfPoker {
 			UI.printout("~~ " + players.get(i).hand.toString());
 		}
 		
+	}
+	
+	/**
+	 * Calculates who has the highest scoring hand in the group
+	 * @return an arrayList containing the winner or tied winners in a very rare case
+	 */
+	private ArrayList<PokerPlayer> calculateWinners() {
+		ArrayList<PokerPlayer> winnersCircle = new ArrayList<PokerPlayer>();
+		PokerPlayer winner = players.get(0);
+		
+		// Look for highest scoring hand
+		for (int i=1; i<players.size(); i++){
+			if (players.get(i).hand.getGameValue() > winner.hand.getGameValue()){
+				winner = players.get(i);
+			}
+		}
+		
+		// Store winner
+		winnersCircle.add(winner);
+		players.remove(winner);
+		
+		// Check for very rare occurrence of a draw for a split pot
+		for (int i=0; i<players.size(); i++){
+			if (players.get(i).hand.getGameValue() == winner.hand.getGameValue()){
+				winnersCircle.add(players.get(i));
+			}
+		}
+		
+		return winnersCircle;
+	}
+	
+	private void awardWinner(ArrayList<PokerPlayer> winners) { 
+		if (winners.size() == 1){
+			//declarewinner(winners);
+			UI.printout(winners.get(0).toString() + " wins with a " + winners.get(0).getHandType());
+		}
+		else {
+			//splitPot(winners);
+			UI.printout("lol");
+		}
 	}
 	
 	/**
