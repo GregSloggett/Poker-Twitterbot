@@ -54,8 +54,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return false;
 	}
 
-
-
 	OutputTerminal output = new OutputTerminal();
 
 	public void discard() throws InterruptedException, TwitterException, IOException {
@@ -196,13 +194,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return askToDiscard;
 	}
 
-
-
-
 	public void setAskToDiscard(boolean askToDiscard) {
 		this.askToDiscard = askToDiscard;
 	}
-
 
 	public int inHandBet() throws TwitterException, InterruptedException{
 		int bet = 0;

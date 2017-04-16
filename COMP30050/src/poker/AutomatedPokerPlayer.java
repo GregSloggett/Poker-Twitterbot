@@ -9,8 +9,6 @@ import java.util.Random;
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerType;
 	private int playerBluffProbability;
-	private boolean hasRaised = false;
-	private int betCalculationValue = 15;
 	public static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
 	public static final int FILE_OF_NAMES_LENGTH = 157;
 	private static TwitterInteraction twitter;
@@ -84,59 +82,70 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 */
 	public int getBet(){
 		int betValue = getBetValueCalculation();
-		boolean roundRaised = false;
+		int callValue = getCallValueCalculation(betValue);
+		boolean hasRaised = false;
+		boolean bettingHasBeenRaised = false;
+		
+		//if nobody has bet
 		if(HandOfPoker.highBet == 0){
+			output.printout("I bet " + betValue + " to start off the betting.");
 			return betValue;
 		}
-		if(betValue < HandOfPoker.highBet-playerType){
+		//if a players betValue/callValue are both less than the highbet then fold. 
+		if(betValue <= HandOfPoker.highBet && callValue < HandOfPoker.highBet){
 			return fold(betValue);
 		}
-		else if(betValue >= HandOfPoker.highBet + 2 && hasRaised  != true){
+		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.
+		else if(betValue > HandOfPoker.highBet && hasRaised != true){
 			hasRaised = true;
-			if(roundRaised == true){
+			if(bettingHasBeenRaised == true){
 				return reRaise(betValue);
 			}
 			else{
-				roundRaised = true;
+				bettingHasBeenRaised = true;
 				return raise(betValue);
 			}
 		}
-		else if(playerBluffProbability > 75){
+		//this may occur if a player chooses to bluff
+		else if(playerBluffProbability > 75 && hasRaised != true){
 			hasRaised = true;
-			if(roundRaised == true){
+			if(bettingHasBeenRaised == true){
 				return reRaise(HandOfPoker.highBet+betValue);
 			}
 			else{
-				roundRaised = true;
+				bettingHasBeenRaised = true;
 				return raise(HandOfPoker.highBet+betValue);
 			}
 		}
+		//if decides not to fold/raise/bluff then see(call) the highBet.
 		else{
 			return see(betValue);
 		}
 	}
 	
 	/**
+	 * Multiplies the betValue of a players and by a certain value based on their playerType to
+	 * find a value that they would risk calling to. For example, if the highBet is at 60 and the
+	 * betValue of the players hand is at 40, a player with type 5 (risky) would call up to a value
+	 * of 40 * 1.55 = 62 however a less risky player with type 2 (slightly conservative would only
+	 * call up to a value of 40 * 1.25 = 50.
+	 */
+	private int getCallValueCalculation(int betValue) {
+		float playerTypeCalculation = (float) (0.75 + (1 - ((float)1/playerType)));
+		int callValue = (int) (betValue*playerTypeCalculation);
+			
+		return callValue;
+	}
+
+
+	/**
 	 * Uses the HandGameValue(HGV), the PlayerType(PT) & the Pot Size(PS) to calculate
-	 * a betting value for the hand: (PT * HGV) / (15 - PT)
+	 * a betting value for the hand: (PS * HGV) / (15 - PT)
 	 */
 	private int getBetValueCalculation(){
-		int handGameValue = this.hand.getGameValue()/100000000;
-		
+		int betCalculationValue = 15;
+		int handGameValue = this.hand.getGameValue()/100000000;	
 		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));
-		
-		
-		 /* 
-		  * uncomment to show stats behind bet value
-		  */
-	/*
-		if(playerBluffProbability > 75){
-			output.printout("I bluffed");
-		}
-		output.printout("Hand: " + hand.toString() + hand.getGameValue() + "\nPT = " + playerType + "       HGV = " + handGameValue + "        PS = " + playerPot);
-		output.printout("bet value = "+ betValue + "            |||      highBet = " + HandOfPoker.highBet);
-	*/
-		
 		return betValue;
 	}
 	
@@ -161,12 +170,12 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		int raiseValue = betValue - HandOfPoker.highBet;
 		
 		if(playerType < 4){
-			output.printout("I think I can win this one, "
-					+ "I raise the betting by " + raiseValue + " chips.");
+			output.printout("I can win this one, I raise the betting by " + raiseValue + " chips.");
 		}
 		else{
 			output.printout("I can't lose, I raise the betting by " + raiseValue + " chips.");
 		}
+		
 		return betValue;
 	}
 
@@ -232,5 +241,33 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	
 	public void testAppendString(){
 		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
+	}
+
+	public static void main(String[] args) throws InterruptedException{
+		DeckOfCards deck = new DeckOfCards();
+		TwitterInteraction t = new TwitterInteraction(TwitterStreamer.twitter);
+		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
+		OutputTerminal out = new OutputTerminal();
+		
+		HandOfPoker.highBet = 0;
+
+		/*
+		 * Tests betting against high bet values for a number
+		 * of random hands for every player type.
+		 */
+		for(int j=0; j<10; j++){
+			
+			playerOne.dealNewHand();
+			deck.reset();
+			deck.shuffle();
+			out.printout("\n\nTESTING AGAINST A HIGH BET OF: " + HandOfPoker.highBet + "\n" + playerOne.hand + " - HAND VALUE = " + playerOne.hand.getGameValue());	
+			
+			for(int i=1; i<6; i++){
+				playerOne.playerType = i;
+				out.printout("Player Type = " + playerOne.playerType + ", therefore bet value = " + playerOne.getBet() + "\n");
+			}
+			
+			HandOfPoker.highBet+=2;
+		}
 	}
 }

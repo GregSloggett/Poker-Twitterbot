@@ -16,7 +16,7 @@ public class GameOfPoker{
 		twitter = t;
 	}
 	
-	public static final int PLAYER_POT_DEFAULT = 40;
+	public static final int PLAYER_POT_DEFAULT = 100;
 	public static final int ROUND_NUMBER = 0;
 	
 	public static void main(String[] args) throws InterruptedException {
