@@ -1,5 +1,6 @@
 package poker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,6 +10,10 @@ import twitter4j.TwitterException;
 public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	TwitterInteraction twitter;
 	private DeckOfCards a;
+	public PictureOfHand pic;
+	
+	
+	
 	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
 		twitter = t;
@@ -53,14 +58,16 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	OutputTerminal output = new OutputTerminal();
 
-	public void discard() throws InterruptedException, TwitterException {
+	public void discard() throws InterruptedException, TwitterException, IOException {
+		PictureOfHand pic = new PictureOfHand();
+		
 		String positiveResponse = "y";
 		String negativeResponse = "n";
 		askToDiscard = true;
 		//output.printout("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
 		//String Answer = output.readInString();
 		System.out.println("getting here 1");
-		twitter.updateStatus("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
+		twitter.updateStatusWithTextAndImage("Here are your cards! do you want to replace any!?\n If so tweet Y for yes or N for no", pic.createImage(this.hand)  );
 		System.out.println("getting here 2");
 		String Answer = twitter.waitForTweet();
 
@@ -85,6 +92,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 					int discardedCard = readinMultipleInt(discardedCardString).get(0);
 					if (discardedCard > 0 && discardedCard <= 5) {
 						this.hand.replaceCardFromDeck(discardedCard - 1);
+						this.hand.sort();
+						twitter.updateStatusWithTextAndImage("Here is your updated hand goodluck!", pic.createImage(this.hand)  );
+
 					} else {
 						//output.printout("Sorry this isnt a valid card..");
 						twitter.updateStatus("Sorry this isnt a valid card..");
@@ -104,6 +114,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 							this.hand.replaceCardFromDeck(discardedCard.get(i)-1);
 						}
 						this.hand.sort();
+						twitter.updateStatusWithTextAndImage("Here is your updated hand! Good Luck!!", pic.createImage(this.hand)  );
+
 
 					}else{
 						//output.printout("Sorry one of the card positions you entered is invalid");
@@ -150,25 +162,29 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return validBet;
 	}
 
-	public int openingBet(){
+	public int openingBet() throws TwitterException, InterruptedException{
 		String betResponse = "Bet";
 		String checkResponse = "Check";
 
-		output.printout("Do you want to open betting? \n tweet 'Bet' to bet or 'Check' to check");
+		twitter.updateStatus("Do you want to open betting? \n tweet 'Bet' to bet or 'Check' to check");
 
-		String Answer = output.readInString();
+		//String Answer = output.readInString();
+		String Answer = twitter.waitForTweet();
 		int bet =0;
 		if (Answer.equalsIgnoreCase(betResponse)){
-			output.printout("How much do you wanna bet?");
-			bet = output.readinMultipleInt().get(0);
+			twitter.updateStatus("How much do you wanna bet?");
+			String openingBet = twitter.waitForTweet();
+			bet = readinMultipleInt(openingBet).get(0);
 			if(!validBet(bet)){
-				output.printout("sorry you dont have this amount to bet");
+				//output.printout("sorry you dont have this amount to bet");
+				twitter.updateStatus("sorry you dont have this amount to bet");
 				this.openingBet();
 			}
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
-			output.printout("Sorry not a valid response");
+			//output.printout("Sorry not a valid response");
+			twitter.updateStatus("Sorry not a valid response");
 			this.openingBet();
 
 		}
@@ -188,32 +204,37 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	}
 
 
-	public int inHandBet(){
+	public int inHandBet() throws TwitterException, InterruptedException{
 		int bet = 0;
 		String callResponse = "Call";
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
 		
 		if(playerPot< HandOfPoker.highBet){
-			output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
+			//output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
+			twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
+					+" be split here and you can win up to this amount in the hand");
+			
 			splitPot = true;
 		}
 		if(HandOfPoker.pot == 0){
 			this.openingBet();
 		}else{
-			output.printout("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to continue");
-			String Answer = output.readInString();
+			twitter.updateStatus("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to continue");
+			String Answer = twitter.waitForTweet();
 			if(Answer.equalsIgnoreCase(callResponse)){
-				output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
+				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
+				twitter.updateStatus("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
 				bet = (HandOfPoker.highBet-currentBet);
 			}else if(Answer.equalsIgnoreCase(raiseResponse)){
-				output.printout("The pot is at " + HandOfPoker.pot + " and it will take " + (HandOfPoker.highBet - currentBet) + " to meet the current bet,"
+				twitter.updateStatus("The pot is at " + HandOfPoker.pot + " and it will take " + (HandOfPoker.highBet - currentBet) + " to meet the current bet,"
 						+ " how much do you want to raise by");
-				bet = output.readinMultipleInt().get(0);
+				String betAmountString = twitter.waitForTweet();
+				bet = readinMultipleInt(betAmountString).get(0);
 				bet = bet + (HandOfPoker.highBet - currentBet);
 				currentBet = bet;
 				if(!validBet(currentBet)){
-					output.printout("Sorry you dont have the money to make this bet");
+					twitter.updateStatus("Sorry you dont have the money to make this bet");
 					this.inHandBet();
 				}
 			}else if(Answer.equalsIgnoreCase(FoldResponse)){
@@ -221,7 +242,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				currentBet = 0;
 			}
 			else{
-				output.printout("Sorry that isnt a valid response");
+				twitter.updateStatus("Sorry that isnt a valid response");
 				this.inHandBet();
 			}
 		}
@@ -229,14 +250,14 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return bet;
 	}
 
-	public boolean Fold() {
+	public boolean Fold() throws TwitterException, InterruptedException {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
 
 		boolean isFold = false;
 
-		output.printout("Do you want to fold??\n If so tweet Y for yes or N for no");
-		String Answer = output.readInString();
+		twitter.updateStatus("Do you want to fold??\n If so tweet Y for yes or N for no");
+		String Answer = twitter.waitForTweet();
 
 		if (Answer.equalsIgnoreCase(positiveResponse)) {
 			isFold = true;
@@ -244,7 +265,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			isFold = false;
 			this.inHandBet();
 		} else {
-			output.printout("Sorry I didnt regcognise this response");
+			twitter.updateStatus("Sorry I didnt regcognise this response");
 			this.Fold();
 		}
 		System.out.println(isFold);
@@ -252,7 +273,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return isFold;
 	}
 
-	public void runApp() throws InterruptedException{
+	public void runApp() throws InterruptedException, TwitterException, IOException{
 
 		DeckOfCards deck = new DeckOfCards();
 		HumanPokerPlayer human = new HumanPokerPlayer(deck);
@@ -271,7 +292,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		human.Fold();
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, TwitterException, IOException {
 
 		DeckOfCards deck = new DeckOfCards();
 		HumanPokerPlayer human = new HumanPokerPlayer(deck);
@@ -291,10 +312,15 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	@Override
 	public void run() {
-		twitter.appendToCompoundTweet("Testing Compound Tweet");
-		twitter.appendToCompoundTweet("This is coming from the HumanPokerPlayer class");
+		//twitter.appendToCompoundTweet("Testing Compound Tweet");
+		//twitter.appendToCompoundTweet("This is coming from the HumanPokerPlayer class");
 		
-		//discard();
+		try {
+			discard();
+		} catch (InterruptedException | TwitterException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 
 	}

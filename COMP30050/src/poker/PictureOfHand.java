@@ -1,5 +1,6 @@
 package poker;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -10,27 +11,24 @@ import javax.imageio.ImageIO;
 
 public class PictureOfHand {
 	
-	protected HandOfCards hand;
+	;
 	
-	PictureOfHand(HandOfCards inputhand){
-		hand = inputhand;
-	}
+
 	
-	public void createImage() throws IOException {
+	public BufferedImage createImage(HandOfCards inputtedHand) throws IOException {
 		
 
 
-       
-        
-        
 		 
 		Image Scaled1 = null;
-        BufferedImage finalHand = new BufferedImage(500, 300, BufferedImage.TYPE_INT_RGB); 
+        BufferedImage finalHand = new BufferedImage(475, 250, BufferedImage.TYPE_INT_RGB); 
+        
         Graphics2D bgr = finalHand.createGraphics();
+        bgr.setBackground(Color.GREEN);;
     	
         	for(int i =0;i<5;i++){
         		
-        		String filename = hand.cardArray[i].toString()+".png" ;
+        		String filename = inputtedHand.cardArray[i].toString()+".png" ;
         		File file = new File(filename);
         		BufferedImage img1 = ImageIO.read(PictureOfHand.class.getResource("/PlayingCards/"+filename));
         		Scaled1 = img1.getScaledInstance(150, 200, 1);
@@ -52,10 +50,10 @@ public class PictureOfHand {
         	
             
             
-            File outputfile = new File("PlayingCard.png");
-        	ImageIO.write(finalHand, "png", outputfile);
+            //File outputfile = new File("PlayingCard.png");
+        	//ImageIO.write(finalHand, "png", outputfile);
         	
-
+        	return finalHand;
 
 
 
@@ -73,9 +71,9 @@ public class PictureOfHand {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		PictureOfHand pic = new PictureOfHand(hand);
+		PictureOfHand pic = new PictureOfHand();
 		
-		pic.createImage();
+		pic.createImage(hand);
 		System.out.println(hand);
 	
 	}
