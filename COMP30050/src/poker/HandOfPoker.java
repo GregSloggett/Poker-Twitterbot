@@ -2,6 +2,8 @@ package poker;
 
 import java.util.ArrayList;
 
+import twitter4j.TwitterFactory;
+
 public class HandOfPoker {
 	
 	final private static int OPENING_HAND = HandOfCards.ONE_PAIR_DEFAULT;
@@ -83,7 +85,6 @@ public class HandOfPoker {
 	/**
 	 * Returns true if any of the players has an opening hand.
 	 * Prints prompts when a player opens and when no player can open.
-	 * TODO: names
 	 */
 	private boolean checkOpen() {
 		boolean openingHand = false;
@@ -102,7 +103,6 @@ public class HandOfPoker {
 	
 	/**
 	 * TODO: Implement antes properly when betting is implemented
-	 * TODO: Names
 	 * @return number of chips to be added to the pot
 	 */
 	public int collectAntes() {
@@ -118,15 +118,17 @@ public class HandOfPoker {
 	 * Takes bets from players. Players can fold their hands here.
 	 * @return Number of chips to be added to the pot
 	 * TODO: Take bets from players and remove random
-	 * TODO: Players should print their own betting prompts
 	 * TODO: Should be a nested loop for going around the table until all bets are seen or folded
 	 */
 	private int takeBets() {
 		int totalBets =0;
 		UI.printout("## Place your bets!");
+		
+		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
 		for (int i=0; i<players.size(); i++){
 			// End Result should be: bets += players.get(i).getBet();
 			//Random rand = new Random();
+			
 
 			int bet = players.get(i).getBet();
 			if(bet > highBet){  //should be reset after each round of betting
@@ -139,15 +141,16 @@ public class HandOfPoker {
 			}
 			else{
 				UI.printout(players.get(i).playerName + " bets " + bet + "\n");
+				playersNotFolded.add(players.get(i));
 			}
 		}
+		players = playersNotFolded;
 		return totalBets;
 	}
 	
 	/**
 	 * All players discard up to three cards from their hand and re-deal themselves 
 	 * and are re-dealt three from the deck
-	 * TODO: Names
 	 * @throws InterruptedException 
 	 */
 	private void discardCards() throws InterruptedException {
@@ -214,14 +217,30 @@ public class HandOfPoker {
 		return winnersCircle;
 	}
 	
+	/**
+	 * Awards winner the pot and declares the amount.
+	 * TODO Implement when split pot betting occurs
+	 * @param winners
+	 */
 	private void awardWinner(ArrayList<PokerPlayer> winners) { 
+		
 		if (winners.size() == 1){
-			//declarewinner(winners);
-			UI.printout(winners.get(0).toString() + " wins with a " + winners.get(0).getHandType());
+			UI.printout(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
+			UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			winners.get(0).awardChips(pot);
+			pot = 0;
 		}
+		
 		else {
-			//splitPot(winners);
-			UI.printout("lol");
+			
+			for (int i=0; i<winners.size(); i++){
+				UI.printout(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
+			}
+			
+			for (int i=0; i< winners.size(); i++){
+				winners.get(i).awardChips(pot/winners.size());
+				UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			}
 		}
 	}
 	private TwitterInteraction getTwitter(){
@@ -238,28 +257,31 @@ public class HandOfPoker {
 	/*
 	 * Initialises and plays two separate instances of a hand of poker 
 	 */
-	public void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException {
 		DeckOfCards deck = new DeckOfCards();
 		OutputTerminal console = new OutputTerminal();
 		int ante = 1;
+		//TwitterFactory twitterO = new TwitterFactory();
+		//TwitterStreamer twitterS = new TwitterStreamer();
+		TwitterInteraction testTwitteri = new TwitterInteraction(TwitterStreamer.twitter);
 		
 		ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>(5);
 		
 		for(int i=0;i<5;i++){
-			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, twitter);
+			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, testTwitteri);
 			players.add(computerPlayer);			
 		}
 		
 		// First hand of poker
 		new HandOfPoker(players, ante, deck, console);
-		console.printout("\n\n\n" +
+		new HandOfPoker(players, ante, deck, console);
+		/*console.printout("\n\n\n" +
 				"~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
 				"\n\n\n"
 				);
 		
 		// Second hand
-		new HandOfPoker(players, ante, deck, console);
-		console.printout("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		console.printout("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~");*/
 	}
 
 }

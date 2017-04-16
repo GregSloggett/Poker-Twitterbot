@@ -86,6 +86,10 @@ public abstract class PokerPlayer {
 	
 	public abstract boolean showCards(PokerPlayer handWinner);
 	
+	public void awardChips(int amountWon) {
+		playerPot += amountWon;
+	}
+	
 /*	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
 		/*
