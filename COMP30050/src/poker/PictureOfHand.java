@@ -1,5 +1,6 @@
 package poker;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,9 @@ public class PictureOfHand {
 		 
 		Image Scaled1 = null;
         BufferedImage finalHand = new BufferedImage(475, 250, BufferedImage.TYPE_INT_RGB); 
+        
         Graphics2D bgr = finalHand.createGraphics();
+        bgr.setBackground(Color.GREEN);;
     	
         	for(int i =0;i<5;i++){
         		

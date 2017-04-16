@@ -92,6 +92,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 					int discardedCard = readinMultipleInt(discardedCardString).get(0);
 					if (discardedCard > 0 && discardedCard <= 5) {
 						this.hand.replaceCardFromDeck(discardedCard - 1);
+						this.hand.sort();
+						twitter.updateStatusWithTextAndImage("Here is your updated hand goodluck!", pic.createImage(this.hand)  );
+
 					} else {
 						//output.printout("Sorry this isnt a valid card..");
 						twitter.updateStatus("Sorry this isnt a valid card..");
@@ -111,6 +114,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 							this.hand.replaceCardFromDeck(discardedCard.get(i)-1);
 						}
 						this.hand.sort();
+						twitter.updateStatusWithTextAndImage("Here is your updated hand! Good Luck!!", pic.createImage(this.hand)  );
+
 
 					}else{
 						//output.printout("Sorry one of the card positions you entered is invalid");
