@@ -9,7 +9,7 @@ public class HandOfPoker {
 	final private static int OPENING_HAND = HandOfCards.ONE_PAIR_DEFAULT;
 	public static int highBet = 0;
 
-	ArrayList<PokerPlayer> players;
+	private ArrayList<PokerPlayer> players;
 	int ante;
 	public static int pot;
 	OutputTerminal UI;
@@ -32,7 +32,7 @@ public class HandOfPoker {
 	}
 	
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, TwitterInteraction t){
-		this.players = players;
+		this.players.addAll(players);
 		this.ante = ante;
 		this.UI = UI;
 		this.twitter = t;
@@ -56,13 +56,15 @@ public class HandOfPoker {
 		pot += takeBets();
 		highBet = 0;
 		displayPot();
-		// TODO: if >1 player not folded
-		discardCards();
-		displayPot();
-		pot += takeBets();
-		displayPot();
-		// TODO: if >1 player not folded
-		showCards();
+		if (players.size() > 1){
+			discardCards();
+			displayPot();
+			pot += takeBets();
+			displayPot();
+			if (players.size() >1){
+				showCards();
+			}
+		}
 		awardWinner(calculateWinners());
 	}
 
@@ -117,34 +119,87 @@ public class HandOfPoker {
 	/**
 	 * Takes bets from players. Players can fold their hands here.
 	 * @return Number of chips to be added to the pot
-	 * TODO: Take bets from players and remove random
 	 * TODO: Should be a nested loop for going around the table until all bets are seen or folded
 	 */
 	private int takeBets() {
 		int totalBets =0;
 		UI.printout("## Place your bets!");
 		
+		boolean raisedBet = false;
+		int lastRaise = 0;
+		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent palyer[i]'s bet
+		
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
-		for (int i=0; i<players.size(); i++){
-			// End Result should be: bets += players.get(i).getBet();
-			//Random rand = new Random();
+		for (int i=0; i<players.size() +1 ; i++){
 			
+			int playerIndex = (i+1) % players.size();
 
-			int bet = players.get(i).getBet();
+			int bet = players.get(playerIndex).getBet();
 			if(bet > highBet){  //should be reset after each round of betting
+				if (i >0){
+					raisedBet = true;
+				}
 				highBet = bet;
+				lastRaise = i;
 			}
 			
 			totalBets += bet;
-			if(bet == 0){
-				UI.printout(players.get(i).playerName + " folds.\n");
+			
+			if (i == players.size() -1 && playersNotFolded.isEmpty()){
+				UI.printout("Everyone else has folded!");
+				playersNotFolded.add(players.get(playerIndex));
+			}
+			else if (bet == 0){
+				UI.printout(players.get(playerIndex).playerName + " folds.\n");
 			}
 			else{
-				UI.printout(players.get(i).playerName + " bets " + bet + "\n");
-				playersNotFolded.add(players.get(i));
+				UI.printout(players.get(playerIndex).playerName + " bets " + bet + "\n");
+				playersNotFolded.add(players.get(playerIndex));
+				betRecord.add(bet);
 			}
 		}
-		players = playersNotFolded;
+		players.clear();
+		players.addAll(playersNotFolded);
+		UI.printout("~~~");
+		
+		/*
+		System.out.println(players);
+		System.out.println("highBet = " + highBet);
+		System.out.println("lastRaise = " + lastRaise);
+		System.out.println("raisedBet = " + raisedBet);
+		System.out.println(betRecord);
+		*/
+		
+		if (raisedBet && players.size() > 1){/* TODO Fix if the first player can raise bet
+			if (lastRaise == 0){
+				lastRaise = players.size();
+			}*/
+			
+			playersNotFolded.clear();
+
+			//System.out.println("BBBB" + players.size());
+			
+			for (int i=0; i<players.size(); i++) {
+				// TODO Change this to a bet that can only be seen 
+				//System.out.println("AAAAA");
+				UI.printout(" Checking if " + players.get(i).playerName + " will see.");
+				int bet = players.get(i).getBet();
+				
+				if ((bet >= highBet && i<lastRaise) || (lastRaise ==0 && i != lastRaise)  || (i == players.size()-1 && playersNotFolded.size() ==0)){
+					int betDifference = highBet - betRecord.get(i);
+					totalBets += betDifference;
+					UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
+					playersNotFolded.add(players.get(i));
+				}
+			}
+			
+
+			players = playersNotFolded;
+		}
+		
+
+		UI.printout("~~~");
+		
 		return totalBets;
 	}
 	
@@ -158,7 +213,7 @@ public class HandOfPoker {
 			int discardedCount = players.get(i).hand.discard();
 			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
-		UI.printout("Players are redealt their cards.");
+		UI.printout("\n\n## Players are redealt their cards.");
 	}
 	
 	/**
@@ -243,6 +298,7 @@ public class HandOfPoker {
 			}
 		}
 	}
+	
 	private TwitterInteraction getTwitter(){
 		return twitter;
 	}
@@ -273,6 +329,8 @@ public class HandOfPoker {
 		}
 		
 		// First hand of poker
+		new HandOfPoker(players, ante, deck, console);
+		new HandOfPoker(players, ante, deck, console);
 		new HandOfPoker(players, ante, deck, console);
 		new HandOfPoker(players, ante, deck, console);
 		/*console.printout("\n\n\n" +
