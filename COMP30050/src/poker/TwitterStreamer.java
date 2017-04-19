@@ -161,7 +161,9 @@ public class TwitterStreamer {
 
 	
 	public static void main(String[] args) throws InterruptedException, TwitterException {
-		//StartHashtagStream();
+		StartHashtagStream();
+		
+		/*
 		TwitterInteraction t = new TwitterInteraction(twitter,(twitter.updateStatus("Testing Compound Tweets in the next two tweets.")), "PokerFOAK");
 		DeckOfCards d = new DeckOfCards();
 		HumanPokerPlayer p = new HumanPokerPlayer(d,t);
@@ -180,7 +182,7 @@ public class TwitterStreamer {
 		t.appendToCompoundTweet("Compounding second tweet.");
 		t.appendToCompoundTweet("Posting.");
 		t.postCompoundTweet();
-		
+		*/
 	}
 	
 	
