@@ -21,7 +21,7 @@ public class PictureOfHand {
 
 		 
 		Image Scaled1 = null;
-        BufferedImage finalHand = new BufferedImage(475, 250, BufferedImage.TYPE_INT_RGB); 
+        BufferedImage finalHand = new BufferedImage(450, 200, BufferedImage.TYPE_INT_RGB); 
         
         Graphics2D bgr = finalHand.createGraphics();
         bgr.setBackground(Color.GREEN);;
