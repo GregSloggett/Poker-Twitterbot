@@ -42,6 +42,7 @@ public class DeckOfCards {
 	 * Note: Do not shuffle without resetting
 	 */
 	public void shuffle(){
+		System.out.println("got into shuffle");
 		Random rand = new Random(System.currentTimeMillis());
 		for(int i=0; i<(deck.length*deck.length); i++){
 			int index1, index2;
@@ -53,7 +54,7 @@ public class DeckOfCards {
 			PlayingCard temp = deck[index1];
 			deck[index1] = deck[index2];
 			deck[index2] = temp;
-		}
+		System.out.println("deck was shuffled in DeckOfCards");}
 	}
 	
 	/**

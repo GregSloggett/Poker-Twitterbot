@@ -35,12 +35,14 @@ public class HandOfPoker {
 		this.players.addAll(players);
 		this.ante = ante;
 		this.twitter = t;
-		
+		this.deck = deck;
+		/*
 		try {
-			gameLoop();
+			//gameLoop();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 	/**
@@ -48,12 +50,16 @@ public class HandOfPoker {
 	 * @return
 	 * @throws InterruptedException 
 	 */
-	private void gameLoop() throws InterruptedException {
+	void gameLoop() throws InterruptedException {
+		System.out.println("getting into gameLoop");
 		dealHandsUntilOpen();
+		System.out.println("game loop 1");
 		pot += collectAntes();
 		displayPot();
+		System.out.println("game loop 2");
 		pot += takeBets();
 		highBet = 0;
+		System.out.println("game loop 3");
 		displayPot();
 		if (players.size() > 1){
 			discardCards();
@@ -64,7 +70,12 @@ public class HandOfPoker {
 				showCards();
 			}
 		}
+		System.out.println("game loop 4");
+		
 		awardWinner(calculateWinners());
+		for(PokerPlayer p:players){
+			System.out.println("Hand for player "+p.toString()+" :"+p.hand);
+		}
 	}
 
 	/**
@@ -74,9 +85,14 @@ public class HandOfPoker {
 	 */
 	private void dealHandsUntilOpen() throws InterruptedException {
 		do {
+			System.out.println("got into dealhandsuntilopen");
+			System.out.println("checking if null");
+			System.out.println(deck==null);
 			deck.shuffle();
+			System.out.println("deck was shuffled");
 			deck.reset();
-			UI.printout("Dealing hands...");
+			System.out.println("deck was reset");
+			twitter.appendToCompoundTweet("Dealing hands...");
 			for (int i=0; i<players.size(); i++){
 				players.get(i).dealNewHand();
 			}
@@ -92,12 +108,12 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
-				UI.printout("Player "+ players.get(i).playerName + " says I can open!\n");
+				twitter.appendToCompoundTweet("Player "+ players.get(i).playerName + " says I can open!\n");
 				break;
 			}
 		}
 		if (!openingHand){
-			UI.printout("Nobody can open this round.");
+			twitter.appendToCompoundTweet("Nobody can open this round.");
 		}
 		return openingHand;
 	}
@@ -110,7 +126,7 @@ public class HandOfPoker {
 		int antesTotal =0;
 		for (int i=0; i<players.size(); i++){
 			antesTotal += ante; // player.takeAnte(ante);
-			UI.printout(players.get(i).playerName + " paid " + ante + " chips for deal.");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " paid " + ante + " chips for deal.");
 		}
 		return antesTotal;
 	}
@@ -122,16 +138,18 @@ public class HandOfPoker {
 	 */
 	private int takeBets() {
 		int totalBets =0;
-		UI.printout("## Place your bets!\n");
-		
+		twitter.appendToCompoundTweet("## Place your bets!\n");
+		System.out.println("appended to tweet");
 		boolean raisedBet = false;
 		int lastRaise = 0;
 		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
 		
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
+		System.out.println("going into for loop");
 		for (int i=0; i<players.size() ; i++){
 			
 			int bet = players.get(i).getBet();
+			System.out.println("got bets");
 			if(bet > highBet){  //should be reset after each round of betting
 				if (i >0){
 					raisedBet = true;
@@ -143,25 +161,25 @@ public class HandOfPoker {
 			totalBets += bet;
 			
 			if (i == players.size() -1 && playersNotFolded.isEmpty()){
-				UI.printout("Everyone else has folded!");
+				twitter.appendToCompoundTweet("Everyone else has folded!");
 				playersNotFolded.add(players.get(i));
 			}
 			else if (bet == 0){
-				UI.printout(players.get(i).playerName + " folds.\n");
+				twitter.appendToCompoundTweet(players.get(i).playerName + " folds.\n");
 			}
 			else{
-				UI.printout(players.get(i).playerName + " bets " + bet + "\n");
+				twitter.appendToCompoundTweet(players.get(i).playerName + " bets " + bet + "\n");
 				playersNotFolded.add(players.get(i));
 				betRecord.add(bet);
 			}
 		}
 		
-		
+		System.out.println("got through for loop in takeBets");
 
-		UI.printout("## Betting comes back around and \n");
+		twitter.appendToCompoundTweet("## Betting comes back around and \n");
 		players.clear();
 		players.addAll(playersNotFolded);
-		UI.printout("~~~");
+		twitter.appendToCompoundTweet("~~~");
 		
 		// If there was a raise after the first player, they can raise again
 		boolean foldedFirstPlayer = false;
@@ -171,11 +189,11 @@ public class HandOfPoker {
 			if(bet > highBet){
 				highBet = bet;
 				lastRaise = 0;
-				UI.printout(players.get(0).playerName + " finally bets " + bet + "\n");
+				twitter.appendToCompoundTweet(players.get(0).playerName + " finally bets " + bet + "\n");
 				betRecord.set(0, bet);
 			}
 			else if (bet == 0){
-				UI.printout(players.get(0).playerName + " folds.\n");
+				twitter.appendToCompoundTweet(players.get(0).playerName + " folds.\n");
 				foldedFirstPlayer = true;
 				players.remove(players.get(0));
 				betRecord.remove(0);
@@ -183,7 +201,7 @@ public class HandOfPoker {
 			else {
 				int betDifference = highBet - betRecord.get(0);
 				totalBets += betDifference;
-				UI.printout(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
+				twitter.appendToCompoundTweet(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
 			}
 		}
 		
@@ -203,13 +221,13 @@ public class HandOfPoker {
 			for (; i<players.size(); i++) {
 				// TODO Change this to a bet that can only be seen 
 				//System.out.println("AAAAA");
-				UI.printout(" Checking if " + players.get(i).playerName + " will see.");
+				twitter.appendToCompoundTweet(" Checking if " + players.get(i).playerName + " will see.");
 				int bet = players.get(i).getBet();
 				
 				if ((bet >= highBet && i<lastRaise) || (lastRaise ==0 && i != lastRaise)  || (i == players.size()-1 && playersNotFolded.size() ==0)){
 					int betDifference = highBet - betRecord.get(i);
 					totalBets += betDifference;
-					UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
+					twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
 					playersNotFolded.add(players.get(i));
 				}
 			}
@@ -220,7 +238,7 @@ public class HandOfPoker {
 		}
 		
 
-		UI.printout("~~~");
+		twitter.appendToCompoundTweet("~~~");
 		
 		return totalBets;
 	}
@@ -233,9 +251,9 @@ public class HandOfPoker {
 	private void discardCards() throws InterruptedException {
 		for (int i=0; i<players.size(); i++){
 			int discardedCount = players.get(i).hand.discard();
-			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
-		UI.printout("\n\n## Players are redealt their cards.");
+		twitter.appendToCompoundTweet("\n\n## Players are redealt their cards.");
 	}
 	
 	/**
@@ -245,7 +263,7 @@ public class HandOfPoker {
 		PokerPlayer handWinner = getHandWinner();
 		
 		for (int i=0; i<players.size(); i++){
-			UI.printout(players.get(i).playerName + " says ");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " says ");
 			players.get(i).showCards(handWinner);
 		}
 	}
@@ -302,8 +320,8 @@ public class HandOfPoker {
 	private void awardWinner(ArrayList<PokerPlayer> winners) { 
 		
 		if (winners.size() == 1){
-			UI.printout(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
-			UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			twitter.appendToCompoundTweet(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
+			twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
 			winners.get(0).awardChips(pot);
 			pot = 0;
 		}
@@ -311,12 +329,12 @@ public class HandOfPoker {
 		else {
 			
 			for (int i=0; i<winners.size(); i++){
-				UI.printout(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
+				twitter.appendToCompoundTweet(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
 			}
 			
 			for (int i=0; i< winners.size(); i++){
 				winners.get(i).awardChips(pot/winners.size());
-				UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+				twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
 			}
 		}
 	}
@@ -329,7 +347,7 @@ public class HandOfPoker {
 	 * Shows the pot to the interface
 	 */
 	private void displayPot(){
-		UI.printout("\nThe pot has " + pot + " chips to play for.\n");
+		twitter.appendToCompoundTweet("\nThe pot has " + pot + " chips to play for.\n");
 	}
 	
 	/*

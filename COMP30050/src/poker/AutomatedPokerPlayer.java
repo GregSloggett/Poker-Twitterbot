@@ -88,7 +88,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		//if nobody has bet
 		if(HandOfPoker.highBet == 0){
-			output.printout("I bet " + betValue + " to start off the betting.");
+			twitter.appendToCompoundTweet("I bet " + betValue + " to start off the betting.");
 			return betValue;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
@@ -155,10 +155,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int see(int betValue){
 		betValue = HandOfPoker.highBet;
 		if(playerType < 4){
-			output.printout("Hmm, let me see. I see your " + betValue + " chips.");
+			twitter.appendToCompoundTweet("Hmm, let me see. I see your " + betValue + " chips.");
 		}
 		else{
-			output.printout("I think you're bluffing. I see your " + betValue + " chips.");			
+			twitter.appendToCompoundTweet("I think you're bluffing. I see your " + betValue + " chips.");			
 		}
 		return betValue;
 	}
@@ -170,10 +170,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		int raiseValue = betValue - HandOfPoker.highBet;
 		
 		if(playerType < 4){
-			output.printout("I can win this one, I raise the betting by " + raiseValue + " chips.");
+			twitter.appendToCompoundTweet("I can win this one, I raise the betting by " + raiseValue + " chips.");
 		}
 		else{
-			output.printout("I can't lose, I raise the betting by " + raiseValue + " chips.");
+			twitter.appendToCompoundTweet("I can't lose, I raise the betting by " + raiseValue + " chips.");
 		}
 		
 		return betValue;
@@ -185,7 +185,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int reRaise(int betValue){
 		int raiseValue = betValue - HandOfPoker.highBet;
 		
-		output.printout("I re-raise the betting by " + raiseValue + " chips.");
+		twitter.appendToCompoundTweet("I re-raise the betting by " + raiseValue + " chips.");
 		return betValue;
 	}
 
@@ -196,10 +196,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		betValue = 0;
 		
 		if(playerType < 4){
-			output.printout("My hand is weak, I fold.");
+			twitter.appendToCompoundTweet("My hand is weak, I fold.");
 		}
 		else{
-			output.printout("I fold.");
+			twitter.appendToCompoundTweet("I fold.");
 		}
 		return betValue;
 	}
@@ -222,19 +222,19 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		boolean wonRound = didWinThisHand(handWinner);
 		
 		if(playerBluffProbability > 75 && wonRound == true){
-			output.printout("I bluffed and I won! Here is my hand: " + this.hand + "\n");
+			twitter.appendToCompoundTweet("I bluffed and I won! Here is my hand: " + this.hand + "\n");
 			return true;
 		}
 		else if(wonRound == true){
-			output.printout("here is my winning hand: " + this.hand + "\n");
+			twitter.appendToCompoundTweet("here is my winning hand: " + this.hand + "\n");
 			return true;
 		}
 		else if(wonRound == false){
-			output.printout("I choose not to show my hand.\n");
+			twitter.appendToCompoundTweet("I choose not to show my hand.\n");
 			return false;
 		}
 		else{
-			output.printout("here is my hand: \n" + this.hand + "\n");
+			twitter.appendToCompoundTweet("here is my hand: \n" + this.hand + "\n");
 			return true;
 		}
 	}

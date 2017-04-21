@@ -41,7 +41,20 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	 * Should return the value of the bet for the human player.
 	 */
 	public int getBet(){
-		return 0;
+		System.out.println("getting human bet");
+		int ret = -1;
+		try {
+			System.out.println("getting inhandbet");
+			ret = inHandBet();
+			System.out.println("got inhand bet");
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
 	}
 	
 	/**
@@ -203,18 +216,23 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String callResponse = "Call";
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
-		
+		System.out.println("going into first if");
 		if(playerPot< HandOfPoker.highBet){
 			//output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
+			System.out.println("going to post sorry message");
 			twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
 					+" be split here and you can win up to this amount in the hand");
-			
+			System.out.println("posted sorry message");
 			splitPot = true;
 		}
 		if(HandOfPoker.pot == 0){
+			System.out.println("pot was 0");
 			this.openingBet();
+			System.out.println("ran opening bet");
 		}else{
+			System.out.println("got into else");
 			twitter.updateStatus("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to continue");
+			System.out.println("getting reply");
 			String Answer = twitter.waitForTweet();
 			if(Answer.equalsIgnoreCase(callResponse)){
 				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");

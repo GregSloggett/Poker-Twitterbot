@@ -55,14 +55,17 @@ public class TwitterStreamer {
 							DeckOfCards d = new DeckOfCards();
 							String nick = status.getUser().getScreenName();
 							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
-							HumanPokerPlayer p = new HumanPokerPlayer(d,t);
-							gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t));
+							GameOfPoker g = new GameOfPoker(status.getUser().getScreenName(),t,d);
+							//gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t,d));
 							//waitForTweet(status);
 
 							//p.run();
 							//Thread thread = new Thread(p);
 							//thread.start();
-							executor.execute(p);
+							//executor.execute(g);
+							Thread thread = new Thread(g);
+							System.out.println("trying to run game");
+							g.run();
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{
@@ -162,6 +165,7 @@ public class TwitterStreamer {
 
 	public static void main(String[] args) throws InterruptedException, TwitterException {
 		StartHashtagStream();
+		/*
 		TwitterInteraction t = new TwitterInteraction(twitter, twitter.updateStatus("Testing splitting tweets in the next few tweets."),"PokerFOAK");
 		
 		for(int i=0;i<10;i++){
@@ -169,7 +173,7 @@ public class TwitterStreamer {
 			t.appendToCompoundTweet("Line "+i+" to check splitting tweets.");
 		}
 		t.postCompoundTweet();
-
+*/
 		/*
 		TwitterInteraction t = new TwitterInteraction(twitter,(twitter.updateStatus("Testing Compound Tweets in the next two tweets.")), "PokerFOAK");
 		DeckOfCards d = new DeckOfCards();
