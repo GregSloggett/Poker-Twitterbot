@@ -40,14 +40,14 @@ public class TwitterStreamer {
 					if(containsIgnoreCase(status.getText(),"FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
-							
+
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game!");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("replyStatus is replying to tweet: "+replyStatus.getInReplyToStatusId());
 							Status latestTweet = twitter.updateStatus(replyStatus);
-							
+
 							System.out.println("2");
 							usersPlayingGames.put(status.getUser().getScreenName(), true);
 							System.out.println("3");
@@ -58,7 +58,7 @@ public class TwitterStreamer {
 							HumanPokerPlayer p = new HumanPokerPlayer(d,t);
 							gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t));
 							//waitForTweet(status);
-							
+
 							//p.run();
 							//Thread thread = new Thread(p);
 							//thread.start();
@@ -138,56 +138,63 @@ public class TwitterStreamer {
 		String keywords[] = {"#FOAKDeal","#FOAKLeave","#FOAKDEAL","#FOAKLEAVE","#foakdeal", "#foakleave","#FOAKdeal","#FOAKleave"};
 
 		filter.track(keywords);      
-		
+
 
 		twitterStream.addListener(statusListener);
 		twitterStream.filter(filter);          
 	}  
-	
+
 	public static boolean containsIgnoreCase(String str, String searchStr)     {
-	    if(str == null || searchStr == null) return false;
+		if(str == null || searchStr == null) return false;
 
-	    final int length = searchStr.length();
-	    if (length == 0)
-	        return true;
+		final int length = searchStr.length();
+		if (length == 0)
+			return true;
 
-	    for (int i = str.length() - length; i >= 0; i--) {
-	        if (str.regionMatches(true, i, searchStr, 0, length))
-	            return true;
-	    }
-	    return false;
+		for (int i = str.length() - length; i >= 0; i--) {
+			if (str.regionMatches(true, i, searchStr, 0, length))
+				return true;
+		}
+		return false;
 	}
-	
 
-	
+
+
 	public static void main(String[] args) throws InterruptedException, TwitterException {
 		StartHashtagStream();
+		TwitterInteraction t = new TwitterInteraction(twitter, twitter.updateStatus("Testing splitting tweets in the next few tweets."),"PokerFOAK");
 		
+		for(int i=0;i<10;i++){
+			System.out.println("getting here");
+			t.appendToCompoundTweet("Line "+i+" to check splitting tweets.");
+		}
+		t.postCompoundTweet();
+
 		/*
 		TwitterInteraction t = new TwitterInteraction(twitter,(twitter.updateStatus("Testing Compound Tweets in the next two tweets.")), "PokerFOAK");
 		DeckOfCards d = new DeckOfCards();
 		HumanPokerPlayer p = new HumanPokerPlayer(d,t);
 		AutomatedPokerPlayer a = new AutomatedPokerPlayer(d,t);
-		
+
 		Thread.sleep(15000);
-		
+
 		t.appendToCompoundTweet("This is from the TwitterStreamer Class");
 		p.testAppendString();
 		a.testAppendString();
 		t.postCompoundTweet();
-		
+
 		Thread.sleep(10000);
-		
+
 		t.appendToCompoundTweet("Testing that first compound tweet has been cleared");
 		t.appendToCompoundTweet("Compounding second tweet.");
 		t.appendToCompoundTweet("Posting.");
 		t.postCompoundTweet();
-		*/
+		 */
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 }
