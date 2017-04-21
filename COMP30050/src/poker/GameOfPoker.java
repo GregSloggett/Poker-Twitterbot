@@ -59,39 +59,17 @@ public class GameOfPoker implements Runnable{
 	@Override
 	public void run() {
 		System.out.println("getting into run");
-		HandOfPoker hop = new HandOfPoker(players,ante,deck,twitter);
-		while(!playerWin && !playerLose && continueGame){
-			System.out.println("getting into game loop");
-			try {
-				hop.gameLoop();
-			} catch (InterruptedException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+		
+		try {
+			while(!playerWin && !playerLose && continueGame){
+				HandOfPoker hop = new HandOfPoker(players,ante,deck,twitter);
 			}
-			System.out.println("went through hand of poker");
-			try {
-				twitter.postCompoundTweet();
-			} catch (TwitterException e1) {
-				e1.printStackTrace();
-			}
-			
-			
-			/*
-			try {
-				humanPlayer.discard();
-				players.remove(0);
-				players.add(0, humanPlayer);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TwitterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

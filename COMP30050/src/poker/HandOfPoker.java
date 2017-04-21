@@ -1,7 +1,9 @@
 package poker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 public class HandOfPoker {
@@ -15,7 +17,8 @@ public class HandOfPoker {
 	OutputTerminal UI;
 	DeckOfCards deck;
 	TwitterInteraction twitter;
-	
+	HumanPokerPlayer human;
+	/*
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, OutputTerminal UI){
 		this.players = new ArrayList<PokerPlayer>();
 		this.players.addAll(players);
@@ -29,28 +32,32 @@ public class HandOfPoker {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
-	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, TwitterInteraction t){
+	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, TwitterInteraction t) throws TwitterException, IOException{
 		this.players = new ArrayList<PokerPlayer>();
 		this.players.addAll(players);
 		this.ante = ante;
 		this.twitter = t;
 		this.deck = deck;
-		/*
+		this.human = (HumanPokerPlayer) players.get(0);
+		
 		try {
-			//gameLoop();
+			gameLoop();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		*/
+		
 	}
 	
 	/**
 	 * Runs the events of the game from a very high level
 	 * @return
 	 * @throws InterruptedException 
+	 * @throws IOException 
+	 * @throws TwitterException 
 	 */
-	void gameLoop() throws InterruptedException {
+	void gameLoop() throws InterruptedException, TwitterException, IOException {
 		System.out.println("getting into gameLoop");
 		dealHandsUntilOpen();
 		System.out.println("game loop 1");
@@ -58,11 +65,15 @@ public class HandOfPoker {
 		displayPot();
 		System.out.println("game loop 2");
 		pot += takeBets();
+		twitter.postCompoundTweet();
+		discardCards();
 		highBet = 0;
 		System.out.println("game loop 3");
 		displayPot();
+		twitter.postCompoundTweet();
+		System.out.println("number of players "+players.size());
 		if (players.size() > 1){
-			discardCards();
+			//discardCards();
 			displayPot();
 			pot += takeBets();
 			displayPot();
@@ -73,9 +84,6 @@ public class HandOfPoker {
 		System.out.println("game loop 4");
 		
 		awardWinner(calculateWinners());
-		for(PokerPlayer p:players){
-			System.out.println("Hand for player "+p.toString()+" :"+p.hand);
-		}
 	}
 
 	/**
@@ -247,9 +255,13 @@ public class HandOfPoker {
 	 * All players discard up to three cards from their hand and re-deal themselves 
 	 * and are re-dealt three from the deck
 	 * @throws InterruptedException 
+	 * @throws IOException 
+	 * @throws TwitterException 
 	 */
-	private void discardCards() throws InterruptedException {
-		for (int i=0; i<players.size(); i++){
+	private void discardCards() throws InterruptedException, TwitterException, IOException {
+		human.discard();
+		players.set(0, human);
+		for (int i=1; i<players.size(); i++){
 			int discardedCount = players.get(i).hand.discard();
 			twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
@@ -369,10 +381,12 @@ public class HandOfPoker {
 		}
 		
 		// First hand of poker
+		/*
 		new HandOfPoker(players, ante, deck, console);
 		new HandOfPoker(players, ante, deck, console);
 		new HandOfPoker(players, ante, deck, console);
 		new HandOfPoker(players, ante, deck, console);
+		*/
 		/*console.printout("\n\n\n" +
 				"~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
 				"\n\n\n"

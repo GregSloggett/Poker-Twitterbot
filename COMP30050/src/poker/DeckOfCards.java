@@ -9,7 +9,7 @@ public class DeckOfCards {
 	private int cardsDealt;
 	private PlayingCard[] deck;
 	private Semaphore dealerAvailable;
-	
+
 	/*
 	 * Constructor initializes internal fields of deck and semaphore
 	 * Shuffles and resets deck to leave ready for play
@@ -20,7 +20,7 @@ public class DeckOfCards {
 		shuffle();
 		reset();
 	}
-	
+
 	/**
 	 * Returns next non-dealt card and increments cardsDealt index
 	 * Uses the semaphore to lock down a critical section in case parallel access occurs
@@ -35,7 +35,7 @@ public class DeckOfCards {
 		dealerAvailable.release();
 		return outputCard;
 	}
-	
+
 	/**
 	 * Shuffles the deck by randomly selecting two card indexes in the deck array and swapping the cards
 	 * This is repeated by the size of the deck squared times to ensure the deck is thoroughly shuffled
@@ -50,13 +50,13 @@ public class DeckOfCards {
 				index1 = rand.nextInt(deck.length);
 				index2 = rand.nextInt(deck.length);
 			} while (index1 == index2);
-			
+
 			PlayingCard temp = deck[index1];
 			deck[index1] = deck[index2];
 			deck[index2] = temp;
-		System.out.println("deck was shuffled in DeckOfCards");}
+		}
 	}
-	
+
 	/**
 	 * Returns a card to the bottom of the deck.
 	 * Uses semaphore to ensure parallel access is not an issue
@@ -77,7 +77,7 @@ public class DeckOfCards {
 		cardsDealt--;
 		dealerAvailable.release();;
 	}
-	
+
 	/**
 	 * Sets cards dealt to zero
 	 * Cards will need to be shuffled for a new game
@@ -85,18 +85,18 @@ public class DeckOfCards {
 	public void reset(){
 		cardsDealt = 0;
 	}
-	
+
 	/*
 	 * Main method tests the deck
 	 * Simply run and read the error status at the bottom of the console  
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		boolean errorFound = false;
 		DeckOfCards testDeck = new DeckOfCards();
 		ArrayList<PlayingCard> cardsDealt = new ArrayList<PlayingCard>();
 		ArrayList<PlayingCard> discardedCards = new ArrayList<PlayingCard>();
-		
+
 		// First we check dealing all the cards without discarding any that none are repeated
 		for (int i=0; i<52 ; i++){
 			PlayingCard nextCard = testDeck.dealNext();
@@ -107,13 +107,13 @@ public class DeckOfCards {
 			}
 			cardsDealt.add(nextCard);
 		}
-		
+
 		// We check that deck returns a null when all cards are dealt
 		if (testDeck.dealNext() != null){
 			System.out.println("ERROR: DECK DEALING CARDS WHEN NONE ARE LEFT, SHOULD DEAL NULL");
 			errorFound = true;
 		}
-		
+
 		// Reset deck and cards dealt
 		testDeck.reset();
 		cardsDealt.clear();
@@ -122,13 +122,13 @@ public class DeckOfCards {
 		for (int i=0; i<26 ; i++){
 			PlayingCard nextCard = testDeck.dealNext();
 			System.out.println(nextCard.toString());
-			
+
 			//Make sure that no repeats come back to us
 			if (cardsDealt.contains(nextCard)){
 				System.out.println("ERROR: DECK DEALING CARDS ALREADY DEALT");
 				errorFound = true;
 			}
-			
+
 			// Check that we get all original cards before the discarded cards come back
 			if (discardedCards.contains(nextCard)){
 				System.out.println("ERROR: DECK DEALING CARDS RETURNED IMMEDIATELY");
@@ -139,7 +139,7 @@ public class DeckOfCards {
 			testDeck.returnCard(nextCard);
 			discardedCards.add(nextCard);
 		}
-		
+
 		// Check that the discarded cards begin to deal when the deck is through and that no repeats happen
 		for(int i=0; i<26; i++){
 			PlayingCard nextCard = testDeck.dealNext();
@@ -153,13 +153,13 @@ public class DeckOfCards {
 			}
 			cardsDealt.add(nextCard);
 		}
-		
+
 		// Check that a null is dealt when all these are dealt too
 		if (testDeck.dealNext() != null){
 			System.out.println("ERROR: DECK DEALING CARDS WHEN NONE ARE LEFT, SHOULD DEAL NULL");
 			errorFound = true;
 		}
-		
+
 		// Print error status
 		if (errorFound){
 			System.out.println("###Error found, please check above in console for cause.");
