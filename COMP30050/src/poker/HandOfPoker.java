@@ -18,6 +18,7 @@ public class HandOfPoker {
 	DeckOfCards deck;
 	TwitterInteraction twitter;
 	HumanPokerPlayer human;
+
 	/*
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, OutputTerminal UI){
 		this.players = new ArrayList<PokerPlayer>();
@@ -42,6 +43,7 @@ public class HandOfPoker {
 		this.deck = deck;
 		this.human = (HumanPokerPlayer) players.get(0);
 		
+		
 		try {
 			gameLoop();
 		} catch (InterruptedException e) {
@@ -61,8 +63,17 @@ public class HandOfPoker {
 		System.out.println("getting into gameLoop");
 		dealHandsUntilOpen();
 		System.out.println("game loop 1");
+		System.out.println("\n\n\n\n\n\n***********************\n" +players +"\n\n\n\n\n\n***********************\n");
+		twitter.appendToCompoundTweet(human.hand.toString());
+		twitter.postCompoundTweet();
+		System.out.println("################################################################");
+		//twitter.updateStatusWithTextAndImage("Here are your cards!", human.pic.createImage(human.hand)  );
+		
+		System.out.println("\n\n\n\n\n\n***********************\n2\n" +players +"\n\n\n\n\n\n***********************\n");
+		twitter.postCompoundTweet();
 		pot += collectAntes();
 		displayPot();
+		twitter.postCompoundTweet();
 		System.out.println("game loop 2");
 		pot += takeBets();
 		twitter.postCompoundTweet();
@@ -117,6 +128,7 @@ public class HandOfPoker {
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
 				twitter.appendToCompoundTweet("Player "+ players.get(i).playerName + " says I can open!\n");
+				System.out.println("Player "+ players.get(i).playerName + " says I can open!\n");
 				break;
 			}
 		}
@@ -143,10 +155,12 @@ public class HandOfPoker {
 	 * Takes bets from players. Players can fold their hands here.
 	 * @return Number of chips to be added to the pot
 	 * TODO: Should be a nested loop for going around the table until all bets are seen or folded
+	 * @throws TwitterException 
 	 */
-	private int takeBets() {
+	private int takeBets() throws TwitterException {
 		int totalBets =0;
 		twitter.appendToCompoundTweet("## Place your bets!\n");
+		twitter.postCompoundTweet();
 		System.out.println("appended to tweet");
 		boolean raisedBet = false;
 		int lastRaise = 0;
@@ -181,6 +195,8 @@ public class HandOfPoker {
 				betRecord.add(bet);
 			}
 		}
+		
+		twitter.postCompoundTweet();
 		
 		System.out.println("got through for loop in takeBets");
 

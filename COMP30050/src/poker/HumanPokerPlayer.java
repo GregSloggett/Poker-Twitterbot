@@ -234,6 +234,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			twitter.updateStatus("The pot is at " + HandOfPoker.pot + " Do you want to 'call', 'raise', or 'fold', reply with any of these words to continue");
 			System.out.println("getting reply");
 			String Answer = twitter.waitForTweet();
+			
+			System.out.println("\n\n\n\n\n@@@@@@@@@@@@@@@@@@" + Answer + "\n\n\n");
+			
 			if(Answer.equalsIgnoreCase(callResponse)){
 				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
 				twitter.updateStatus("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
