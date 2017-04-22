@@ -1,27 +1,53 @@
 package poker;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Random;
-
 
 
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private static int playerType;
 	private int playerBluffProbability;
 	public static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
-	public static final int FILE_OF_NAMES_LENGTH = 157;
+	public static final String COCKY_PLAYER_QUOTES = "src/PlayerQuotes/CockyPlayerRaiseQuotes.txt";
 	private static TwitterInteraction twitter;
 	
 	OutputTerminal output = new OutputTerminal();
 	
 	public AutomatedPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
-		playerName = getPlayerName();
+		playerName = getPlayerName(FILE_OF_NAMES);
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
 		twitter = t;
 		
+	}
+	
+	public static int countLines(String f) throws IOException {
+	    InputStream is = new BufferedInputStream(new FileInputStream(f));
+	    try {
+	        byte[] c = new byte[1024];
+	        int count = 0;
+	        int readChars = 0;
+	        boolean empty = true;
+	        while ((readChars = is.read(c)) != -1) {
+	            empty = false;
+	            for (int i = 0; i < readChars; ++i) {
+	                if (c[i] == '\n') {
+	                    ++count;
+	                }
+	            }
+	        }
+	        return (count == 0 && !empty) ? 1 : count;
+	    } finally {
+	        is.close();
+	    }
 	}
 	
 	public static int getPlayerType() {
@@ -29,25 +55,47 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return playerType;
 	}
 	
+	public String getCockyPlayerRaiseQuote(){
+		String quote = null;
+		try{
+			quote = getRandomLineFromFile(COCKY_PLAYER_QUOTES);
+		}
+		catch (Exception e){
+			quote = "I can't lose, ";
+		}
+		return quote;		
+	}
+	
+	public String getRandomLineFromFile(String filename){
+		String out = "";
+		try{
+			Random rand = new Random();
+			int number_line = rand.nextInt(countLines(filename));
+			@SuppressWarnings("resource")
+			BufferedReader read = new BufferedReader(new FileReader(filename));
+			String line;
+			for(int i=0; i<=number_line; i++){
+				line = read.readLine();
+				if(i==number_line){
+					out = line;
+				}
+			}
+			return out;
+		}
+		catch(Exception e){
+			return out;
+		}
+	}
+	
 	/**
 	 * Retrieves a random name from the FILE_OF_NAMES for this 
 	 * automated poker player.
 	 * @return
 	 */
-	private String getPlayerName() {
+	private String getPlayerName(String fileOfNames) {
 		String playerName = null;
 		try{
-			Random rand = new Random();
-			int number_line = rand.nextInt(FILE_OF_NAMES_LENGTH);
-			BufferedReader read = new BufferedReader(new FileReader(FILE_OF_NAMES));
-			String line;
-			for(int i=0; i<=number_line; i++){
-				line = read.readLine();
-				if(i==number_line){
-					playerName = line;
-				}
-			}
-			read.close();
+			playerName = getRandomLineFromFile(fileOfNames);
 		}
 		catch (Exception e){
 			playerName = "Bot Player";
@@ -93,7 +141,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		//if nobody has bet
 		if(HandOfPoker.highBet == 0){
-			twitter.appendToCompoundTweet("I bet " + betValue + " to start off the betting.");
+			twitter.appendToCompoundTweet("I bet " + betValue + " to start.");
 			return betValue;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
@@ -160,10 +208,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int see(int betValue){
 		betValue = HandOfPoker.highBet;
 		if(playerType < 4){
-			twitter.appendToCompoundTweet("Hmm, let me see. I see your " + betValue + " chips.");
+			twitter.appendToCompoundTweet("I'm not confident but I'll see your " + betValue + " chips.");
 		}
 		else{
-			twitter.appendToCompoundTweet("I think you're bluffing. I see your " + betValue + " chips.");			
+			twitter.appendToCompoundTweet("You're bluffing. I see your " + betValue + " chips.");			
 		}
 		return betValue;
 	}
@@ -175,10 +223,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		int raiseValue = betValue - HandOfPoker.highBet;
 		
 		if(playerType < 4){
-			twitter.appendToCompoundTweet("I can win this one, I raise the betting by " + raiseValue + " chips.");
+			twitter.appendToCompoundTweet("I raise " + raiseValue + " chips.");
 		}
 		else{
-			twitter.appendToCompoundTweet("I can't lose, I raise the betting by " + raiseValue + " chips.");
+			twitter.appendToCompoundTweet(getCockyPlayerRaiseQuote() + " I raise the betting by " + raiseValue + " chips.");
 		}
 		
 		return betValue;
@@ -204,7 +252,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			twitter.appendToCompoundTweet("My hand is weak, I fold.");
 		}
 		else{
-			twitter.appendToCompoundTweet("I fold.");
+			twitter.appendToCompoundTweet("No luck, I fold.");
 		}
 		return betValue;
 	}
@@ -248,18 +296,39 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
 	}
 
-	public static void main(String[] args) throws InterruptedException{
+	public static void main(String[] args) throws InterruptedException, IOException{
+				
 		DeckOfCards deck = new DeckOfCards();
 		TwitterInteraction t = new TwitterInteraction(TwitterStreamer.twitter);
-		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
 		OutputTerminal out = new OutputTerminal();
+		
+		ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
+		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
+		AutomatedPokerPlayer playerTwo = new AutomatedPokerPlayer(deck, t);
+		AutomatedPokerPlayer playerThree = new AutomatedPokerPlayer(deck, t);
+		AutomatedPokerPlayer playerFour = new AutomatedPokerPlayer(deck, t);
+		
+		players.add(playerOne);
+		players.add(playerTwo);
+		players.add(playerThree);
+		players.add(playerFour);
+	
+		for(AutomatedPokerPlayer p : players){
+			out.printout(p.playerName + " " + p.playerType);
+			int temp = p.getBet();
+			if(temp > HandOfPoker.highBet){
+				HandOfPoker.highBet = temp;
+			}
+		}
+		
+		
 		
 		HandOfPoker.highBet = 0;
 
 		/*
 		 * Tests betting against high bet values for a number
 		 * of random hands for every player type.
-		 */
+		 
 		for(int j=0; j<10; j++){
 			
 			playerOne.dealNewHand();
@@ -274,5 +343,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			
 			HandOfPoker.highBet+=2;
 		}
+		*/
 	}
 }
