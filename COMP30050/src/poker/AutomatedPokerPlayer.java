@@ -7,7 +7,7 @@ import java.util.Random;
 
 
 public class AutomatedPokerPlayer extends PokerPlayer {
-	private int playerType;
+	private static int playerType;
 	private int playerBluffProbability;
 	public static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
 	public static final int FILE_OF_NAMES_LENGTH = 157;
@@ -22,6 +22,11 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		playerBluffProbability = getBluffProbability();
 		twitter = t;
 		
+	}
+	
+	public static int getPlayerType() {
+		// TODO Auto-generated method stub
+		return playerType;
 	}
 	
 	/**

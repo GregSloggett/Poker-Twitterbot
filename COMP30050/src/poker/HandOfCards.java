@@ -2,6 +2,9 @@ package poker;
 
 import java.util.Random;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+
 public class HandOfCards {
 	
 	/*
@@ -43,7 +46,18 @@ public class HandOfCards {
 		sort();
 	}
 	
+	public int getAutomatedPlayerType(){
+		int playerType = AutomatedPokerPlayer.getPlayerType();
+		System.out.println("playerType = " + playerType);
+		return playerType;
+	}
 	
+	public int increaseDiscardProbabilityValue(int discardProbability){
+		float playerTypeCalculation = (float) (1 + (1 - ((float)1/getAutomatedPlayerType())));
+		int newDiscardProbability = (int) (discardProbability*playerTypeCalculation);
+		
+		return newDiscardProbability;
+	}
 	
 	public int discard() throws InterruptedException{
 		int numCardsDiscarded = 0;
@@ -1244,7 +1258,7 @@ public class HandOfCards {
 			discardProbability = discardProbabilityHighHand(cardPosition);
 		}
 		
-		return discardProbability;
+		return increaseDiscardProbabilityValue(discardProbability);
 	}
 	
 
@@ -2051,6 +2065,10 @@ public class HandOfCards {
 	 * in the terminal after
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		DeckOfCards d = new DeckOfCards();
+		Twitter t1 = null;
+		TwitterInteraction t = new TwitterInteraction(t1);
+		AutomatedPokerPlayer one = new AutomatedPokerPlayer(d, t);
 		
 		//First make an array containing all cards to use in our tests
 		PlayingCard[][] allCardsArray = new PlayingCard[13][4];
