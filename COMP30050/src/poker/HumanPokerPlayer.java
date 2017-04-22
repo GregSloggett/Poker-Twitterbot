@@ -144,6 +144,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				twitter.updateStatus("OK lets continue...");
 			}
 	}
+	
+	
+	public void tweetInitialCards() throws TwitterException, IOException {
+		pic = new PictureOfHand();
+		twitter.updateStatusWithTextAndImage("These are your cards!", pic.createImage(this.hand)  );
+		
+	}
 
 	public ArrayList<Integer> readinMultipleInt(String input){	
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
@@ -235,7 +242,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			System.out.println("getting reply");
 			String Answer = twitter.waitForTweet();
 			
-			System.out.println("\n\n\n\n\n@@@@@@@@@@@@@@@@@@" + Answer + "\n\n\n");
+			//System.out.println("\n\n\n\n\n@@@@@@@@@@@@@@@@@@" + Answer + "\n\n\n");
 			
 			if(Answer.equalsIgnoreCase(callResponse)){
 				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
@@ -271,7 +278,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		boolean isFold = false;
 
-		twitter.updateStatus("Do you want to fold??\n If so tweet Y for yes or N for no");
+		twitter.updateStatus("Are you sure you want to fold??\n If so tweet Y for yes or N for no");
 		String Answer = twitter.waitForTweet();
 
 		if (Answer.equalsIgnoreCase(positiveResponse)) {

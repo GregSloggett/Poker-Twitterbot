@@ -63,12 +63,13 @@ public class HandOfPoker {
 		System.out.println("getting into gameLoop");
 		dealHandsUntilOpen();
 		System.out.println("game loop 1");
-		System.out.println("\n\n\n\n\n\n***********************\n" +players +"\n\n\n\n\n\n***********************\n");
-		twitter.appendToCompoundTweet(human.hand.toString());
-		twitter.postCompoundTweet();
-		System.out.println("################################################################");
+		//System.out.println("\n\n\n\n\n\n***********************\n" +players +"\n\n\n\n\n\n***********************\n");
+		//twitter.appendToCompoundTweet(human.hand.toString());
+		//twitter.postCompoundTweet();
+		//System.out.println("################################################################");
 		//twitter.updateStatusWithTextAndImage("Here are your cards!", human.pic.createImage(human.hand)  );
-		
+		twitter.postCompoundTweet();
+		human.tweetInitialCards();
 		System.out.println("\n\n\n\n\n\n***********************\n2\n" +players +"\n\n\n\n\n\n***********************\n");
 		twitter.postCompoundTweet();
 		pot += collectAntes();
@@ -162,6 +163,9 @@ public class HandOfPoker {
 		twitter.appendToCompoundTweet("## Place your bets!\n");
 		twitter.postCompoundTweet();
 		System.out.println("appended to tweet");
+		
+		showBanks();
+		
 		boolean raisedBet = false;
 		int lastRaise = 0;
 		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
@@ -181,6 +185,7 @@ public class HandOfPoker {
 			}
 			
 			totalBets += bet;
+			pot += bet;
 			
 			if (i == players.size() -1 && playersNotFolded.isEmpty()){
 				twitter.appendToCompoundTweet("Everyone else has folded!");
@@ -267,6 +272,13 @@ public class HandOfPoker {
 		return totalBets;
 	}
 	
+	private void showBanks() throws TwitterException {
+		for (int i=0; i< players.size(); i++){
+			twitter.appendToCompoundTweet(players.get(i).playerName + " has " + players.get(i).playerPot + " chips");
+		}
+		twitter.postCompoundTweet();
+	}
+	
 	/**
 	 * All players discard up to three cards from their hand and re-deal themselves 
 	 * and are re-dealt three from the deck
@@ -282,6 +294,7 @@ public class HandOfPoker {
 			twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
 		twitter.appendToCompoundTweet("\n\n## Players are redealt their cards.");
+		twitter.postCompoundTweet();
 	}
 	
 	/**
@@ -344,12 +357,17 @@ public class HandOfPoker {
 	 * Awards winner the pot and declares the amount.
 	 * TODO Implement when split pot betting occurs
 	 * @param winners
+	 * @throws TwitterException 
 	 */
-	private void awardWinner(ArrayList<PokerPlayer> winners) { 
+	private void awardWinner(ArrayList<PokerPlayer> winners) throws TwitterException { 
 		
 		if (winners.size() == 1){
+			twitter.postCompoundTweet(); //Make sure compound tweet is clear
+			twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			twitter.appendToCompoundTweet(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
 			twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			twitter.postCompoundTweet();
 			winners.get(0).awardChips(pot);
 			pot = 0;
 		}
