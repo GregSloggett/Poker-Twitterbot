@@ -1,5 +1,7 @@
 package poker;
 
+import twitter4j.TwitterException;
+
 public abstract class PokerPlayer {
 	private DeckOfCards deck;
 	protected HandOfCards hand;
@@ -82,7 +84,7 @@ public abstract class PokerPlayer {
 		hand = new HandOfCards(deck);
 	}
 	
-	public abstract int getBet();
+	public abstract int getBet() throws TwitterException;
 	
 	public abstract boolean showCards(PokerPlayer handWinner);
 	
