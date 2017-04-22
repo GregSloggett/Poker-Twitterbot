@@ -17,16 +17,20 @@ public class GameOfPoker implements Runnable{
 	boolean continueGame = true;
 
 	public GameOfPoker(String username, TwitterInteraction t, DeckOfCards d) throws InterruptedException{
+		System.out.println("gop 1");
 		playerName = username;
 		deck = d;
+		System.out.println("1 - a");
 		humanPlayer = new HumanPokerPlayer(deck, t);
+		System.out.println("1 - b");
 		twitter = t;
+		System.out.println("1 - c");
 		players.add(humanPlayer);
+		System.out.println("gop 2");
 		for(int i=0;i<5;i++){
 			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, twitter);
 			players.add(computerPlayer);			
 		}
-
 		System.out.println("created gameofpoker object successfully");
 	}
 
@@ -63,6 +67,7 @@ public class GameOfPoker implements Runnable{
 		
 		try {
 			while(!playerWin && !playerLose && continueGame){
+				System.out.println("is deck null 1 "+ (deck == null));
 				HandOfPoker hop = new HandOfPoker(players,ante,deck,twitter);
 			}
 		} catch (TwitterException e) {

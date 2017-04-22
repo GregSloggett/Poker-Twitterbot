@@ -44,6 +44,7 @@ public class DeckOfCards {
 	public void shuffle(){
 		System.out.println("got into shuffle");
 		Random rand = new Random(System.currentTimeMillis());
+		System.out.println("got rand");
 		for(int i=0; i<(deck.length*deck.length); i++){
 			int index1, index2;
 			do {
@@ -55,6 +56,7 @@ public class DeckOfCards {
 			deck[index1] = deck[index2];
 			deck[index2] = temp;
 		}
+		System.out.println("got through for loop in shuffle");
 	}
 
 	/**

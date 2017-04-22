@@ -17,8 +17,11 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	
 	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
+		System.out.println("human 1 -a");
 		twitter = t;
+		System.out.println("human 1 -b");
 		a = inputDeck;
+		System.out.println("human 1 -c");
 		// TODO Auto-generated constructor stub
 	}
 
@@ -370,5 +373,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		twitter.waitForTweet();
 		
 	}
+
 
 }

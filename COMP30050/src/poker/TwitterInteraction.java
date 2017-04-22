@@ -96,7 +96,7 @@ public class TwitterInteraction {
 		boolean waiting = true;
 		while(waiting){
 			Thread.yield();
-			Thread.sleep(30000);
+			Thread.sleep(10000);
 			System.out.println(Thread.currentThread().getId());
 			ArrayList<Status> replies = getDiscussion();
 			System.out.println(replies.size());
@@ -179,6 +179,7 @@ public class TwitterInteraction {
 		System.out.println("Conversation with user: "+username);
 		System.out.println("This started with the tweet: "+firstTweet.getText());
 		System.out.println("Hashcode: "+hashCode);
+		System.out.println("Pot in this thread is at: "+HandOfPoker.pot);
 		System.out.println("-------------------------------------------");
 		List<Status> statuses = twitter.getUserTimeline(username);
 		ArrayList<Status> replies = new ArrayList<Status>();

@@ -43,7 +43,7 @@ public class TwitterStreamer {
 
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
-							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game!");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game.");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("replyStatus is replying to tweet: "+replyStatus.getInReplyToStatusId());
 							Status latestTweet = twitter.updateStatus(replyStatus);
@@ -52,20 +52,20 @@ public class TwitterStreamer {
 							usersPlayingGames.put(status.getUser().getScreenName(), true);
 							System.out.println("3");
 							System.out.println(usersPlayingGames.containsKey(status.getUser().getScreenName()));
+							System.out.println("creating d");
 							DeckOfCards d = new DeckOfCards();
+							
 							String nick = status.getUser().getScreenName();
+							System.out.println("creatint t");
 							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
+							System.out.println("creating g");
 							GameOfPoker g = new GameOfPoker(status.getUser().getScreenName(),t,d);
 							//gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t,d));
-							//waitForTweet(status);
-
-							//p.run();
-							//Thread thread = new Thread(p);
-							//thread.start();
-							//executor.execute(g);
-							Thread thread = new Thread(g);
-							System.out.println("trying to run game");
-							g.run();
+							System.out.println("created g");
+							System.out.println("executing g");
+							executor.execute(g);
+							System.out.println("g was executed");
+							
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{

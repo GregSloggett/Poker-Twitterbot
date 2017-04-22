@@ -13,7 +13,10 @@ public class HandOfPoker {
 
 	private ArrayList<PokerPlayer> players;
 	int ante;
+	//public static ThreadLocal<Integer> pot = new ThreadLocal<Integer>();
 	public static int pot;
+
+	
 	OutputTerminal UI;
 	DeckOfCards deck;
 	TwitterInteraction twitter;
@@ -42,7 +45,7 @@ public class HandOfPoker {
 		this.twitter = t;
 		this.deck = deck;
 		this.human = (HumanPokerPlayer) players.get(0);
-		
+		//pot.set(0);
 		
 		try {
 			gameLoop();
@@ -73,10 +76,12 @@ public class HandOfPoker {
 		//System.out.println("\n\n\n\n\n\n***********************\n2\n" +players +"\n\n\n\n\n\n***********************\n");
 		twitter.postCompoundTweet();
 		pot += collectAntes();
+		//pot.set(pot.get() + collectAntes());
 		displayPot();
 		twitter.postCompoundTweet();
 		System.out.println("game loop 2");
 		pot += takeBets();
+		//pot.set(pot.get() + takeBets());
 		twitter.postCompoundTweet();
 		discardCards();
 		highBet = 0;
@@ -88,6 +93,7 @@ public class HandOfPoker {
 			//discardCards();
 			displayPot();
 			pot += takeBets();
+			//pot.set(pot.get()+takeBets());
 			displayPot();
 			if (players.size() >1){
 				showCards();
@@ -188,6 +194,7 @@ public class HandOfPoker {
 			
 			totalBets += bet;
 			pot += bet;
+			//pot.set(pot.get() + bet);
 			
 			if (i == players.size() -1 && playersNotFolded.isEmpty()){
 				twitter.appendToCompoundTweet("Everyone else has folded!");
@@ -432,4 +439,10 @@ public class HandOfPoker {
 		console.printout("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~-----------~~~~~~~~~~~~~~~~~~~~~~~~~~~");*/
 	}
 
+	public int getPot(){
+		return pot;
+	}
+	public void setPot(int pots){
+		pot = pots;
+	}
 }
