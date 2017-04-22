@@ -70,7 +70,7 @@ public class HandOfPoker {
 		//twitter.updateStatusWithTextAndImage("Here are your cards!", human.pic.createImage(human.hand)  );
 		twitter.postCompoundTweet();
 		human.tweetInitialCards();
-		System.out.println("\n\n\n\n\n\n***********************\n2\n" +players +"\n\n\n\n\n\n***********************\n");
+		//System.out.println("\n\n\n\n\n\n***********************\n2\n" +players +"\n\n\n\n\n\n***********************\n");
 		twitter.postCompoundTweet();
 		pot += collectAntes();
 		displayPot();
@@ -96,6 +96,7 @@ public class HandOfPoker {
 		System.out.println("game loop 4");
 		
 		awardWinner(calculateWinners());
+		human.replyForNextRound();
 	}
 
 	/**
@@ -161,10 +162,11 @@ public class HandOfPoker {
 	private int takeBets() throws TwitterException {
 		int totalBets =0;
 		twitter.appendToCompoundTweet("## Place your bets!\n");
-		twitter.postCompoundTweet();
+		//twitter.postCompoundTweet();
 		System.out.println("appended to tweet");
 		
 		showBanks();
+		
 		
 		boolean raisedBet = false;
 		int lastRaise = 0;
