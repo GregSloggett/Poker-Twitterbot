@@ -12,7 +12,7 @@ import java.util.Random;
 
 
 public class AutomatedPokerPlayer extends PokerPlayer {
-	private static int playerType;
+	private int playerType;
 	private int playerBluffProbability;
 	private static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
 	private static final String COCKY_PLAYER_RAISE_QUOTES = "src/PlayerQuotes/CockyPlayerRaiseQuotes.txt";
@@ -27,8 +27,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private static final int CONSERVATIVE_RAISE = 3;
 	private static final int CONSERVATIVE_SEE = 4;
 	private static final int CONSERVATIVE_FOLD = 5;
-	
-
 
 	private static TwitterInteraction twitter;
 
@@ -40,9 +38,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
 		twitter = t;
-
+		this.hand.passPlayerType(this);
 	}
-
+	
 	public static int countLines(String f) throws IOException {
 		InputStream is = new BufferedInputStream(new FileInputStream(f));
 		try {
@@ -64,7 +62,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 	}
 
-	public static int getPlayerType() {
+	public int getPlayerType() {
 		// TODO Auto-generated method stub
 		return playerType;
 	}
@@ -94,29 +92,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		return quote;
 	}
-/*	
-	public String getCockyPlayerRaiseQuote(){
-		String quote = null;
-		try{
-			quote = getRandomLineFromFile(CONSERVATIVE_PLAYER_SEE_QUOTES);
-		}
-		catch (Exception e){
-			quote = "I can't lose, ";
-		}
-		return quote;		
-	}
 
-	public String getConservativePlayerRaiseQuote(){
-		String quote = null;
-		try{
-			quote = getRandomLineFromFile(CONSERVATIVE_PLAYER_SEE_QUOTES);
-		}
-		catch (Exception e){
-			quote = "I can't lose, ";
-		}
-		return quote;		
-	}
-*/
 	public String getRandomLineFromFile(String filename){
 		String out = "";
 		try{
