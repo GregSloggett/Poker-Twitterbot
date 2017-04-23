@@ -9,12 +9,12 @@ import twitter4j.TwitterFactory;
 public class HandOfPoker {
 	
 	final private static int OPENING_HAND = HandOfCards.ONE_PAIR_DEFAULT;
-	public static int highBet = 0;
+	public int highBet = 0;
 
 	private ArrayList<PokerPlayer> players;
 	int ante;
 	//public static ThreadLocal<Integer> pot = new ThreadLocal<Integer>();
-	public static int pot;
+	public int pot;
 
 	
 	OutputTerminal UI;

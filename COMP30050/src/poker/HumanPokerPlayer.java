@@ -229,7 +229,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
 		System.out.println("going into first if");
-		if(playerPot< HandOfPoker.highBet){
+		if(playerPot< currentRound.highBet){
 			//output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
 			System.out.println("going to post sorry message");
 			twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
@@ -237,13 +237,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			System.out.println("posted sorry message");
 			splitPot = true;
 		}
-		if(HandOfPoker.pot == 0){
+		if(currentRound.pot == 0){
 			System.out.println("pot was 0");
 			this.openingBet();
 			System.out.println("ran opening bet");
 		}else{
 			System.out.println("got into else");
-			twitter.updateStatus("The pot is at " + HandOfPoker.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
+			twitter.updateStatus("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
 			System.out.println("getting reply");
 			String Answer = twitter.waitForTweet();
 			
@@ -251,14 +251,14 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			
 			if(Answer.equalsIgnoreCase(callResponse)){
 				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
-				twitter.updateStatus("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
-				bet = (HandOfPoker.highBet-currentBet);
+				twitter.updateStatus("Ok you have called the pot at "+ currentRound.highBet + "betting");
+				bet = (currentRound.highBet-currentBet);
 			}else if(Answer.equalsIgnoreCase(raiseResponse)){
-				twitter.updateStatus("The pot is at " + HandOfPoker.pot + " and it will take " + (HandOfPoker.highBet - currentBet) + " to meet the current bet."
+				twitter.updateStatus("The pot is at " + currentRound.pot + " and it will take " + (currentRound.highBet - currentBet) + " to meet the current bet."
 						+ " How much do you want to raise by?");
 				String betAmountString = twitter.waitForTweet();
 				bet = readinMultipleInt(betAmountString).get(0);
-				bet = bet + (HandOfPoker.highBet - currentBet);
+				bet = bet + (currentRound.highBet - currentBet);
 				currentBet = bet;
 				if(!validBet(currentBet)){
 					twitter.updateStatus("Sorry you dont have the money to make this bet");

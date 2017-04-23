@@ -179,7 +179,8 @@ public class TwitterInteraction {
 		System.out.println("Conversation with user: "+username);
 		System.out.println("This started with the tweet: "+firstTweet.getText());
 		System.out.println("Hashcode: "+hashCode);
-		System.out.println("Pot in this thread is at: "+HandOfPoker.pot);
+		System.out.println("Pot in this thread is at " + "#Had to edit this to remove static access#");
+		//System.out.println("Pot in this thread is at: "+HandOfPoker.pot);
 		System.out.println("-------------------------------------------");
 		List<Status> statuses = twitter.getUserTimeline(username);
 		ArrayList<Status> replies = new ArrayList<Status>();

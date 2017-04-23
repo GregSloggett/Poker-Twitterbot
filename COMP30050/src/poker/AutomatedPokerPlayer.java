@@ -27,6 +27,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private static final int CONSERVATIVE_RAISE = 3;
 	private static final int CONSERVATIVE_SEE = 4;
 	private static final int CONSERVATIVE_FOLD = 5;
+	
 
 
 	private static TwitterInteraction twitter;
@@ -190,16 +191,16 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		boolean bettingHasBeenRaised = false;
 
 		//if nobody has bet
-		if(HandOfPoker.highBet == 0){
+		if(currentRound.highBet == 0){
 			twitter.appendToCompoundTweet("I bet " + betValue + " to start.");
 			return betValue;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
-		if(betValue <= HandOfPoker.highBet && callValue < HandOfPoker.highBet){
+		if(betValue <= currentRound.highBet && callValue < currentRound.highBet){
 			return fold(betValue);
 		}
 		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.
-		else if(betValue > HandOfPoker.highBet && hasRaised != true){
+		else if(betValue > currentRound.highBet && hasRaised != true){
 			hasRaised = true;
 			if(bettingHasBeenRaised == true){
 				return reRaise(betValue);
@@ -213,11 +214,11 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		else if(playerBluffProbability > 75 && hasRaised != true){
 			hasRaised = true;
 			if(bettingHasBeenRaised == true){
-				return reRaise(HandOfPoker.highBet+betValue);
+				return reRaise(currentRound.highBet+betValue);
 			}
 			else{
 				bettingHasBeenRaised = true;
-				return raise(HandOfPoker.highBet+betValue);
+				return raise(currentRound.highBet+betValue);
 			}
 		}
 		//if decides not to fold/raise/bluff then see(call) the highBet.
@@ -256,7 +257,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * Calls the high bet if the betValue for the hand is within a small range of the high bet
 	 */
 	private int see(int betValue){
-		betValue = HandOfPoker.highBet;
+		betValue = currentRound.highBet;
 		if(playerType < 4){
 			twitter.appendToCompoundTweet(getPlayerQuote(CONSERVATIVE_SEE) + "I'll see your " + betValue + " chips.");
 		}
@@ -270,7 +271,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * Raises the betting if the value of the hand is greater than the high bet by 2 or more.
 	 */
 	private int raise(int betValue){
-		int raiseValue = betValue - HandOfPoker.highBet;
+		int raiseValue = betValue - currentRound.highBet;
 
 		if(playerType < 4){
 			twitter.appendToCompoundTweet(getPlayerQuote(CONSERVATIVE_RAISE) + "I raise " + raiseValue + " chips.");
@@ -286,7 +287,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * Raises the betting if the value of the hand is greater than the high bet by 2 or more.
 	 */
 	private int reRaise(int betValue){
-		int raiseValue = betValue - HandOfPoker.highBet;
+		int raiseValue = betValue - currentRound.highBet;
 
 		twitter.appendToCompoundTweet("I re-raise the betting by " + raiseValue + " chips.");
 		return betValue;
@@ -362,7 +363,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		players.add(playerTwo);
 		players.add(playerThree);
 		players.add(playerFour);
-
+		
+		
+		/*//Had to comment this out to change static variables to dynamic in hand
 		for(int i=0; i<3; i++){
 			for(AutomatedPokerPlayer p : players){
 				out.printout(p.playerName);
@@ -375,7 +378,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 
 
 
-		HandOfPoker.highBet = 0;
+		HandOfPoker.highBet = 0;*/
 
 		/*
 		 * Tests betting against high bet values for a number

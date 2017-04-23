@@ -4,6 +4,7 @@ import twitter4j.TwitterException;
 
 public abstract class PokerPlayer {
 	private DeckOfCards deck;
+	protected HandOfPoker currentRound;
 	protected HandOfCards hand;
 	protected int playerPot;
 	protected int roundPot;
@@ -14,8 +15,12 @@ public abstract class PokerPlayer {
 		deck = inputDeck;
 		hand = new HandOfCards(deck);
 		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;
-		roundPot = HandOfPoker.pot;
-		highBet = HandOfPoker.highBet;
+	}
+	
+	public void passHandOfPokerRef(HandOfPoker currentRound){
+		this.currentRound = currentRound;
+		roundPot = currentRound.pot;
+		highBet = currentRound.highBet;
 	}
 
 	/*
