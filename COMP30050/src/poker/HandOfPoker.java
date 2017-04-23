@@ -41,6 +41,9 @@ public class HandOfPoker {
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, TwitterInteraction t) throws TwitterException, IOException{
 		this.players = new ArrayList<PokerPlayer>();
 		this.players.addAll(players);
+		for (int i=0; i< this.players.size(); i++){
+			this.players.get(i).passHandOfPokerRef(this);
+		}
 		this.ante = ante;
 		this.twitter = t;
 		this.deck = deck;
