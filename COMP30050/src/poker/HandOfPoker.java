@@ -176,6 +176,7 @@ public class HandOfPoker {
 		
 		showBanks();
 		
+		
 		boolean raisedBet = false;
 		int lastRaise = 0;
 		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
@@ -421,9 +422,12 @@ public class HandOfPoker {
 		ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>(5);
 		
 		for(int i=0;i<5;i++){
-			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, testTwitteri);
-			players.add(computerPlayer);			
+			AutomatedPokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, testTwitteri);
+			players.add(computerPlayer);
+			
+			System.out.println(computerPlayer.getHandType());
 		}
+		
 		
 		// First hand of poker
 		/*

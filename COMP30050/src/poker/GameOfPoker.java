@@ -29,7 +29,8 @@ public class GameOfPoker implements Runnable{
 		System.out.println("gop 2");
 		for(int i=0;i<5;i++){
 			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, twitter);
-			players.add(computerPlayer);			
+			players.add(computerPlayer);	
+			System.out.println("\n\n\n\n\n\n" + computerPlayer.getHandType());
 		}
 		System.out.println("created gameofpoker object successfully");
 	}

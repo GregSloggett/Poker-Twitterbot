@@ -29,6 +29,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
 	public int currentBet =0;
 	public boolean askToDiscard = false;
 	public boolean splitPot = false;
@@ -372,6 +374,5 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		twitter.waitForTweet();
 		
 	}
-
 
 }

@@ -323,25 +323,31 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
 	}
 
-	public static void main(String[] args) throws InterruptedException, IOException{
+	public static void main(String[] args) throws InterruptedException{
 
 		DeckOfCards deck = new DeckOfCards();
 		TwitterInteraction t = new TwitterInteraction(TwitterStreamer.twitter);
 		OutputTerminal out = new OutputTerminal();
 
-		ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
+		//ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
 		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerTwo = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerThree = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerFour = new AutomatedPokerPlayer(deck, t);
 
-		players.add(playerOne);
-		players.add(playerTwo);
-		players.add(playerThree);
-		players.add(playerFour);
+		System.out.println("name: " + playerOne.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerTwo.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerThree.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerFour.playerName + " type: " + playerOne.playerType);
 		
+
 		
-		/*//Had to comment this out to change static variables to dynamic in hand
+		//players.add(playerOne);
+		//players.add(playerTwo);
+		//players.add(playerThree);
+		//players.add(playerFour);
+		
+				/*//Had to comment this out to change static variables to dynamic in hand
 		for(int i=0; i<3; i++){
 			for(AutomatedPokerPlayer p : players){
 				out.printout(p.playerName);
