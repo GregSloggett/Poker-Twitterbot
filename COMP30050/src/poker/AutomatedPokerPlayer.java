@@ -12,7 +12,7 @@ import java.util.Random;
 
 
 public class AutomatedPokerPlayer extends PokerPlayer {
-	private static int playerType;
+	private int playerType;
 	private int playerBluffProbability;
 	private static final String FILE_OF_NAMES = "src/PlayerNames/AutomatedPokerPlayerNames.txt";
 	private static final String COCKY_PLAYER_RAISE_QUOTES = "src/PlayerQuotes/CockyPlayerRaiseQuotes.txt";
@@ -27,8 +27,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private static final int CONSERVATIVE_RAISE = 3;
 	private static final int CONSERVATIVE_SEE = 4;
 	private static final int CONSERVATIVE_FOLD = 5;
-	
-
 
 	private static TwitterInteraction twitter;
 
@@ -40,9 +38,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
 		twitter = t;
-
+		this.hand.passPlayerType(this);
 	}
-
+	
 	public static int countLines(String f) throws IOException {
 		InputStream is = new BufferedInputStream(new FileInputStream(f));
 		try {
@@ -64,7 +62,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 	}
 
-	public static int getPlayerType() {
+	public int getPlayerType() {
 		// TODO Auto-generated method stub
 		return playerType;
 	}
@@ -94,29 +92,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		return quote;
 	}
-/*	
-	public String getCockyPlayerRaiseQuote(){
-		String quote = null;
-		try{
-			quote = getRandomLineFromFile(CONSERVATIVE_PLAYER_SEE_QUOTES);
-		}
-		catch (Exception e){
-			quote = "I can't lose, ";
-		}
-		return quote;		
-	}
 
-	public String getConservativePlayerRaiseQuote(){
-		String quote = null;
-		try{
-			quote = getRandomLineFromFile(CONSERVATIVE_PLAYER_SEE_QUOTES);
-		}
-		catch (Exception e){
-			quote = "I can't lose, ";
-		}
-		return quote;		
-	}
-*/
 	public String getRandomLineFromFile(String filename){
 		String out = "";
 		try{
@@ -347,25 +323,31 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
 	}
 
-	public static void main(String[] args) throws InterruptedException, IOException{
+	public static void main(String[] args) throws InterruptedException{
 
 		DeckOfCards deck = new DeckOfCards();
 		TwitterInteraction t = new TwitterInteraction(TwitterStreamer.twitter);
 		OutputTerminal out = new OutputTerminal();
 
-		ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
+		//ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
 		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerTwo = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerThree = new AutomatedPokerPlayer(deck, t);
 		AutomatedPokerPlayer playerFour = new AutomatedPokerPlayer(deck, t);
 
-		players.add(playerOne);
-		players.add(playerTwo);
-		players.add(playerThree);
-		players.add(playerFour);
+		System.out.println("name: " + playerOne.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerTwo.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerThree.playerName + " type: " + playerOne.playerType);
+		System.out.println("name: " + playerFour.playerName + " type: " + playerOne.playerType);
 		
+
 		
-		/*//Had to comment this out to change static variables to dynamic in hand
+		//players.add(playerOne);
+		//players.add(playerTwo);
+		//players.add(playerThree);
+		//players.add(playerFour);
+		
+				/*//Had to comment this out to change static variables to dynamic in hand
 		for(int i=0; i<3; i++){
 			for(AutomatedPokerPlayer p : players){
 				out.printout(p.playerName);

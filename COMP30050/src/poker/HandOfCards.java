@@ -32,6 +32,7 @@ public class HandOfCards {
 	public static final int CARDS_HELD = 5;
 	public PlayingCard[] cardArray;
 	private DeckOfCards deck;
+	private int playerType;
 	
 	/*
 	 * Constructor takes in deck, initializes card array and then fills in with 5
@@ -46,10 +47,13 @@ public class HandOfCards {
 		sort();
 	}
 	
+	public void passPlayerType(AutomatedPokerPlayer aiPlayer){
+		playerType = aiPlayer.getPlayerType();
+	}
+	
 	public int getAutomatedPlayerType(){
-		int playerType = AutomatedPokerPlayer.getPlayerType();
-		System.out.println("playerType = " + playerType);
-		return playerType;
+		System.out.println("playerType = " + this.playerType);
+		return this.playerType;
 	}
 	
 	public int increaseDiscardProbabilityValue(int discardProbability){
@@ -2065,10 +2069,6 @@ public class HandOfCards {
 	 * in the terminal after
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		DeckOfCards d = new DeckOfCards();
-		Twitter t1 = null;
-		TwitterInteraction t = new TwitterInteraction(t1);
-		AutomatedPokerPlayer one = new AutomatedPokerPlayer(d, t);
 		
 		//First make an array containing all cards to use in our tests
 		PlayingCard[][] allCardsArray = new PlayingCard[13][4];
@@ -2112,6 +2112,7 @@ public class HandOfCards {
 			System.out.println("XXX Discard Probability test(s) failed, please check terminal above for failures");
 		}
 		
+
 		
 		
 	}

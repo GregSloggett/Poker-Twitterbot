@@ -534,9 +534,12 @@ public class HandOfPoker {
 		ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>(5);
 		
 		for(int i=0;i<5;i++){
-			PokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, testTwitteri);
-			players.add(computerPlayer);			
+			AutomatedPokerPlayer computerPlayer = new AutomatedPokerPlayer(deck, testTwitteri);
+			players.add(computerPlayer);
+			
+			System.out.println(computerPlayer.getHandType());
 		}
+		
 		
 		// First hand of poker
 		/*

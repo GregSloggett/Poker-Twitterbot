@@ -39,7 +39,7 @@ public class TwitterInteraction {
 	//static Twitter twitter = TwitterFactory.getSingleton();
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
-
+	
 	/**
 	 * This method is just for displaying a String as a status.
 	 * @param status

@@ -22,7 +22,7 @@ public abstract class PokerPlayer {
 		roundPot = currentRound.pot;
 		highBet = currentRound.highBet;
 	}
-
+	
 	/*
 	 * This method tests if every card in the hand has 0 probability, in this case
 	 * no discard is possible. I use this in my main to stop the discards in the case

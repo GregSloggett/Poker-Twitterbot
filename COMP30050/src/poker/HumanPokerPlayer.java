@@ -13,8 +13,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	private DeckOfCards a;
 	public PictureOfHand pic;
 	
-	
-	
 	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
 		System.out.println("human 1 -a");
@@ -22,6 +20,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		System.out.println("human 1 -b");
 		a = inputDeck;
 		System.out.println("human 1 -c");
+		this.playerName = t.username; 
 		// TODO Auto-generated constructor stub
 	}
 
@@ -30,6 +29,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
 	public int currentBet =0;
 	public boolean askToDiscard = false;
 	public boolean splitPot = false;
@@ -373,6 +374,5 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		twitter.waitForTweet();
 		
 	}
-
 
 }
