@@ -97,6 +97,10 @@ public abstract class PokerPlayer {
 		playerPot += amountWon;
 	}
 	
+	public String toString() {
+		return playerName;
+	}
+	
 /*	public static void main(String[] args) throws InterruptedException {	
 		int numTestsToRun = 100;
 		/*

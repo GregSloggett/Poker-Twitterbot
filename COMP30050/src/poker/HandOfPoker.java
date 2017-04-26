@@ -297,17 +297,16 @@ public class HandOfPoker {
 		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
 		
+		// 1
 		// First bet loop goes until a player raises
 		twitter.appendToCompoundTweet("First Loop");
-		twitter.postCompoundTweet();
 		int firstRaiserIndex = -1;
-		for (int i=0; i< players.size() && firstRaiserIndex != -1; i++){
-			
+		for (int i=0; i< players.size() && firstRaiserIndex == -1; i++){
 			int bet =0;
 			
 			// Take opening bets 
-			if (players.get(i) == human){
-				 bet = human.openingBet();
+			if (players.get(i).equals(human)){
+				bet = human.openingBet();
 			}
 			else {
 				bet = players.get(i).getBet();
@@ -323,14 +322,17 @@ public class HandOfPoker {
 				twitter.appendToCompoundTweet(players.get(i).playerName + " checks.");
 				twitter.postCompoundTweet();
 			}
-			betRecord.add(i);
+			playersNotFolded.add(players.get(i));
+			betRecord.add(bet);
+			twitter.postCompoundTweet();
 		}
 		
+		System.out.println("\n\n\n\n#####\n" + betRecord.toString() + "\n\n" + playersNotFolded.toString() + "\n\n\n\n\n");
 		
 		pot += highBet;
-		twitter.appendToCompoundTweet("First Loop");
-		twitter.postCompoundTweet();
+		twitter.appendToCompoundTweet("Second Loop");
 		
+		// 2
 		// Go back around again and see who raises and give the first raiser a second chance to raise
 		int lastRaiserIndex = -1;
 		for (int i =(firstRaiserIndex + 1)%players.size(); i != firstRaiserIndex; i = (i+1)%players.size()) {
@@ -353,6 +355,7 @@ public class HandOfPoker {
 				}
 				else {
 					pot += bet - betRecord.get(i);
+					betRecord.set(i, bet);
 					twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 							+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 					twitter.postCompoundTweet();
@@ -361,11 +364,19 @@ public class HandOfPoker {
 			else {
 				if (i < firstRaiserIndex){
 					betRecord.remove(i);
+					playersNotFolded.remove(i);
 				}
 				twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 				twitter.postCompoundTweet();
 			}
 		}
+		twitter.postCompoundTweet();
+		
+		
+		System.out.println("\n\n\n\n#####\n" + betRecord.toString() + "\n\n" + playersNotFolded.toString() + "\n\n\n\n\n");
+		
+
+		twitter.appendToCompoundTweet("Third Loop");
 		
 		// Call the bets back around to the last raiser if there are still enough players not folded
 		players.clear();
@@ -387,6 +398,8 @@ public class HandOfPoker {
 					twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 					twitter.postCompoundTweet();
 				}
+
+				System.out.println("\n\n\n\n#####\n" + betRecord.toString() + "\n\n" + playersNotFolded.toString() + "\n\n\n\n\n");
 			}
 		}
 		else {

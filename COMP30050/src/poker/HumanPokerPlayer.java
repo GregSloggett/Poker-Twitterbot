@@ -196,7 +196,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String Answer = twitter.waitForTweet();
 		int bet =0;
 		if (Answer.equalsIgnoreCase(betResponse)){
-			twitter.updateStatus("How much do you wanna bet?");
+			twitter.updateStatus("How much would you like to bet?");
 			String openingBet = twitter.waitForTweet();
 			bet = readinMultipleInt(openingBet).get(0);
 			if(!validBet(bet)){
