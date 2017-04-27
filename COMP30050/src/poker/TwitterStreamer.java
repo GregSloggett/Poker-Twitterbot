@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
@@ -22,7 +23,7 @@ import twitter4j.TwitterStreamFactory;
 public class TwitterStreamer {
 	static Twitter twitter = TwitterFactory.getSingleton();
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
-	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
+	static Map<String, Future<?>> gamesOfPoker = new HashMap<String, Future<?>>();
 	private static final int NUMTHREADS = 30;
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	Thread thread;
@@ -43,7 +44,7 @@ public class TwitterStreamer {
 
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
-							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker. Welcome to the game.");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker.. Welcome to the game!.");
 							replyStatus.setInReplyToStatusId(status.getId());
 							System.out.println("replyStatus is replying to tweet: "+replyStatus.getInReplyToStatusId());
 							Status latestTweet = twitter.updateStatus(replyStatus);
@@ -63,7 +64,7 @@ public class TwitterStreamer {
 							//gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t,d));
 							System.out.println("created g");
 							System.out.println("executing g");
-							executor.execute(g);
+							gamesOfPoker.put(userNickname, executor.submit(g));
 							System.out.println("g was executed");
 							
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
@@ -83,11 +84,15 @@ public class TwitterStreamer {
 							System.out.println("1");
 							System.out.println(status.getUser().getScreenName());
 
-							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted the hashtag to leave a poker game. Thanks for playing!");
+							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted the hashtag to leave a poker game.. Thanks for playing!");
 							replyStatus.setInReplyToStatusId(status.getId());
 							twitter.updateStatus(replyStatus);
 							System.out.println("2");
+							System.out.println("Is cancelled?"+gamesOfPoker.get(userNickname).isCancelled());
+
 							usersPlayingGames.remove(status.getUser().getScreenName());
+							gamesOfPoker.get(userNickname).cancel(true);
+							System.out.println("Is cancelled?"+gamesOfPoker.get(userNickname).isCancelled());
 							System.out.println("3");
 						}
 						else{
@@ -159,6 +164,10 @@ public class TwitterStreamer {
 				return true;
 		}
 		return false;
+	}
+	
+	public  static boolean userHasQuit(String username){
+		return gamesOfPoker.get(username).isCancelled();
 	}
 
 

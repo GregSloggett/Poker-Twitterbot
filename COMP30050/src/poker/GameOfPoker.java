@@ -67,9 +67,12 @@ public class GameOfPoker implements Runnable{
 		System.out.println("getting into run");
 		
 		try {
-			while(!playerWin && !playerLose && continueGame){
+			while(!playerWin && !playerLose && continueGame && !(Thread.currentThread().isInterrupted())){
 				System.out.println("is deck null 1 "+ (deck == null));
 				HandOfPoker hop = new HandOfPoker(players,ante,deck,twitter);
+				if(TwitterStreamer.userHasQuit(playerName) == true){
+					break;
+				}
 			}
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block

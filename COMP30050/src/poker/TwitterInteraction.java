@@ -39,7 +39,7 @@ public class TwitterInteraction {
 	//static Twitter twitter = TwitterFactory.getSingleton();
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
-	
+
 	/**
 	 * This method is just for displaying a String as a status.
 	 * @param status
@@ -54,7 +54,12 @@ public class TwitterInteraction {
 	}
 
 	public Status update(StatusUpdate a) throws TwitterException{
-		return this.twitter.updateStatus(a);
+		Status ret = latestTweet;
+		System.out.println("Thread is interrupted? "+ Thread.currentThread().isInterrupted());
+		System.out.println("User has quit? "+TwitterStreamer.userHasQuit(username));
+			ret =  twitter.updateStatus(a);
+		
+		return ret;
 	}
 
 
@@ -93,10 +98,7 @@ public class TwitterInteraction {
 	}
 
 	public  String waitForTweet() throws TwitterException, InterruptedException{
-		boolean waiting = true;
-		while(waiting){
-			Thread.yield();
-			Thread.sleep(10000);
+		while(!(TwitterStreamer.userHasQuit(username))){
 			System.out.println(Thread.currentThread().getId());
 			ArrayList<Status> replies = getDiscussion();
 			System.out.println(replies.size());
@@ -109,35 +111,28 @@ public class TwitterInteraction {
 				Status latestReply = replies.get(replies.size()-1);
 				System.out.println("latest reply below");
 				System.out.println(latestReply.getText());
-				if(!(latestReply.getText().contains("#FOAKDeal")|| latestReply.getText().contains("#FOAKLeave"))){
-					//latestTweet = latestReply;
-					String latestReplyString = latestReply.getText();
-					latestReplyString = stripAmpersandInfo(latestReplyString);
-					latestTweet = latestReply;
+				//latestTweet = latestReply;
+				String latestReplyString = latestReply.getText();
+				latestReplyString = stripAmpersandInfo(latestReplyString);
+				latestTweet = latestReply;
+				if(!(TwitterStreamer.userHasQuit(username))){
 					return latestReplyString;
 				}
-				/*
-				if(latestReply.getText().compareTo("y")==0)	{
-					StatusUpdate replyStatus = new StatusUpdate("You have decided to discard some cards.");
-					replyStatus.setInReplyToStatusId(latestReply.getId());
-					latestTweet = twitter.updateStatus(replyStatus);
-					return "y";
-				}
-				else if(latestReply.getText().compareTo("n")==0)	{
-					StatusUpdate replyStatus = new StatusUpdate("You have decided against discarding cards.");
-					replyStatus.setInReplyToStatusId(latestReply.getId());
-					latestTweet = twitter.updateStatus(replyStatus);
-					return "n";
-				}
-				else{
-					StatusUpdate replyStatus = new StatusUpdate("Command was not recognized, try again.");
-					replyStatus.setInReplyToStatusId(latestReply.getId());
-					latestTweet = twitter.updateStatus(replyStatus);
-				}
-				 */
 			}
+			try{
+				Thread.sleep(10000);
+			}
+			catch(InterruptedException e){
+				Thread.currentThread().interrupt();
+			}
+
 		}
-		return "";
+		/*
+		 * If null is returned then we know the thread has been interrupted.
+		 * This means user has Tweeted #FOAKLeave and we need to try
+		 * break out of all running code, because the game is over.
+		 */
+		return null;
 	}
 
 	private static String stripAmpersandInfo(String latestReplyString) {
@@ -205,7 +200,7 @@ public class TwitterInteraction {
 		ArrayList<StatusUpdate> statusesToPost = new ArrayList<StatusUpdate>();
 
 		System.out.println("compound tweet: \n"+compoundTweet);
-		while(compoundTweet.length() > 120){
+		while(compoundTweet.length() > 120 && !(TwitterStreamer.userHasQuit(username))){
 			boolean foundLine = false;
 			int foundIndex=0;
 			String substr = "";
@@ -243,6 +238,8 @@ public class TwitterInteraction {
 
 
 	}
+
+
 
 
 

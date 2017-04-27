@@ -15,6 +15,7 @@ public class HandOfPoker {
 	int ante;
 	//public static ThreadLocal<Integer> pot = new ThreadLocal<Integer>();
 	public int pot;
+	public boolean gotGameEndSignal = false;
 
 	
 	OutputTerminal UI;
@@ -307,6 +308,10 @@ public class HandOfPoker {
 			// Take opening bets 
 			if (players.get(i).equals(human)){
 				bet = human.openingBet();
+				if(bet==-1){
+					gotGameEndSignal = true;
+					break;
+				}
 			}
 			else {
 				bet = players.get(i).getBet();
