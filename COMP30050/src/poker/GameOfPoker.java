@@ -35,7 +35,7 @@ public class GameOfPoker implements Runnable{
 		System.out.println("created gameofpoker object successfully");
 	}
 
-	public static final int PLAYER_POT_DEFAULT = 100;
+	public static final int PLAYER_POT_DEFAULT = 20;
 	public static final int ROUND_NUMBER = 0;
 	int ante = 1;
 

@@ -17,6 +17,10 @@ public abstract class PokerPlayer {
 		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;
 	}
 	
+	public void subtractChips (int chips) {
+		playerPot = playerPot - chips;
+	}
+	
 	public void passHandOfPokerRef(HandOfPoker currentRound){
 		this.currentRound = currentRound;
 		roundPot = currentRound.pot;
@@ -88,6 +92,8 @@ public abstract class PokerPlayer {
 	public void dealNewHand() throws InterruptedException{
 		hand = new HandOfCards(deck);
 	}
+	
+	public abstract int getCall();
 	
 	public abstract int getBet() throws TwitterException;
 	

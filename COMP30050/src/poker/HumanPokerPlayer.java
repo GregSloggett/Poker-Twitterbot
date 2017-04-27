@@ -41,6 +41,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public void setSplitPot(boolean splitPot) {
 		this.splitPot = splitPot;
 	}
+	
+	public int getCall(){
+		return 0;
+	}
 
 	/**
 	 * Should return the value of the bet for the human player.

@@ -2,12 +2,10 @@ package poker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -41,7 +39,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		this.hand.passPlayerType(this);
 	}
 	
-	public static int countLines(String f) throws IOException {
+	public static int countFileLines(String f) throws IOException {
 		InputStream is = new BufferedInputStream(new FileInputStream(f));
 		try {
 			byte[] c = new byte[1024];
@@ -63,8 +61,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	}
 
 	public int getPlayerType() {
-		// TODO Auto-generated method stub
-		return playerType;
+		return this.playerType;
 	}
 
 	public String getPlayerQuote(int quoteNumber){
@@ -97,7 +94,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		String out = "";
 		try{
 			Random rand = new Random();
-			int number_line = rand.nextInt(countLines(filename));
+			int number_line = rand.nextInt(countFileLines(filename));
 			@SuppressWarnings("resource")
 			BufferedReader read = new BufferedReader(new FileReader(filename));
 			String line;
@@ -157,6 +154,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return rand.nextInt(range) + 1;
 	}
 
+	public int getCall(){
+		return 0;
+	}
+	
 	/**
 	 * Retrieves the bet value the player wishes to bet.
 	 */
@@ -213,7 +214,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int getCallValueCalculation(int betValue) {
 		float playerTypeCalculation = (float) (0.75 + (1 - ((float)1/playerType)));
 		int callValue = (int) (betValue*playerTypeCalculation);
-
+			
 		return callValue;
 	}
 
@@ -327,7 +328,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 
 		DeckOfCards deck = new DeckOfCards();
 		TwitterInteraction t = new TwitterInteraction(TwitterStreamer.twitter);
-		OutputTerminal out = new OutputTerminal();
 
 		//ArrayList<AutomatedPokerPlayer> players = new ArrayList<AutomatedPokerPlayer>();
 		AutomatedPokerPlayer playerOne = new AutomatedPokerPlayer(deck, t);
