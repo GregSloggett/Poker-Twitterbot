@@ -41,10 +41,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public void setSplitPot(boolean splitPot) {
 		this.splitPot = splitPot;
 	}
-	
-	public int getCall(){
-		return 0;
-	}
 
 	/**
 	 * Should return the value of the bet for the human player.
@@ -199,6 +195,21 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		return validBet;
 	}
+	
+	public int getBet(String Bet) throws TwitterException{
+		int bet = Integer.parseInt(Bet);
+		int finalBet = 0;
+		if(bet <= this.playerPot && bet <= 0 ){
+			 bet = finalBet;	
+		}
+		else{
+			twitter.updateStatus("Sorry this is an invalid bet");
+			this.getBet();
+		}
+		
+		return finalBet;
+		
+	}
 
 	public int openingBet() throws TwitterException, InterruptedException{
 		String betResponse = "Bet";
@@ -212,15 +223,11 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		if (Answer.equalsIgnoreCase(betResponse)){
 			twitter.updateStatus("How much would you like to bet?");
 			String openingBet = twitter.waitForTweet();
+			currentBet = getBet(openingBet);
 			if(openingBet.equals(null)){
 				return -1;
 			}
-			bet = readinMultipleInt(openingBet).get(0);
-			if(!validBet(bet)){
-				//output.printout("sorry you dont have this amount to bet");
-				twitter.updateStatus("Sorry, you dont have this amount to bet");
-				this.openingBet();
-			}
+			
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
@@ -255,7 +262,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			System.out.println("posted sorry message");
 			splitPot = true;
 		}
-		if(currentRound.pot == 0){
+		if(currentRound.highBet == 0){
 			System.out.println("pot was 0");
 			this.openingBet();
 			System.out.println("ran opening bet");
@@ -276,7 +283,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 						+ " How much do you want to raise by?");
 				String betAmountString = twitter.waitForTweet();
 				if(!(betAmountString.equals(null))){
-					bet = readinMultipleInt(betAmountString).get(0);
+					bet = getBet(betAmountString);
 					bet = bet + (currentRound.highBet - currentBet);
 					currentBet = bet;
 					if(!validBet(currentBet)){
@@ -395,6 +402,12 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		twitter.postCompoundTweet();
 		twitter.waitForTweet();
 
+	}
+
+	@Override
+	public int getCall() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
