@@ -200,7 +200,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		int bet = Integer.parseInt(Bet);
 		int finalBet = 0;
 		if(bet <= this.playerPot && bet >= 0 ){
-			 bet = finalBet;	
+			 finalBet = bet;	
 		}
 		else{
 			twitter.updateStatus("Sorry this is an invalid bet");
