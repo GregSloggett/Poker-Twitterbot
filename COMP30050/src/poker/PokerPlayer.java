@@ -17,10 +17,6 @@ public abstract class PokerPlayer {
 		playerPot = GameOfPoker.PLAYER_POT_DEFAULT;
 	}
 	
-	public void subtractChips (int chips) {
-		playerPot = playerPot - chips;
-	}
-	
 	public void passHandOfPokerRef(HandOfPoker currentRound){
 		this.currentRound = currentRound;
 		roundPot = currentRound.pot;
@@ -101,6 +97,10 @@ public abstract class PokerPlayer {
 	
 	public void awardChips(int amountWon) {
 		playerPot += amountWon;
+	}
+	
+	public void subtractChips (int chips) {
+		playerPot = playerPot - chips;
 	}
 	
 	public String toString() {

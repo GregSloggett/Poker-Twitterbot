@@ -199,7 +199,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public int getBet(String Bet) throws TwitterException{
 		int bet = Integer.parseInt(Bet);
 		int finalBet = 0;
-		if(bet <= this.playerPot && bet <= 0 ){
+		if(bet <= this.playerPot && bet >= 0 ){
 			 bet = finalBet;	
 		}
 		else{
@@ -236,7 +236,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.openingBet();
 
 		}
-		currentBet = bet;
+		bet = currentBet;
 		return bet;
 	}
 

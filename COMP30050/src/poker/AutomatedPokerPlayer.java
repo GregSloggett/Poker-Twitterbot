@@ -39,6 +39,13 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		this.hand.passPlayerType(this);
 	}
 	
+	
+	/**
+	 * Counts the number of lines in a given file
+	 * @param location of File 
+	 * @return
+	 * @throws IOException
+	 */
 	public static int countFileLines(String f) throws IOException {
 		InputStream is = new BufferedInputStream(new FileInputStream(f));
 		try {
@@ -60,10 +67,19 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 	}
 
+	/**
+	 * Returns the player type of the player in question
+	 * @return
+	 */
 	public int getPlayerType() {
 		return this.playerType;
 	}
 
+	/**
+	 * Retrieves a quote for folding/raising/calling for each player type
+	 * @param quoteNumber
+	 * @return
+	 */
 	public String getPlayerQuote(int quoteNumber){
 		String quote = "";
 		
@@ -155,21 +171,28 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	}
 
 	public int getCall(){
-		return 0;
+		int betValue = getBetValueCalculation();
+
+		return see(betValue);
 	}
 	
 	/**
 	 * Retrieves the bet value the player wishes to bet.
 	 */
 	public int getBet(){
-		int betValue = getBetValueCalculation();
-		int callValue = getCallValueCalculation(betValue);
+		int betValue = getBetValueCalculation();	//the value at which a player would bet up to 
+		int callValue = getCallValueCalculation(betValue);   //the value at which a player would call up to, based on the bet value and player type
 		boolean hasRaised = false;
 		boolean bettingHasBeenRaised = false;
 
 		//if nobody has bet
 		if(currentRound.highBet == 0){
-			twitter.appendToCompoundTweet("I bet " + betValue + " to start.");
+			if(this.hand.getGameValue() < 100500000){
+				twitter.appendToCompoundTweet("I check");
+			}
+			else{
+				twitter.appendToCompoundTweet("I bet " + betValue + " to start.");
+			}
 			return betValue;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
@@ -177,8 +200,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			return fold(betValue);
 		}
 		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.
-		else if(betValue > currentRound.highBet && hasRaised != true){
+		else if(betValue > currentRound.highBet && hasRaised == false){
 			hasRaised = true;
+			
 			if(bettingHasBeenRaised == true){
 				return reRaise(betValue);
 			}
@@ -250,6 +274,16 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int raise(int betValue){
 		int raiseValue = betValue - currentRound.highBet;
 
+		//different types of betting to be implemented
+		
+		/*
+		 * if a player has a strong hand there's a number of betting strategies they can use:
+		 * - Slow Play = where player checks/bets low in order to tempt other players into betting
+		 * - Value Bet = player believes they have the strongest hand, & wants to bet without scaring other players into folding
+		 * - Over Bet = pressurize opponents into 
+		 * - All in Bet = pressurize opponents into 
+		 */
+		
 		if(playerType < 4){
 			twitter.appendToCompoundTweet(getPlayerQuote(CONSERVATIVE_RAISE) + "I raise " + raiseValue + " chips.");
 		}
