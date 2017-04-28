@@ -20,6 +20,7 @@ public class HandOfCards {
 	public static final int TWO_PAIR_DEFAULT = 300000000;
 	public static final int ONE_PAIR_DEFAULT = 200000000;
 	public static final int HIGH_HAND_DEFAULT = 100000000;
+	public static final int DISCARD_PROBABILITY_SCALE = 3;
 	
 	/*
 	 * Set to true to show game values in toString() method, useful for testing
@@ -33,7 +34,6 @@ public class HandOfCards {
 	public PlayingCard[] cardArray;
 	private DeckOfCards deck;
 	private int playerType;
-	
 	/*
 	 * Constructor takes in deck, initializes card array and then fills in with 5
 	 * cards dealt from deck
@@ -47,29 +47,37 @@ public class HandOfCards {
 		sort();
 	}
 	
-	public void passPlayerType(AutomatedPokerPlayer aiPlayer){
-		playerType = aiPlayer.getPlayerType();
+	public void passPlayerType(PokerPlayer pokerPlayer){
+		playerType = pokerPlayer.getPlayerType();
+		
 	}
 	
 	public int getAutomatedPlayerType(){
-		System.out.println("playerType = " + this.playerType);
-		return this.playerType;
+		return playerType;
 	}
 	
 	public int increaseDiscardProbabilityValue(int discardProbability){
-		float playerTypeCalculation = (float) (1 + (1 - ((float)1/getAutomatedPlayerType())));
+		//out.printout("DP1 ===  " + discardProbability );
+		
+		
+		float playerTypeCalculation = (float) (DISCARD_PROBABILITY_SCALE + (1 - ((float)1/getAutomatedPlayerType())));
 		int newDiscardProbability = (int) (discardProbability*playerTypeCalculation);
 		
+		//out.printout("DP2 ===  " + newDiscardProbability );
 		return newDiscardProbability;
 	}
 	
+	OutputTerminal out = new OutputTerminal();
+	
 	public int discard() throws InterruptedException{
+		//out.printout("PT ==== " + player.getPlayerType());
+		//out.printout("Hand =====  " + player.getHandType());
 		int numCardsDiscarded = 0;
 		Random rand = new Random();
 		
 		//Random number in the range [0,99]
-		int randomNumber = rand.nextInt(100);
-		
+		int randomNumber = rand.nextInt(80);
+		//out.printout("RAND ====    " + randomNumber);
 		for(int card=0;card<CARDS_HELD;card++){
 			PlayingCard nextCard = deck.dealNext();
 			/*
@@ -2112,7 +2120,15 @@ public class HandOfCards {
 			System.out.println("XXX Discard Probability test(s) failed, please check terminal above for failures");
 		}
 		
-
+		DeckOfCards d = new DeckOfCards();
+		TwitterInteraction t = new TwitterInteraction(null);
+		PokerPlayer p1 = new AutomatedPokerPlayer(d, t);
+		PokerPlayer p2 = new AutomatedPokerPlayer(d, t);
+		PokerPlayer p3 = new AutomatedPokerPlayer(d, t);
+		
+		System.out.println(p1.hand.playerType);
+		System.out.println(p2.hand.playerType);
+		System.out.println(p3.hand.playerType);
 		
 		
 	}

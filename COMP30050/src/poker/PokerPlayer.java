@@ -95,6 +95,8 @@ public abstract class PokerPlayer {
 	
 	public abstract boolean showCards(PokerPlayer handWinner);
 	
+	public abstract int getPlayerType();
+	
 	public void awardChips(int amountWon) {
 		playerPot += amountWon;
 	}

@@ -62,6 +62,18 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return ret;
 	}
 
+	@Override
+	public int getCall() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getPlayerType() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 	/**
 	 * Should return whether or not the player wants to show his/her cards at the end of the round.
 	 * The PokerPlayer that won the hand is past in to be used to check if a player has won.
@@ -426,12 +438,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		output.printout(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
 		output.printout("reply #FOAKLeave to leave or reply to continue..");
 		output.readInString();
-	}
-
-	@Override
-	public int getCall() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

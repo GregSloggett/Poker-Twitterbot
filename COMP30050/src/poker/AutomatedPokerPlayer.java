@@ -36,9 +36,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		playerType = randomPokerPlayerType();
 		playerBluffProbability = getBluffProbability();
 		twitter = t;
-		this.hand.passPlayerType(this);
 	}
-	
 	
 	/**
 	 * Counts the number of lines in a given file
@@ -72,6 +70,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * @return
 	 */
 	public int getPlayerType() {
+		System.out.println("PT =     " + this.playerType);
 		return this.playerType;
 	}
 
