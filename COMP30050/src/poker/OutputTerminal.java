@@ -1,13 +1,24 @@
 package poker;
 
 import java.awt.List;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OutputTerminal {
 	
 	public void printout(String Output){
-		System.out.println(Output);
+		
+		System.setOut(TwitterStreamer.zo);
+		
+		System.out.println("TERMINAL##>"+Output);
+		
+		System.setOut(new PrintStream(new OutputStream() {
+			  public void write(int b) {
+			    // NO-OP
+			  }
+			}));
 	}
 	
 	public String readInString(){

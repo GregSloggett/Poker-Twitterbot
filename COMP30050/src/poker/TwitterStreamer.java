@@ -1,7 +1,10 @@
 package poker;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -26,7 +29,11 @@ public class TwitterStreamer {
 	static Map<String, Future<?>> gamesOfPoker = new HashMap<String, Future<?>>();
 	private static final int NUMTHREADS = 30;
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
+	public static final String outputMethod = "terminal";
 	Thread thread;
+	
+	public static PrintStream zo = System.out;
+	
 
 	public static void StartHashtagStream() {
 		TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
@@ -173,7 +180,20 @@ public class TwitterStreamer {
 
 
 	public static void main(String[] args) throws InterruptedException, TwitterException {
-		StartHashtagStream();
+		//StartHashtagStream();
+		
+		System.setOut(new PrintStream(new OutputStream() {
+			  public void write(int b) {
+			    // NO-OP
+			  }
+			}));
+		
+		Random rand = new Random();
+		Status status = twitter.updateStatus("Testing on terminal" + rand.nextInt(10000));
+		TwitterInteraction t = new TwitterInteraction(twitter,status,"FOAKPoker");
+		DeckOfCards d= new DeckOfCards();
+		GameOfPoker g = new GameOfPoker("FOAKPoker",t,d);
+		g.run();
 		/*
 		TwitterInteraction t = new TwitterInteraction(twitter, twitter.updateStatus("Testing splitting tweets in the next few tweets."),"PokerFOAK");
 		

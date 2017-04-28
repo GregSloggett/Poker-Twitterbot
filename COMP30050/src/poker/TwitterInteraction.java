@@ -55,10 +55,13 @@ public class TwitterInteraction {
 
 	public Status update(StatusUpdate a) throws TwitterException{
 		Status ret = latestTweet;
-		System.out.println("Thread is interrupted? "+ Thread.currentThread().isInterrupted());
-		System.out.println("User has quit? "+TwitterStreamer.userHasQuit(username));
+		if(TwitterStreamer.outputMethod.compareTo("twitter")==0){
+			System.out.println("Thread is interrupted? "+ Thread.currentThread().isInterrupted());
+			System.out.println("User has quit? "+TwitterStreamer.userHasQuit(username));
+
 			ret =  twitter.updateStatus(a);
-		
+		}
+
 		return ret;
 	}
 
@@ -98,7 +101,7 @@ public class TwitterInteraction {
 	}
 
 	public  String waitForTweet() throws TwitterException, InterruptedException{
-		while(!(TwitterStreamer.userHasQuit(username))){
+		while(!(TwitterStreamer.userHasQuit(username)) && TwitterStreamer.outputMethod.compareTo("twitter")==0){
 			System.out.println(Thread.currentThread().getId());
 			ArrayList<Status> replies = getDiscussion();
 			System.out.println(replies.size());
@@ -197,41 +200,43 @@ public class TwitterInteraction {
 	}
 
 	public void postCompoundTweet() throws TwitterException{
-		ArrayList<StatusUpdate> statusesToPost = new ArrayList<StatusUpdate>();
+		if(compoundTweet.length()>0){
+			ArrayList<StatusUpdate> statusesToPost = new ArrayList<StatusUpdate>();
 
-		System.out.println("compound tweet: \n"+compoundTweet);
-		while(compoundTweet.length() > 120 && !(TwitterStreamer.userHasQuit(username))){
-			boolean foundLine = false;
-			int foundIndex=0;
-			String substr = "";
-			for(int i=0;i<compoundTweet.length();i++){
-				if(compoundTweet.charAt(i)=='\n' && i<=120){
-					substr = compoundTweet.substring(0, i+1);
-					foundLine = true;
-					foundIndex = i;
-				}
-				if(compoundTweet.charAt(i) == '\n' && i>120 && foundLine){
-					System.out.println("Substring which is becoming tweet: "+substr);
-					StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+substr);
-					statusesToPost.add(replyStatus);
-					compoundTweet = compoundTweet.substring(foundIndex+1,compoundTweet.length());
-					break;
+			System.out.println("compound tweet: \n"+compoundTweet);
+			while(compoundTweet.length() > 120 && !(TwitterStreamer.userHasQuit(username))){
+				boolean foundLine = false;
+				int foundIndex=0;
+				String substr = "";
+				for(int i=0;i<compoundTweet.length();i++){
+					if(compoundTweet.charAt(i)=='\n' && i<=120){
+						substr = compoundTweet.substring(0, i+1);
+						foundLine = true;
+						foundIndex = i;
+					}
+					if(compoundTweet.charAt(i) == '\n' && i>120 && foundLine){
+						System.out.println("Substring which is becoming tweet: "+substr);
+						StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+substr);
+						statusesToPost.add(replyStatus);
+						compoundTweet = compoundTweet.substring(foundIndex+1,compoundTweet.length());
+						break;
+					}
 				}
 			}
+
+
+			StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+compoundTweet);
+			replyStatus.setInReplyToStatusId(latestTweet.getId());
+			statusesToPost.add(replyStatus);
+			System.out.println(compoundTweet+"\n\n");
+
+			for(StatusUpdate status:statusesToPost){
+				//	System.out.println("\n\n------Status: "+status.toString()+"-------\n\n");
+				status.setInReplyToStatusId(latestTweet.getId());
+				latestTweet = update(status);
+			}
+			compoundTweet = "";
 		}
-
-
-		StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+compoundTweet);
-		replyStatus.setInReplyToStatusId(latestTweet.getId());
-		statusesToPost.add(replyStatus);
-		System.out.println(compoundTweet+"\n\n");
-
-		for(StatusUpdate status:statusesToPost){
-			//	System.out.println("\n\n------Status: "+status.toString()+"-------\n\n");
-			status.setInReplyToStatusId(latestTweet.getId());
-			latestTweet = update(status);
-		}
-		compoundTweet = "";
 	}
 
 	public static void main(String[] args) throws TwitterException, IOException {

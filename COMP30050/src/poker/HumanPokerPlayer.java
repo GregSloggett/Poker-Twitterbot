@@ -80,35 +80,39 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String positiveResponse = "y";
 		String negativeResponse = "n";
 		askToDiscard = true;
-		//output.printout("Do you want to replace some of your cards??\n If so tweet Y for yes or N for no");
-		//String Answer = output.readInString();
+
 		System.out.println("getting here 1");
-		twitter.updateStatusWithTextAndImage("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no", pic.createImage(this.hand)  );
+		//twitter.updateStatusWithTextAndImage("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no", pic.createImage(this.hand)  );
+		output.printout("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no\n"+hand.toString());
 		System.out.println("getting here 2");
-		String Answer = twitter.waitForTweet();
+		//String Answer = twitter.waitForTweet();
+		String Answer = output.readInString();
 
 		if (Answer.equalsIgnoreCase(positiveResponse)) {
-			//output.printout("OK how many cards do you need to change you can discard up to 3 cards");
-			twitter.updateStatus("How many cards do you need to change? You can discard up to 3 cards.");
+			output.printout("OK how many cards do you need to change you can discard up to 3 cards");
+			//twitter.updateStatus("How many cards do you need to change? You can discard up to 3 cards.");
 			//int amountToDiscard = output.readInSingleInt();
 			int amountToDiscard = -1;
 			boolean gotNumber = false;
 			while(gotNumber == false){
 				try{
-					String stringToDiscard = twitter.waitForTweet();
+					//String stringToDiscard = twitter.waitForTweet();
+					String stringToDiscard = output.readInString();
 					if(stringToDiscard.equals(null)){
 						break;
 					}
 					amountToDiscard = Integer.parseInt(stringToDiscard);
 					gotNumber =true;
 				}catch(NumberFormatException ex){ // handle your exception
-					twitter.updateStatus("Invalid input, try again.");
+					//twitter.updateStatus("Invalid input, try again.");
+					output.printout("Invalid input try again.");
 				}
 				if (amountToDiscard == 1) {
-					//output.printout("which card do you want to discard? 1 is the first card up to 5 the rightmost card");
-					twitter.updateStatus("Which card(s) do you want to discard? Cards are labelled 1 to 5 from left to right");
+					output.printout("which card do you want to discard? 1 is the first card up to 5 the rightmost card");
+					//twitter.updateStatus("Which card(s) do you want to discard? Cards are labelled 1 to 5 from left to right");
 					//int discardedCard = output.readinMultipleInt().get(0);
-					String discardedCardString = twitter.waitForTweet();
+					//String discardedCardString = twitter.waitForTweet();
+					String discardedCardString = output.readInString();
 					if(discardedCardString.equals(null)){
 						break;
 					}
@@ -116,44 +120,44 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 					if (discardedCard > 0 && discardedCard <= 5) {
 						this.hand.replaceCardFromDeck(discardedCard - 1);
 						this.hand.sort();
-						twitter.updateStatusWithTextAndImage("Here is your updated hand goodluck!", pic.createImage(this.hand)  );
-
+						//twitter.updateStatusWithTextAndImage("Here is your updated hand goodluck!", pic.createImage(this.hand)  );
+						output.printout("Here is your updated hand goodluck!\n" + hand.toString());
 					} else {
-						//output.printout("Sorry this isnt a valid card..");
-						twitter.updateStatus("Sorry this isnt a valid card..");
+						output.printout("Sorry this isnt a valid card..");
+						//twitter.updateStatus("Sorry this isnt a valid card..");
 						this.discard();
 					}
 
 				}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
-					//output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
-					twitter.updateStatus("Which cards do you want to discard? The cards are labelled 1 to 5 from left to right");
+					output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
+					//twitter.updateStatus("Which cards do you want to discard? The cards are labelled 1 to 5 from left to right");
 					ArrayList<Integer> discardedCard = new ArrayList<Integer>();
 
-					String discardedCardString = twitter.waitForTweet();
-					//discardedCard = output.readinMultipleInt();
+					//String discardedCardString = twitter.waitForTweet();
+					String discardedCardString = output.readInString();
 					discardedCard = readinMultipleInt(discardedCardString);
 					if(discardedCard.size() == amountToDiscard){
 						for(int i = 0; i<amountToDiscard; i++){
 							this.hand.replaceCardFromDeck(discardedCard.get(i)-1);
 						}
 						this.hand.sort();
-						twitter.updateStatusWithTextAndImage("Here is your updated hand! Good Luck!!", pic.createImage(this.hand)  );
-
+						//twitter.updateStatusWithTextAndImage("Here is your updated hand! Good Luck!!", pic.createImage(this.hand)  );
+						output.printout("Here is your updated hand! Good Luck!!\n"+hand.toString());
 
 					}else{
-						//output.printout("Sorry one of the card positions you entered is invalid");
-						twitter.updateStatus("Sorry one of the card positions you entered is invalid");
+						output.printout("Sorry one of the card positions you entered is invalid");
+						//twitter.updateStatus("Sorry one of the card positions you entered is invalid");
 						this.discard();
 					}
 
 				}else{
-					//output.printout("Sorry you can only remove between 1 and 3 cards");
-					twitter.updateStatus("Sorry you can only remove between 1 and 3 cards");
+					output.printout("Sorry you can only remove between 1 and 3 cards");
+					//twitter.updateStatus("Sorry you can only remove between 1 and 3 cards");
 					this.discard();
 				}
 			}}else if(Answer.equalsIgnoreCase(negativeResponse)){
-				//output.printout("OK lets continue...");
-				twitter.updateStatus("OK lets continue...");
+				output.printout("OK lets continue...");
+				//twitter.updateStatus("OK lets continue...");
 			}
 			else if (Answer.equals(null)){
 
@@ -163,8 +167,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	public void tweetInitialCards() throws TwitterException, IOException, InterruptedException {
 		pic = new PictureOfHand();
-		twitter.updateStatusWithTextAndImage("These are your cards!", pic.createImage(this.hand)  );
-		twitter.updateStatus(this.hand.toString());
+		//twitter.updateStatusWithTextAndImage("These are your cards!", pic.createImage(this.hand)  );
+		//twitter.updateStatus(this.hand.toString());
+		output.printout("These are your cards!");
+		output.printout(hand.toString());
 
 	}
 
@@ -203,7 +209,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			 finalBet = bet;	
 		}
 		else{
-			twitter.updateStatus("Sorry this is an invalid bet");
+			//twitter.updateStatus("Sorry this is an invalid bet");
+			output.printout("Sorry this is an invalid bet\n");
 			this.getBet();
 		}
 		
@@ -215,14 +222,17 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String betResponse = "Bet";
 		String checkResponse = "Check";
 
-		twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
+		//twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
+		output.printout("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check\n");
 
-		//String Answer = output.readInString();
-		String Answer = twitter.waitForTweet();
+		String Answer = output.readInString();
+		//String Answer = twitter.waitForTweet();
 		int bet =0;
 		if (Answer.equalsIgnoreCase(betResponse)){
-			twitter.updateStatus("How much would you like to bet?");
-			String openingBet = twitter.waitForTweet();
+			output.printout("How much would you like to bet?\n");
+			//twitter.updateStatus("How much would you like to bet?");
+			//String openingBet = twitter.waitForTweet();
+			String openingBet = output.readInString();
 			currentBet = getBet(openingBet);
 			if(openingBet.equals(null)){
 				return -1;
@@ -231,8 +241,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
-			//output.printout("Sorry not a valid response");
-			twitter.updateStatus("Sorry not a valid response");
+			output.printout("Sorry not a valid response");
+			//twitter.updateStatus("Sorry not a valid response");
 			this.openingBet();
 
 		}
@@ -255,10 +265,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String FoldResponse = "Fold";
 		System.out.println("going into first if");
 		if(playerPot< currentRound.highBet){
-			//output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
+			output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
 			System.out.println("going to post sorry message");
-			twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
-					+" be split here and you can win up to this amount in the hand");
+			//twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
+			//		+" be split here and you can win up to this amount in the hand");
 			System.out.println("posted sorry message");
 			splitPot = true;
 		}
@@ -268,26 +278,34 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			System.out.println("ran opening bet");
 		}else{
 			System.out.println("got into else");
-			twitter.updateStatus("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
+			//twitter.updateStatus("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
+			output.printout("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
 			System.out.println("getting reply");
-			String Answer = twitter.waitForTweet();
+			//String Answer = twitter.waitForTweet();
+			String Answer = output.readInString();
+			
 
 			//System.out.println("\n\n\n\n\n@@@@@@@@@@@@@@@@@@" + Answer + "\n\n\n");
 
 			if(Answer.equalsIgnoreCase(callResponse)){
-				//output.printout("Ok you have called the pot at "+ HandOfPoker.highBet + "betting");
-				twitter.updateStatus("Ok you have called the pot at "+ currentRound.highBet + "betting");
+				output.printout("Ok you have called the pot at "+ currentRound.highBet + "betting");
+				//twitter.updateStatus("Ok you have called the pot at "+ currentRound.highBet + "betting");
 				bet = (currentRound.highBet-currentBet);
 			}else if(Answer.equalsIgnoreCase(raiseResponse)){
-				twitter.updateStatus("The pot is at " + currentRound.pot + " and it will take " + (currentRound.highBet - currentBet) + " to meet the current bet."
+				//twitter.updateStatus("The pot is at " + currentRound.pot + " and it will take " + (currentRound.highBet - currentBet) + " to meet the current bet."
+				//		+ " How much do you want to raise by?");
+				output.printout("The pot is at " + currentRound.pot + " and it will take " + (currentRound.highBet - currentBet) + " to meet the current bet."
 						+ " How much do you want to raise by?");
-				String betAmountString = twitter.waitForTweet();
+				
+				//String betAmountString = twitter.waitForTweet();
+				String betAmountString = output.readInString();
 				if(!(betAmountString.equals(null))){
 					bet = getBet(betAmountString);
 					bet = bet + (currentRound.highBet - currentBet);
 					currentBet = bet;
 					if(!validBet(currentBet)){
-						twitter.updateStatus("Sorry you dont have the money to make this bet");
+						//twitter.updateStatus("Sorry you dont have the money to make this bet");
+						output.printout("Sorry you dont have the money to make this bet");
 						this.inHandBet();
 					}
 				}
@@ -296,7 +314,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				currentBet = 0;
 			}
 			else{
-				twitter.updateStatus("Sorry that isnt a valid response");
+				//twitter.updateStatus("Sorry that isnt a valid response");
+				output.printout("Sorry that isnt a valid response");
 				this.inHandBet();
 			}
 		}
@@ -310,8 +329,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		boolean isFold = false;
 
-		twitter.updateStatus("Are you sure you want to fold??\n If so tweet Y for yes or N for no");
-		String Answer = twitter.waitForTweet();
+		//twitter.updateStatus("Are you sure you want to fold??\n If so tweet Y for yes or N for no");
+		output.printout("Are you sure you want to fold??\n If so tweet Y for yes or N for no");
+		//String Answer = twitter.waitForTweet();
+		String Answer = output.readInString();
 
 		if(!(Answer.equals(null))){
 			if (Answer.equalsIgnoreCase(positiveResponse)) {
@@ -320,7 +341,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				isFold = false;
 				this.inHandBet();
 			} else {
-				twitter.updateStatus("Sorry I didnt regcognise this response");
+				//twitter.updateStatus("Sorry I didnt regcognise this response");
+				output.printout("Sorry I didnt regcognise this response");
 				this.Fold();
 			}
 			System.out.println(isFold);
@@ -397,11 +419,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		};
 		Random rand = new Random();
 
-		twitter.appendToCompoundTweet(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
-		twitter.appendToCompoundTweet("Tweet #FOAKLeave to leave or reply to continue. . .");
-		twitter.postCompoundTweet();
-		twitter.waitForTweet();
-
+		//twitter.appendToCompoundTweet(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
+		//twitter.appendToCompoundTweet("Tweet #FOAKLeave to leave or reply to continue. . .");
+		//twitter.postCompoundTweet();
+		//twitter.waitForTweet();
+		output.printout(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
+		output.printout("reply #FOAKLeave to leave or reply to continue..");
+		output.readInString();
 	}
 
 	@Override
