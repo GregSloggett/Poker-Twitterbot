@@ -61,11 +61,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		return ret;
 	}
+	
+	
 
 	@Override
 	public int getCall() {
 		// TODO Auto-generated method stub
-		return 0;
+		return currentRound.highBet-currentBet;
 	}
 
 	@Override
