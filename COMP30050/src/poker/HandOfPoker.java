@@ -415,7 +415,7 @@ public class HandOfPoker {
 		//twitter.appendToCompoundTweet("Need calling function here");
 		UI.printout("Need calling function here");
 		if (players.size() > 1){
-			for (int i = firstRaiserIndex; (i+1)%players.size() != lastRaiserIndex; i = (i+1)%players.size()){
+			for (int i = firstRaiserIndex; (i+1)%players.size() != lastRaiserIndex-1; i = (i+1)%players.size()){
 				int bet = players.get(i).getBet();
 				if (bet != 0){
 					playersNotFolded.add(players.get(i));
@@ -550,6 +550,7 @@ public class HandOfPoker {
 			
 			twitter.postCompoundTweet();
 			winners.get(0).awardChips(pot);
+			
 			pot = 0;
 		}
 		
@@ -565,6 +566,8 @@ public class HandOfPoker {
 				//twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
 				UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
 			}
+			
+			
 		}
 	}
 	
