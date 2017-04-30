@@ -206,10 +206,7 @@ public class TwitterStreamer {
 
 
 	public static void main(String[] args) throws InterruptedException, TwitterException {
-		//StartHashtagStream();
-
-		incrementProfileGameCount();
-		
+		//StartHashtagStream();		
 	System.setOut(new PrintStream(new OutputStream() {
 		public void write(int b) {
 			// NO-OP
