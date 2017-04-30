@@ -256,11 +256,15 @@ public class HandOfPoker {
 			else {
 				int betDifference = highBet - betRecord.get(0);
 				totalBets += betDifference;
-				//twitter.appendToCompoundTweet(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
-				UI.printout(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
+				if(betDifference == 0 ){
+					UI.printout(players.get(0).playerName + " sees the bet of " + highBet + " chips. \n");
+				}
+				else{
+					//twitter.appendToCompoundTweet(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
+					UI.printout(players.get(0).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.\n");
+				}
 			}
 		}
-		
 		/*
 		System.out.println(players);
 		System.out.println("highBet = " + highBet);
@@ -284,9 +288,14 @@ public class HandOfPoker {
 				if ((bet >= highBet && i<lastRaise) || (lastRaise ==0 && i != lastRaise)  || (i == players.size()-1 && playersNotFolded.size() ==0)){
 					int betDifference = highBet - betRecord.get(i);
 					totalBets += betDifference;
-					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
-					UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
-					playersNotFolded.add(players.get(i));
+					if(betDifference == 0){
+						UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");						
+					}
+					else{
+						//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
+						UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " and throws in the additional " + betDifference + " chips.");
+					}
+				playersNotFolded.add(players.get(i));
 				}
 			}
 			
@@ -429,8 +438,13 @@ public class HandOfPoker {
 					pot += highBet - betRecord.get(i);
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-					UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
-							+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
+					if((bet - betRecord.get(0)) == 0){
+						UI.printout(players.get(i).playerName + " sees the bet of " + highBet);					
+					}
+					else{
+						UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
+								+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
+					}
 					twitter.postCompoundTweet();
 				}
 				else {
