@@ -194,6 +194,7 @@ public class HandOfPoker {
 		for (int i=0; i<players.size() ; i++){
 			
 			int bet = players.get(i).getBet();
+			players.get(i).subtractChips(bet);
 			System.out.println("got bets");
 			if(bet > highBet){  //should be reset after each round of betting
 				if (i >0){
@@ -284,11 +285,12 @@ public class HandOfPoker {
 				//twitter.appendToCompoundTweet(" Checking if " + players.get(i).playerName + " will see.");
 				UI.printout(" Checking if " + players.get(i).playerName + " will see.");
 				int bet = players.get(i).getBet();
-				
+				players.get(i).subtractChips(bet);
+
 				if ((bet >= highBet && i<lastRaise) || (lastRaise ==0 && i != lastRaise)  || (i == players.size()-1 && playersNotFolded.size() ==0)){
 					int betDifference = highBet - betRecord.get(i);
 					totalBets += betDifference;
-					if(betDifference == 0){
+					if(betDifference < 1){
 						UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");						
 					}
 					else{
@@ -373,6 +375,8 @@ public class HandOfPoker {
 			//UI.printout("high bet 1 = " + highBet);
 			
 			int bet = players.get(i).getBet();
+			players.get(i).subtractChips(bet);
+
 			if (bet > highBet){
 				lastRaiserIndex = i;
 			}
@@ -433,12 +437,14 @@ public class HandOfPoker {
 		if (players.size() > 1){
 			for (int i = firstRaiserIndex; (i+1)%players.size() != lastRaiserIndex-1; i = (i+1)%players.size()){
 				int bet = players.get(i).getBet();
+				players.get(i).subtractChips(bet);
+
 				if (bet != 0){
 					playersNotFolded.add(players.get(i));
 					pot += highBet - betRecord.get(i);
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-					if((bet - betRecord.get(0)) == 0){
+					if((bet - betRecord.get(i)) == 0){
 						UI.printout(players.get(i).playerName + " sees the bet of " + highBet);					
 					}
 					else{
