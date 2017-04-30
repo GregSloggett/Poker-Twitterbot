@@ -185,6 +185,8 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		boolean hasRaised = false;
 		boolean bettingHasBeenRaised = false;
 
+		int returnValue = 0;
+		
 		//if nobody has bet
 		if(currentRound.highBet == 0){
 			if(this.hand.getGameValue() < 100500000){
@@ -193,39 +195,42 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			else{
 				twitter.appendToCompoundTweet("I bet " + betValue + " to start.");
 			}
-			return betValue;
+			returnValue = betValue;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
 		if(betValue <= currentRound.highBet && callValue < currentRound.highBet){
-			return fold(betValue);
+			returnValue = fold(betValue);
 		}
 		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.
 		else if(betValue > currentRound.highBet && hasRaised == false){
 			hasRaised = true;
 			
 			if(bettingHasBeenRaised == true){
-				return reRaise(betValue);
+				returnValue = reRaise(betValue);
 			}
 			else{
 				bettingHasBeenRaised = true;
-				return raise(betValue);
+				returnValue = raise(betValue);
 			}
 		}
 		//this may occur if a player chooses to bluff
 		else if(playerBluffProbability > 75 && hasRaised != true){
 			hasRaised = true;
 			if(bettingHasBeenRaised == true){
-				return reRaise(currentRound.highBet+betValue);
+				returnValue = reRaise(currentRound.highBet+betValue);
 			}
 			else{
 				bettingHasBeenRaised = true;
-				return raise(currentRound.highBet+betValue);
+				returnValue = raise(currentRound.highBet+betValue);
 			}
 		}
 		//if decides not to fold/raise/bluff then see(call) the highBet.
 		else{
-			return see(betValue);
+			returnValue = see(betValue);
 		}
+		
+		this.subtractChips(returnValue);
+		return returnValue;
 	}
 
 	/**
