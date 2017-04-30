@@ -22,6 +22,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.User;
 
 public class TwitterStreamer {
 	static Twitter twitter = TwitterFactory.getSingleton();
@@ -31,6 +32,7 @@ public class TwitterStreamer {
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	public static final String outputMethod = "terminal";
 	Thread thread;
+	private static int gameCount = 0;
 
 	public static PrintStream zo = System.out;
 
@@ -48,7 +50,8 @@ public class TwitterStreamer {
 					if(containsIgnoreCase(status.getText(),"FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
-
+							twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", "Number of games played in this execution of app: "+gameCount);
+							gameCount++;
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker.. Welcome to the game!.");
@@ -73,7 +76,7 @@ public class TwitterStreamer {
 							System.out.println("executing g");
 							gamesOfPoker.put(userNickname, executor.submit(g));
 							System.out.println("g was executed");
-
+							
 							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
 						else{
@@ -192,6 +195,8 @@ public class TwitterStreamer {
 				// NO-OP
 			}
 		}));
+		
+		twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", "Number of games played in this execution of app: "+0);
 
 		Random rand = new Random();
 		Status status = twitter.updateStatus("Testing on terminal" + rand.nextInt(10000));
