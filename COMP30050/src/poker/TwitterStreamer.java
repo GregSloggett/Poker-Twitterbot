@@ -200,7 +200,7 @@ public class TwitterStreamer {
 	private static void incrementProfileGameCount() throws TwitterException{
 		int currentGameCount = getNumGamesPlayed();
 		currentGameCount++;
-		twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", ("Number of games played in this version of game: "+currentGameCount));
+		twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", ("To Play: Tweet with #FOAKDeal&emsp;&emsp;&emsp;&emsp;To Leave: Tweet with #FOAKLeave&emsp;&emsp;Number of games played in this version of game: "+currentGameCount));
 	}
 
 
@@ -212,7 +212,6 @@ public class TwitterStreamer {
 			// NO-OP
 		}
 	}));
-	
 		Random rand = new Random();
 		Status status = twitter.updateStatus("Testing on terminal" + rand.nextInt(10000));
 		TwitterInteraction t = new TwitterInteraction(twitter,status,"FOAKPoker");
