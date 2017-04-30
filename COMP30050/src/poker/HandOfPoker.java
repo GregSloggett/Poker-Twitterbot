@@ -431,6 +431,10 @@ public class HandOfPoker {
 		playersNotFolded.clear();
 		//twitter.appendToCompoundTweet("Need calling function here");
 		UI.printout("Need calling function here");
+		for(int i=0; i<players.size(); i++){
+			UI.printout("player " + players.get(i).playerName + ": " + players.get(i).roundOverallBet);
+		}
+		
 		if (players.size() > 1){
 			for (int i = firstRaiserIndex; (i+1)%players.size() != lastRaiserIndex-1; i = (i+1)%players.size()){
 				int bet = players.get(i).getBet();

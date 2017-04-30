@@ -10,6 +10,7 @@ public abstract class PokerPlayer {
 	protected int roundPot;
 	protected int highBet;
 	protected String playerName;
+	protected int roundOverallBet;
 	
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		deck = inputDeck;
@@ -87,6 +88,15 @@ public abstract class PokerPlayer {
 	
 	public void dealNewHand() throws InterruptedException{
 		hand = new HandOfCards(deck);
+	}
+	
+	public boolean hasMatchedHighBet(){
+		if(roundOverallBet == currentRound.highBet){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	public abstract int getCall();

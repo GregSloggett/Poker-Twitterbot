@@ -229,6 +229,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			returnValue = see(betValue);
 		}
 		
+		this.roundOverallBet+=returnValue;
 		this.subtractChips(returnValue);
 		return returnValue;
 	}
