@@ -32,7 +32,6 @@ public class TwitterStreamer {
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	public static final String outputMethod = "terminal";
 	Thread thread;
-	private static int gameCount = 0;
 
 	public static PrintStream zo = System.out;
 
@@ -50,8 +49,7 @@ public class TwitterStreamer {
 					if(containsIgnoreCase(status.getText(),"FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
 							System.out.println("1");
-							twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", "Number of games played in this execution of app: "+gameCount);
-							gameCount++;
+							incrementProfileGameCount();
 							System.out.println(status.getUser().getScreenName());
 							System.out.println("Status id: " +status.getId());
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker.. Welcome to the game!.");
@@ -184,20 +182,40 @@ public class TwitterStreamer {
 			return false;
 		}
 	}
+	
+	private static int getNumGamesPlayed() throws TwitterException{
+		User user = twitter.showUser("PokerFOAK");
+		String description = user.getDescription();
+		System.out.println("description is: "+description);
+		String numGamesString = "";
+		for(int i =description.length()-1;i>=description.length()-5;i--){
+			if(Character.isDigit(description.charAt(i))){
+				numGamesString = description.charAt(i)+numGamesString;
+			}
+		}
+		int numGamesPlayed = Integer.parseInt(numGamesString);
+		return numGamesPlayed;
+	}
+	
+	private static void incrementProfileGameCount() throws TwitterException{
+		int currentGameCount = getNumGamesPlayed();
+		currentGameCount++;
+		twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", ("Number of games played in this version of game: "+currentGameCount));
+	}
 
 
 
 	public static void main(String[] args) throws InterruptedException, TwitterException {
 		//StartHashtagStream();
 
-		System.setOut(new PrintStream(new OutputStream() {
-			public void write(int b) {
-				// NO-OP
-			}
-		}));
+		incrementProfileGameCount();
 		
-		twitter.updateProfile("FOAKPoker", "http://cs.ucd.ie", "Ireland", "Number of games played in this execution of app: "+0);
-
+	System.setOut(new PrintStream(new OutputStream() {
+		public void write(int b) {
+			// NO-OP
+		}
+	}));
+	
 		Random rand = new Random();
 		Status status = twitter.updateStatus("Testing on terminal" + rand.nextInt(10000));
 		TwitterInteraction t = new TwitterInteraction(twitter,status,"FOAKPoker");
