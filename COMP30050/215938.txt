@@ -1,0 +1,166 @@
+The first line
+The second line
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before first betting loop.
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: []
+Betting record: []
+
+
+
+First Betting Loop: until someone raises
+player 0
+bet =0
+bet !> 0. continue 1st loop
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes first loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker]
+Betting record: [0]
+
+
+
+player 1
+bet =3
+bet > 0. break 1st loop
+
+
+>>>>>>>>>>>>>>>
+player 1 finishes first loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before second betting loop.
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+player 2
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 2 finishes second loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+player 3
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 3 finishes second loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+player 4
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 4 finishes second loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+player 5
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 5 finishes second loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [0, 3]
+
+
+
+player 0
+bet = 3
+bet >= highbet: 3
+bet != 0, lastRaiser = 0
+i <= firstRaiser index
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes second loop
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [3, 3]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before third loop swap.
+Players array:
+[FOAKPoker, Wayne Rooney, Samir Nasri, Ashley Young, Michael Essien, Sol Campbell]
+Players not Folded: [FOAKPoker, Wayne Rooney]
+Betting record: [3, 3]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+After third loop swap.
+Players array:
+[FOAKPoker, Wayne Rooney]
+Players not Folded: []
+Betting record: [3, 3]
+
+
+
+palyers size = 2
+size > 1
+Player 0
+bet = 3
+bet != 0
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes third loop
+Players array:
+[FOAKPoker, Wayne Rooney]
+Players not Folded: [FOAKPoker]
+Betting record: [3, 3]
+
+
+
