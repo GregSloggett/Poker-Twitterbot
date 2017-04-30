@@ -361,14 +361,13 @@ public class HandOfPoker {
 		// Go back around again and see who raises and give the first raiser a second chance to raise
 		int lastRaiserIndex = -1;
 		for (int i =(firstRaiserIndex + 1)%players.size(); i != firstRaiserIndex; i = (i+1)%players.size()) {
+			//UI.printout("high bet 1 = " + highBet);
 			
 			int bet = players.get(i).getBet();
-			
 			if (bet > highBet){
-				highBet = bet;
 				lastRaiserIndex = i;
 			}
-			
+
 			if (bet != 0){
 				lastRaiserIndex = i;
 				playersNotFolded.add(players.get(i));
@@ -376,7 +375,13 @@ public class HandOfPoker {
 					betRecord.add(bet);
 					pot += bet;
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
-					UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
+					if(bet > highBet){
+						UI.printout(players.get(i).playerName + " raises the bet by " + (bet-highBet) + ", betting " + bet + " chips.");
+						highBet = bet;
+					}
+					else{
+						UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
+					}
 					twitter.postCompoundTweet();
 				}
 				else {
@@ -400,10 +405,12 @@ public class HandOfPoker {
 			}
 		}
 		twitter.postCompoundTweet();
-		
+
+		//UI.printout("high bet 2 = " + highBet);
+
 		
 		System.out.println("\n\n\n\n#####\n" + betRecord.toString() + "\n\n" + playersNotFolded.toString() + "\n\n\n\n\n");
-		
+
 
 		//twitter.appendToCompoundTweet("Third Loop");
 		UI.printout("Third Loop\n");

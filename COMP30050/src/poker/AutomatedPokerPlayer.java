@@ -179,6 +179,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * Retrieves the bet value the player wishes to bet.
 	 */
 	public int getBet(){
+		//output.printout("high bet in ai player class = " + currentRound.highBet);
 		int betValue = getBetValueCalculation();	//the value at which a player would bet up to 
 		int callValue = getCallValueCalculation(betValue);   //the value at which a player would call up to, based on the bet value and player type
 		boolean hasRaised = false;

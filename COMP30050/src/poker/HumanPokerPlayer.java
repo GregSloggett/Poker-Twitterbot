@@ -293,7 +293,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}else{
 			System.out.println("got into else");
 			//twitter.updateStatus("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
-			output.printout("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
+			output.printout("The pot is at " + currentRound.pot + ". You must bet at least " + currentRound.highBet + " chips to remain in this hand. Reply with 'call', 'raise' or 'fold' to continue");
 			System.out.println("getting reply");
 			//String Answer = twitter.waitForTweet();
 			String Answer = output.readInString();
