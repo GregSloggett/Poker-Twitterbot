@@ -1,0 +1,189 @@
+The first line
+The second line
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before first betting loop.
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: []
+Betting record: []
+
+
+
+First Betting Loop: until someone raises
+player 0
+bet =0
+bet !> 0. continue 1st loop
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes first loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker]
+Betting record: [0]
+
+
+
+player 1
+bet =1
+bet > 0. break 1st loop
+firstRaiserIndex = 1
+lastCallerIndex = 1
+
+
+>>>>>>>>>>>>>>>
+player 1 finishes first loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner]
+Betting record: [0, 1]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before second betting loop.
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner]
+Betting record: [0, 1]
+
+
+
+player 2
+bet = 2
+bet > highbet: 1
+lastCallerIndex = 2
+bet != 0, lastRaiser = Jack Rodwell
+i > firstRaiser index
+
+
+>>>>>>>>>>>>>>>
+player 2 finishes second loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [0, 1, 2]
+
+
+
+player 3
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 3 finishes second loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [0, 1, 2]
+
+
+
+player 4
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 4 finishes second loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [0, 1, 2]
+
+
+
+player 5
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 5 finishes second loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [0, 1, 2]
+
+
+
+player 0
+bet = 2
+bet == highbet: 2
+lastCallerIndex = 0
+bet != 0, lastRaiser = Jack Rodwell
+i <= firstRaiser index
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes second loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [2, 1, 2]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before third loop swap.
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell, Mikael Silvestre, Mike Phelan, Oscar]
+Players not Folded: [FOAKPoker, Brian Dunner, Jack Rodwell]
+Betting record: [2, 1, 2]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+After third loop swap.
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell]
+Players not Folded: []
+Betting record: [2, 1, 2]
+
+
+
+lastRaiserIndex = 2
+palyers size = 3
+size > 1
+lastRaiserIndex  = 2
+lastCallerIndex = 0
+Player 0
+bet = 2
+bet != 0
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes third loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell]
+Players not Folded: [FOAKPoker]
+Betting record: [2, 1, 2]
+
+
+
+Player 1
+bet = 2
+bet != 0
+
+
+>>>>>>>>>>>>>>>
+player 1 finishes third loop
+Players array:
+[FOAKPoker, Brian Dunner, Jack Rodwell]
+Players not Folded: [FOAKPoker, Brian Dunner]
+Betting record: [2, 1, 2]
+
+
+
