@@ -80,14 +80,7 @@ public class HandOfCards {
 		int randomNumber = rand.nextInt(80);
 		//out.printout("RAND ====    " + randomNumber);
 		for(int card=0;card<CARDS_HELD;card++){
-			PlayingCard nextCard = deck.dealNext();
-			/*
-			 * If there are no more cards to deal from the deck or
-			 * the shuffled cards that were returned to the deck.
-			 */
-			if(nextCard==null){
-				break;
-			}
+			
 			/*
 			 * The higher our discard probability, the higher the chance that
 			 * it will be higher than the random number between 0 and 99. This
@@ -123,8 +116,6 @@ public class HandOfCards {
 			
 		}
 
-		OutputTerminal delete = new OutputTerminal();
-		delete.printout("\\\\\\\\\\\\ " + this);
 	}
 	
 	/**

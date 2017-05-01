@@ -27,6 +27,7 @@ public class DeckOfCards {
 	 * Uses the semaphore to lock down a critical section in case parallel access occurs
 	 */
 	public synchronized PlayingCard dealNext() throws InterruptedException{
+		
 		dealerAvailable.acquire();
 		PlayingCard outputCard = null;
 		if (cardsDealt < 52){
@@ -34,6 +35,7 @@ public class DeckOfCards {
 			cardsDealt++;
 		}
 		dealerAvailable.release();
+		
 		return outputCard;
 	}
 
@@ -87,6 +89,10 @@ public class DeckOfCards {
 	 */
 	public synchronized void reset(){
 		cardsDealt = 0;
+	}
+	
+	public String toString() {
+		return "cardsDealt:" + cardsDealt;
 	}
 
 	/*
