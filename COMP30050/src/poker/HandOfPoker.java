@@ -109,6 +109,7 @@ public class HandOfPoker {
 			displayPot();
 			revisedTakeBets();
 			displayPot();
+			fillPlayers();
 			if (betRecordz.size() >1){
 				showCards();
 			}
@@ -585,6 +586,7 @@ public class HandOfPoker {
 	 * @return
 	 */
 	private PokerPlayer getHandWinner(){
+		fillPlayers();
 		PokerPlayer winningPlayer = players.get(0);
 
 		for(int i=1; i<players.size(); i++){
