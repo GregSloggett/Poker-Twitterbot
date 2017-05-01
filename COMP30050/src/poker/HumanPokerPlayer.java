@@ -196,6 +196,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 						output.printout("Sorry this isnt a valid card..");
 						//twitter.updateStatus("Sorry this isnt a valid card..");
 						this.discard();
+						break;
 					}
 
 				}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
@@ -218,12 +219,14 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 						output.printout("Sorry one of the card positions you entered is invalid");
 						//twitter.updateStatus("Sorry one of the card positions you entered is invalid");
 						this.discard();
+						break;
 					}
 
 				}else{
 					output.printout("Sorry you can only remove between 1 and 3 cards");
 					//twitter.updateStatus("Sorry you can only remove between 1 and 3 cards");
 					this.discard();
+					break;
 				}
 			}}else if(Answer.equalsIgnoreCase(negativeResponse)){
 				output.printout("OK lets continue...");
@@ -303,6 +306,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 					//twitter.updateStatus("Sorry this is an invalid bet");
 					output.printout("Sorry this is an invalid bet\n");
 					this.getBet();
+					break;
 				}
 			}catch(NumberFormatException ex){
 				output.printout("sorry invalid input, try again.");
