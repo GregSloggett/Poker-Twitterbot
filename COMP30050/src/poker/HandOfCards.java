@@ -58,11 +58,12 @@ public class HandOfCards {
 	
 	public int increaseDiscardProbabilityValue(int discardProbability){
 		//out.printout("DP1 ===  " + discardProbability );
+		//out.printout("APT ====== " + getAutomatedPlayerType());
 		
-		
-		float playerTypeCalculation = (float) (DISCARD_PROBABILITY_SCALE + (1 - ((float)1/getAutomatedPlayerType())));
+		float playerTypeCalculation = (float) (DISCARD_PROBABILITY_SCALE + (2 - ((float)1/getAutomatedPlayerType())));
 		int newDiscardProbability = (int) (discardProbability*playerTypeCalculation);
 		
+		//out.printout("PTC = " + playerTypeCalculation);
 		//out.printout("DP2 ===  " + newDiscardProbability );
 		return newDiscardProbability;
 	}
@@ -70,7 +71,7 @@ public class HandOfCards {
 	OutputTerminal out = new OutputTerminal();
 	
 	public int discard() throws InterruptedException{
-		//out.printout("PT ==== " + player.getPlayerType());
+		//out.printout("PT ==== " + playerType);
 		//out.printout("Hand =====  " + player.getHandType());
 		int numCardsDiscarded = 0;
 		Random rand = new Random();

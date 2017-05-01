@@ -256,7 +256,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * a betting value for the hand: (PS * HGV) / (15 - PT)
 	 */
 	private int getBetValueCalculation(){
-		int betCalculationValue = 15;
+		int betCalculationValue = 10;
 		int handGameValue = this.hand.getGameValue()/100000000;	
 		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));
 		return betValue;
@@ -362,6 +362,12 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 	}
 
+	@Override
+	public int discard() throws InterruptedException, TwitterException, IOException {
+		int cards = hand.discard();
+		return cards;
+	}
+	
 	public void testAppendString(){
 		twitter.appendToCompoundTweet("This is coming from AutomatedPokerPlayer Class");
 	}
@@ -423,11 +429,5 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			HandOfPoker.highBet+=2;
 		}
 		 */
-	}
-
-	@Override
-	public int discard() throws InterruptedException, TwitterException, IOException {
-		int cards = hand.discard();
-		return cards;
 	}
 }

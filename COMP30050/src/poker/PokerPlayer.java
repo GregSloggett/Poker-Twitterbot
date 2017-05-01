@@ -94,6 +94,7 @@ public abstract class PokerPlayer {
 	
 	public boolean hasMatchedHighBet(){
 		if(roundOverallBet == currentRound.highBet){
+			System.out.println("ROB " + roundOverallBet);
 			return true;
 		}
 		else{

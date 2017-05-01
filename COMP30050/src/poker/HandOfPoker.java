@@ -435,6 +435,7 @@ public class HandOfPoker {
 		//human.discard();
 		//players.set(0, human);
 		for (int i=0; i<players.size(); i++){
+			players.get(i).hand.passPlayerType(players.get(i));
 			int discardedCount = players.get(i).discard();
 			//twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
 			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
