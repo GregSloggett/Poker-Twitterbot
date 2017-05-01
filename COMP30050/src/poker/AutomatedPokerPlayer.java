@@ -228,7 +228,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			returnValue = playerPot;
 		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
-		else if(betValue <= currentRound.highBet-2 && callValue < currentRound.highBet-2){
+		else if(betValue <= currentRound.highBet-GameOfPoker.PLAYER_POT_DEFAULT/10 && callValue < currentRound.highBet-GameOfPoker.PLAYER_POT_DEFAULT/10){
 			returnValue = fold(betValue);
 		}
 		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.

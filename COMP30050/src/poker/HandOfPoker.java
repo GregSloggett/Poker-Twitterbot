@@ -409,6 +409,8 @@ public class HandOfPoker {
 				//UI.printout("Player " + i);
 				if (!players.get(i).hasMatchedHighBet()){
 					int bet = players.get(i).getCall();
+					//UI.printout(players.get(i).playerName + " bets " + bet + " & high bet = " + this.highBet);
+
 					testPrint("bet = " + bet);
 					if (bet != 0){
 						testPrint("bet != 0");
@@ -426,7 +428,7 @@ public class HandOfPoker {
 						testPrint("bet = 0 so folds");						
 						UI.printout(players.get(i).playerName + " folds.");
 						betRecord.remove(i);
-						players.remove(i);
+						//players.remove(i);
 						//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 						//twitter.postCompoundTweet();
 
