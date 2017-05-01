@@ -193,7 +193,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		else{
 			returnValue = 0;
 		}
+		//output.printout("\n\n         pot before call: " + this.playerPot);		
 		this.subtractChips(returnValue - currentBet);
+		//output.printout("         pot after bet: " + this.playerPot);		
+
 		return returnValue;
 	}
 	
@@ -208,7 +211,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		boolean bettingHasBeenRaised = false;
 
 		int returnValue = 0;
-		
+
 		//if nobody has bet
 		if(currentRound.highBet == 0){
 			if(this.hand.getGameValue() < 100500000){
@@ -219,8 +222,13 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			}
 			returnValue = betValue;
 		}
+		
+		if(this.playerPot <= (GameOfPoker.PLAYER_POT_DEFAULT/5)){
+			output.printout(this.playerName + " goes all in with " + playerPot + " chips!");
+			returnValue = playerPot;
+		}
 		//if a players betValue/callValue are both less than the highbet then fold. 
-		if(betValue <= currentRound.highBet && callValue < currentRound.highBet){
+		else if(betValue <= currentRound.highBet-2 && callValue < currentRound.highBet-2){
 			returnValue = fold(betValue);
 		}
 		//if the betValue is higher than the high bet, and this player has not previously raised, then raise.
@@ -253,7 +261,13 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		
 		currentBet = truncateBet(returnValue);
 		this.roundOverallBet+=returnValue;
+		
+		
+	//	output.printout("\n\n         pot before bet: " + this.playerPot);		
 		this.subtractChips(returnValue);
+		//output.printout("         pot after bet: " + this.playerPot);
+	
+		
 		return returnValue;
 	}
 
@@ -267,7 +281,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private int getCallValueCalculation(int betValue) {
 		float playerTypeCalculation = (float) (0.75 + (1 - ((float)1/playerType)));
 		int callValue = (int) (betValue*playerTypeCalculation);
-			
+		
 		return callValue;
 	}
 
@@ -277,9 +291,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * a betting value for the hand: (PS * HGV) / (15 - PT)
 	 */
 	private int getBetValueCalculation(){
+		
 		int betCalculationValue = 13;
 		int handGameValue = this.hand.getGameValue()/100000000;	
-		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));
+		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));		
 		return betValue;
 	}
 
@@ -357,21 +372,17 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 */
 	public boolean showCards(PokerPlayer handWinner){
 		boolean wonRound = didWinThisHand(handWinner);
-
-		if(playerBluffProbability > 75 && wonRound == true){
-			twitter.appendToCompoundTweet("I bluffed and I won! Here is my hand: " + this.hand + "\n");
-			return true;
-		}
-		else if(wonRound == true){
-			twitter.appendToCompoundTweet("here is my winning hand: " + this.hand + "\n");
+		
+		if(wonRound == true){
+			output.printout("here is my winning hand: " + this.hand + "\n");
 			return true;
 		}
 		else if(wonRound == false){
-			twitter.appendToCompoundTweet("I choose not to show my hand.\n");
+			output.printout("I did not win, I choose not to show my hand.\n");
 			return false;
 		}
 		else{
-			twitter.appendToCompoundTweet("here is my hand: \n" + this.hand + "\n");
+			output.printout("here is my hand: \n" + this.hand + "\n");
 			return true;
 		}
 	}

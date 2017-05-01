@@ -34,7 +34,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public boolean isSplitPot() {
 		return splitPot;
 	}
-	
+
 	/**
 	 * Sets the value of the split pot
 	 */
@@ -126,11 +126,19 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	 * @return
 	 */
 	public boolean showCards(PokerPlayer handWinner){
-		return false;
+		if(handWinner.equals(this)){
+			output.printout("I win, here is my hand: " + this.hand);
+			return true;
+		}
+		else{
+			output.printout("I lose, I do not show my hand");
+			return false;
+		}
+
 	}
 
 	OutputTerminal output = new OutputTerminal();
-	
+
 	/**
 	 * This asks the player if he want to discard how many he wants to discard and which cards, 
 	 * if carries out the discard and sends an updated pic of the hand as a tweet.
@@ -257,7 +265,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		return numbers;
 	}
-	
+
 	/**
 	 * Returns true if the bet is below the player pot
 	 */
@@ -272,7 +280,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		return validBet;
 	}
-	
+
 	/**
 	 * this returns the bet for the player wether he is the opening bet or or one of the subsequent bets
 	 */
@@ -310,13 +318,18 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public int openingBet() throws TwitterException, InterruptedException{
 		String betResponse = "Bet";
 		String checkResponse = "Check";
+		int bet = 0;
 
-		//twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
-		output.printout("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check\n");
-
+		if(this.playerPot < 1){
+			bet = 0;
+		}
+		else{
+			//twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
+			output.printout("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check\n");
+		}
 		String Answer = output.readInString();
 		//String Answer = twitter.waitForTweet();
-		int bet =0;
+
 		if (Answer.equalsIgnoreCase(betResponse)){
 			output.printout("How much would you like to bet?\n");
 			//twitter.updateStatus("How much would you like to bet?");
@@ -418,7 +431,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 						this.inHandBet();
 					}
 				}
-				
+
 			}else if(Answer.equalsIgnoreCase(FoldResponse)){
 				this.Fold();
 				currentBet = 0;
@@ -433,7 +446,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		this.subtractChips(bet);
 		return bet;
 	}
-	
+
 	/**
 	 * returns if the player has folded or not
 	 */
