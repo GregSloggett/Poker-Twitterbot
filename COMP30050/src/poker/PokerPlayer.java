@@ -14,6 +14,9 @@ public abstract class PokerPlayer {
 	protected String playerName;
 	protected int roundOverallBet;
 	
+	public int lowestPotBetLimit =Integer.MAX_VALUE;
+	public String lowestPotPlayerName ="";
+	
 	public PokerPlayer(DeckOfCards inputDeck) throws InterruptedException {
 		deck = inputDeck;
 		hand = new HandOfCards(deck);
@@ -24,6 +27,14 @@ public abstract class PokerPlayer {
 		this.currentRound = currentRound;
 		roundPot = currentRound.pot;
 		highBet = currentRound.highBet;
+	}
+	
+	public int truncateBet(int bet) {
+		if (bet > lowestPotBetLimit){
+			bet = lowestPotBetLimit;
+			currentRound.printTruncatedBetPrompt(lowestPotPlayerName, bet);
+		}
+		return bet;
 	}
 	
 	/*

@@ -112,6 +112,31 @@ public class HandOfPoker {
 		}
 	}
 	
+	/**
+	 * For truncating the bets
+	 * @return the current lowest player pot in the round
+	 */
+	public void setLowestPotBounds() {
+		//Get pot and name of lowest player
+		int lowestPot = players.get(0).playerPot;
+		String lowestPotName = null;
+		for (int i=0; i<players.size(); i++){
+			if (players.get(i).playerPot < lowestPot){
+				lowestPot = players.get(i).playerPot;
+				lowestPotName = players.get(i).playerName;
+			}
+		}
+		
+		for (int i=0; i<players.size(); i++){
+			players.get(i).lowestPotBetLimit = lowestPot;
+			players.get(i).lowestPotPlayerName = lowestPotName;
+		}
+	}
+	
+	public void printTruncatedBetPrompt(String name, int bet){
+		UI.printout("Bet truncated to " + bet + " chips, " + name + " only has " +bet + "chips.");
+	}
+	
 	private void setUpFilePrint() {
 		if (PRINT_TEST_FILE){
 			String timeStamp = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
@@ -231,6 +256,7 @@ public class HandOfPoker {
 		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore first betting loop.");
 		// 1
 		// First bet loop goes until a player raises
+		setLowestPotBounds();
 		testPrint("First Betting Loop: until someone raises");
 		for (int i=0; i< players.size() && firstRaiserIndex == -1; i++){
 			
@@ -362,6 +388,7 @@ public class HandOfPoker {
 		
 		
 		testPrint(players, playersNotFolded, betRecord, "After third loop swap.");
+		setLowestPotBounds();
 		int lastRaiserIndex = -1;
 		for (int i =0; i< players.size(); i++){
 			if (players.get(i) == lastRaiser){

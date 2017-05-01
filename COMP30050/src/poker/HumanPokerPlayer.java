@@ -313,7 +313,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			//twitter.updateStatus("How much would you like to bet?");
 			//String openingBet = twitter.waitForTweet();
 			String openingBet = output.readInString();
-			currentBet = getBet(openingBet);
+			currentBet = truncateBet(getBet(openingBet));
 			if(openingBet.equals(null)){
 				return -1;
 			}
@@ -326,7 +326,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.openingBet();
 
 		}
-		bet = currentBet;
+		bet = truncateBet(currentBet);
 		//playerPot = playerPot-bet;
 		this.roundOverallBet+=bet;
 
@@ -400,6 +400,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				if(!(betAmountString.equals(null))){
 					bet = getBet(betAmountString);
 					bet = bet + (currentRound.highBet - currentBet);
+					bet = truncateBet(bet);
 					currentBet = bet;
 					if(!validBet(currentBet)){
 						//twitter.updateStatus("Sorry you dont have the money to make this bet");
