@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -252,10 +253,12 @@ public class HandOfPoker {
 		int firstRaiserIndex = -1;
 		PokerPlayer lastRaiser = null;
 		
-		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
+		//ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
+		HashMap<PokerPlayer, Integer> betRecordz = new HashMap<PokerPlayer, Integer>();
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
 
-		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore first betting loop.");
+		//testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore first betting loop.");
+
 		// 1
 		// First bet loop goes until a player raises
 		setLowestPotBounds();
@@ -293,9 +296,13 @@ public class HandOfPoker {
 				UI.printout(players.get(i).playerName + " checks.");
 			}
 			playersNotFolded.add(players.get(i));
-			betRecord.add(bet);
+			//betRecord.add(bet);
+			betRecordz.put(players.get(i), bet);
 			//twitter.postCompoundTweet();
-			testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes first loop");
+			//testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes first loop");
+			//testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes first loop");
+
+		
 		}
 		
 		
@@ -304,7 +311,7 @@ public class HandOfPoker {
 		
 		testShowBanks();
 		
-		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore second betting loop.");
+		//testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore second betting loop.");
 		
 		
 		// 2
@@ -333,7 +340,8 @@ public class HandOfPoker {
 				if ( i > firstRaiserIndex){
 					testPrint("i > firstRaiser index");
 					playersNotFolded.add(players.get(i));
-					betRecord.add(bet);
+					//betRecord.add(bet);
+					betRecordz.put(players.get(i), bet);
 					//players.get(i).subtractChips(bet);
 					pot += bet;
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
@@ -347,13 +355,15 @@ public class HandOfPoker {
 				}
 				else {
 					testPrint("i <= firstRaiser index");
-					pot += bet - betRecord.get(i);
+					//pot += bet - betRecord.get(i);
+					pot+= bet - betRecordz.get(players.get(i));
 					//players.get(i).subtractChips(bet - betRecord.get(i));
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 					UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
-							+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-					betRecord.set(i, bet);
+							+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
+					//betRecord.set(i, bet);
+					betRecordz.replace(players.get(i), bet);
 					//twitter.postCompoundTweet();
 				}
 			}
@@ -363,7 +373,8 @@ public class HandOfPoker {
 				if (i <= firstRaiserIndex){
 					UI.printout("\n\n\n\nFOLDED\n\n\n\n");
 					testPrint("i <= firstRaiser index " + firstRaiserIndex + " removing them.");
-					betRecord.remove(i);
+					//betRecord.remove(i);
+					betRecordz.remove(players.get(i));
 					playersNotFolded.remove(i);
 				}
 				//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
@@ -372,15 +383,15 @@ public class HandOfPoker {
 			}
 			
 
-			testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes second loop");
+		//	testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes second loop");
 		}
 		//twitter.postCompoundTweet();
 		
 
 		testShowBanks();
 		
-		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore third loop swap.");
-		
+		//testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore third loop swap.");
+
 		
 		//twitter.appendToCompoundTweet("Third Loop");
 		
@@ -389,7 +400,7 @@ public class HandOfPoker {
 		players.addAll(playersNotFolded);
 		
 		
-		testPrint(players, playersNotFolded, betRecord, "After third loop swap.");
+		//testPrint(players, playersNotFolded, betRecord, "After third loop swap.");
 		setLowestPotBounds();
 		int lastRaiserIndex = -1;
 		for (int i =0; i< players.size(); i++){
@@ -416,18 +427,20 @@ public class HandOfPoker {
 						testPrint("bet != 0");
 						UI.printout("Adding "+players.get(i).playerName + " to the playersnotfolded");
 						playersNotFolded.add(players.get(i));
-						pot += highBet - betRecord.get(i);
+						//pot += highBet - betRecord.get(i);
+						pot += highBet - betRecordz.get(players.get(i));
 						//players.get(i).subtractChips(highBet - betRecord.get(i));
 						//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 						//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 						//twitter.postCompoundTweet();
 						UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
-								+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
+								+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
 					}
 					else {
 						testPrint("bet = 0 so folds");						
 						UI.printout(players.get(i).playerName + " folds.");
-						betRecord.remove(i);
+						//betRecord.remove(i);
+						betRecordz.remove(players.get(i));
 						//players.remove(i);
 						//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 						//twitter.postCompoundTweet();
@@ -438,7 +451,7 @@ public class HandOfPoker {
 					testPrint("player " + i + "already matched bet");
 				}
 
-				testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes third loop");
+				//testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes third loop");
 			}
 		}
 		else {
