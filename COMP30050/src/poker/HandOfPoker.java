@@ -236,7 +236,7 @@ public class HandOfPoker {
 			}
 			
 			testPrint("bet =" + bet);
-			players.get(i).subtractChips(bet);
+			//players.get(i).subtractChips(bet);
 			
 			if (bet > 0){
 				testPrint("bet > 0. break 1st loop");
@@ -264,7 +264,10 @@ public class HandOfPoker {
 		pot += highBet;
 		//twitter.appendToCompoundTweet("Second Loop");
 		
-
+		UI.printout("\n\nzzzzzzz");
+		showBanks();/////////////////////////////////////////////////////////////
+		UI.printout("\n");
+		
 		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore second betting loop.");
 		
 		
@@ -295,7 +298,7 @@ public class HandOfPoker {
 					testPrint("i > firstRaiser index");
 					playersNotFolded.add(players.get(i));
 					betRecord.add(bet);
-					players.get(i).subtractChips(bet);
+					//players.get(i).subtractChips(bet);
 					pot += bet;
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
 					//twitter.postCompoundTweet();
@@ -309,7 +312,7 @@ public class HandOfPoker {
 				else {
 					testPrint("i <= firstRaiser index");
 					pot += bet - betRecord.get(i);
-					players.get(i).subtractChips(bet - betRecord.get(i));
+					//players.get(i).subtractChips(bet - betRecord.get(i));
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 					UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
@@ -335,6 +338,10 @@ public class HandOfPoker {
 		}
 		//twitter.postCompoundTweet();
 		
+
+		UI.printout("\n\nzzzzzzz");
+		showBanks();/////////////////////////////////////////////////////////////
+		UI.printout("\n");
 		
 		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore third loop swap.");
 		
@@ -396,6 +403,9 @@ public class HandOfPoker {
 			UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
 		}
 		
+		UI.printout("\n\nzzzzzzz");
+		showBanks();/////////////////////////////////////////////////////////////
+		UI.printout("\n");
 		human.currentBet = 0;
 	}
 	
@@ -415,10 +425,10 @@ public class HandOfPoker {
 	 * @throws TwitterException 
 	 */
 	private void discardCards() throws InterruptedException, TwitterException, IOException {
-		human.discard();
-		players.set(0, human);
-		for (int i=1; i<players.size(); i++){
-			int discardedCount = players.get(i).hand.discard();
+		//human.discard();
+		//players.set(0, human);
+		for (int i=0; i<players.size(); i++){
+			int discardedCount = players.get(i).discard();
 			//twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
 			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}

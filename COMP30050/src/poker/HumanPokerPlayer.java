@@ -292,6 +292,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		}
 		bet = currentBet;
+		playerPot = playerPot-bet;
 		return bet;
 	}
 
