@@ -64,12 +64,12 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		output.printout("getBet()      " + this.playerPot);
 		return ret;
 	}
-	
-	
+
+
 
 	@Override
 	public int getCall() {
-		
+
 		String callResponse = "Call";
 		String foldResponse = "Fold";
 		int call = 0;
@@ -79,13 +79,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		String Answer = output.readInString();
 		//String Answer = twitter.waitForTweet();
-		
+
 		if (Answer.equalsIgnoreCase(callResponse)){
-			
+
 			call = currentRound.highBet;
-			
+
 		}else if(Answer.equalsIgnoreCase(foldResponse)){
-			
+
 			call =0;
 			try {
 				this.Fold();
@@ -102,22 +102,22 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.getCall();
 
 		}
-		
-		
+
+
 		//playerPot = playerPot - (call -currentBet);
 		//currentBet = call;
-		
+
 		output.printout("getCall()      " + this.playerPot);		
 		this.subtractChips(call - currentBet);
 		output.printout("getCall()      " + this.playerPot);
-		
+
 		currentBet = currentRound.highBet;
 
 		return call;
 
-		
-		
-		
+
+
+
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	/**
 	 * Should return whether or not the player wants to show his/her cards at the end of the round.
 	 * The PokerPlayer that won the hand is past in to be used to check if a player has won.
@@ -266,36 +266,36 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		return validBet;
 	}
-	
+
 	public int getBet(String Bet) throws TwitterException{
 		boolean isNumber = false;
 		int finalBet = 0;
-		
+
 		while(isNumber == false){
-		try{
-		int bet = Integer.parseInt(Bet);
-		
-		if(bet <= this.playerPot && bet >= 0 ){
-			 finalBet = bet;	
-			 isNumber =true;
-			 break;
+			try{
+				int bet = Integer.parseInt(Bet);
+
+				if(bet <= this.playerPot && bet >= 0 ){
+					finalBet = bet;	
+					isNumber =true;
+					break;
+				}
+				else{
+					//twitter.updateStatus("Sorry this is an invalid bet");
+					output.printout("Sorry this is an invalid bet\n");
+					this.getBet();
+				}
+			}catch(NumberFormatException ex){
+				output.printout("sorry invalid input, try again.");
+				//twitter.updateStatus("Sorry Invalid Input");
+				Bet = (output.readInString());
+			}
 		}
-		else{
-			//twitter.updateStatus("Sorry this is an invalid bet");
-			output.printout("Sorry this is an invalid bet\n");
-			this.getBet();
-		}
-		}catch(NumberFormatException ex){
-			output.printout("sorry invalid input");
-			//twitter.updateStatus("Sorry Invalid Input");
-			this.getBet();
-		}
-		}
-		
+
 		output.printout("getBet(param)      " + this.playerPot);
-		
+
 		return finalBet;
-		
+
 	}
 
 	public int openingBet() throws TwitterException, InterruptedException{
@@ -317,7 +317,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			if(openingBet.equals(null)){
 				return -1;
 			}
-			
+
 		}else if(Answer.equalsIgnoreCase(checkResponse)){
 			bet =0;
 		}else{
@@ -329,11 +329,11 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		bet = currentBet;
 		//playerPot = playerPot-bet;
 		this.roundOverallBet+=bet;
-		
+
 		output.printout("getOpeningBet()      " + this.playerPot);
 		this.subtractChips(bet);
 		output.printout("getOpeningBet()      " + this.playerPot);
-		
+
 		return bet;
 	}
 
@@ -394,7 +394,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				//		+ " How much do you want to raise by?");
 				output.printout("The pot is at " + currentRound.pot + " and it will take " + (currentRound.highBet - currentBet) + " to meet the current bet."
 						+ " How much do you want to raise by?");
-				
+
 				//String betAmountString = twitter.waitForTweet();
 				String betAmountString = output.readInString();
 				if(!(betAmountString.equals(null))){
@@ -415,10 +415,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				//twitter.updateStatus("Sorry that isnt a valid response");
 				output.printout("Sorry that isnt a valid response");
 				this.inHandBet();
-		
+
 			}
 		}
-		
+
 		output.printout("getInHandBet()      " + this.playerPot);
 		this.subtractChips(bet);
 		output.printout("getInHandBet()      " + this.playerPot);
