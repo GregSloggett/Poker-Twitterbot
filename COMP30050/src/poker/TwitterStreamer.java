@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -26,16 +24,29 @@ import twitter4j.User;
 
 public class TwitterStreamer {
 	static Twitter twitter = TwitterFactory.getSingleton();
+	//Stores simple boolean when user is in a game.
 	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
+	
+	/* Stores Future objects of currently running game threads, allowing
+	 * them to be cancelled and interrupted when a user wants to quit
+	 */
 	static Map<String, Future<?>> gamesOfPoker = new HashMap<String, Future<?>>();
+	
+	//Sets the limit on the maximum number of concurrent games on our Twitter bot.
 	private static final int NUMTHREADS = 30;
+	
+	//Allows for GameOfPoker objects running concurrently
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	public static final String outputMethod = "terminal";
-	Thread thread;
 
 	public static PrintStream zo = System.out;
 
-
+	/**
+	 * Begins listening out on Twitter for our hashtags. When they are posted, 
+	 * it checks whether or not they are currently playing a running game and 
+	 * replies accordingly. Creates GameOfPoker objects and launches them for
+	 * new users which join games.
+	 */
 	public static void StartHashtagStream() {
 		TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
 		StatusListener statusListener = new StatusListener() {
@@ -48,99 +59,65 @@ public class TwitterStreamer {
 					String userNickname = status.getUser().getScreenName();
 					if(containsIgnoreCase(status.getText(),"FOAKDeal")){
 						if(!(usersPlayingGames.containsKey(status.getUser().getScreenName()))){
-							System.out.println("1");
 							incrementProfileGameCount();
-							System.out.println(status.getUser().getScreenName());
-							System.out.println("Status id: " +status.getId());
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted our hashtag to play poker.. Welcome to the game!.");
 							replyStatus.setInReplyToStatusId(status.getId());
-							System.out.println("replyStatus is replying to tweet: "+replyStatus.getInReplyToStatusId());
 							Status latestTweet = twitter.updateStatus(replyStatus);
-
-							System.out.println("2");
 							usersPlayingGames.put(status.getUser().getScreenName(), true);
-							System.out.println("3");
-							System.out.println(usersPlayingGames.containsKey(status.getUser().getScreenName()));
-							System.out.println("creating d");
 							DeckOfCards d = new DeckOfCards();
-
-							String nick = status.getUser().getScreenName();
-							System.out.println("creatint t");
-							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,nick);
-							System.out.println("creating g");
+							TwitterInteraction t = new TwitterInteraction(twitter, latestTweet,userNickname);
 							GameOfPoker g = new GameOfPoker(status.getUser().getScreenName(),t,d);
-							//gamesOfPoker.put((status.getUser().getScreenName()), new GameOfPoker(status.getUser().getScreenName(), t,d));
-							System.out.println("created g");
-							System.out.println("executing g");
 							gamesOfPoker.put(userNickname, executor.submit(g));
-							System.out.println("g was executed");
-							
-							//gamesOfPoker.get(status.getUser().getScreenName()).humanPlayer.setAskToDiscard(true);
 						}
+						//If a user tries to join a game and they are already playing
 						else{
-							System.out.println("4");
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You're already playing a running game.");
-							System.out.println("5");
 							replyStatus.setInReplyToStatusId(status.getId());
-							System.out.println("6");
 							twitter.updateStatus(replyStatus);
-							System.out.println("7");
 						}
 					}
 					else if(containsIgnoreCase(status.getText(), "#FOAKLeave")){
 						if((usersPlayingGames.containsKey(status.getUser().getScreenName()))){
-							System.out.println("1");
-							System.out.println(status.getUser().getScreenName());
-
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You have posted the hashtag to leave a poker game.. Thanks for playing!");
 							replyStatus.setInReplyToStatusId(status.getId());
 							twitter.updateStatus(replyStatus);
-							System.out.println("2");
-							System.out.println("Is cancelled?"+gamesOfPoker.get(userNickname).isCancelled());
-
 							usersPlayingGames.remove(status.getUser().getScreenName());
 							gamesOfPoker.get(userNickname).cancel(true);
-							System.out.println("Is cancelled?"+gamesOfPoker.get(userNickname).isCancelled());
-							System.out.println("3");
 						}
+						//If a user tries to leave a game but they are not currently playing one.
 						else{
-							System.out.println("4");
 							StatusUpdate replyStatus = new StatusUpdate("@"+userNickname+" You aren't currently playing a poker game. To start a new game post a tweet with the hashtag 'FOAKDeal'");
-							System.out.println("5");
 							replyStatus.setInReplyToStatusId(status.getId());
-							System.out.println("6");
 							twitter.updateStatus(replyStatus);
-							System.out.println("7");
 						}
 
 					}	
 
 				} catch (TwitterException | InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 
 
-			//The below methods are just auto-generated ones that we don't need right now.
+			
 			@Override
 			public void onDeletionNotice(StatusDeletionNotice sdn) {
-				throw new UnsupportedOperationException("Not supported yet."); 
+				throw new UnsupportedOperationException("Not implemented."); 
 			}
 
 			@Override
 			public void onTrackLimitationNotice(int i) {
-				throw new UnsupportedOperationException("Not supported yet."); 
+				throw new UnsupportedOperationException("Not implemented."); 
 			}
 
 			@Override
 			public void onScrubGeo(long l, long l1) {
-				throw new UnsupportedOperationException("Not supported yet."); 
+				throw new UnsupportedOperationException("Not implemented."); 
 			}
 
 			@Override
 			public void onStallWarning(StallWarning sw) {
-				throw new UnsupportedOperationException("Not supported yet.");
+				throw new UnsupportedOperationException("Not implemented.");
 			}
 
 			@Override
@@ -150,30 +127,35 @@ public class TwitterStreamer {
 
 		FilterQuery filter = new FilterQuery();        
 
-		//These are the keywords it listens out for.
+		//These are the keywords the Streamer looks for
 		String keywords[] = {"#FOAKDeal","#FOAKLeave","#FOAKDEAL","#FOAKLEAVE","#foakdeal", "#foakleave","#FOAKdeal","#FOAKleave"};
 
 		filter.track(keywords);      
-
-
 		twitterStream.addListener(statusListener);
 		twitterStream.filter(filter);          
 	}  
 
-	public static boolean containsIgnoreCase(String str, String searchStr)     {
-		if(str == null || searchStr == null) return false;
+	//Basic algorithm to check if one string contains another, regardless of case.
+	public static boolean containsIgnoreCase(String string, String stringToFind)     {
+		if(string == null || stringToFind == null) return false;
 
-		final int length = searchStr.length();
-		if (length == 0)
+		final int strlen = stringToFind.length();
+		if (strlen == 0)
 			return true;
 
-		for (int i = str.length() - length; i >= 0; i--) {
-			if (str.regionMatches(true, i, searchStr, 0, length))
+		for (int i = string.length() - strlen; i >= 0; i--) {
+			if (string.regionMatches(true, i, stringToFind, 0, strlen))
 				return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Checks in the HashMap of Future objects to see if a user has decided to quit
+	 * their game.
+	 * @param username
+	 * @return
+	 */
 	public  static boolean userHasQuit(String username){
 		if(gamesOfPoker.containsKey(username)){
 			return gamesOfPoker.get(username).isCancelled();
@@ -182,12 +164,16 @@ public class TwitterStreamer {
 			return false;
 		}
 	}
-	
+	/**
+	 * Gets the game counter from our Twitter bio.
+	 * @return
+	 * @throws TwitterException
+	 */
 	private static int getNumGamesPlayed() throws TwitterException{
 		User user = twitter.showUser("PokerFOAK");
 		String description = user.getDescription();
-		System.out.println("description is: "+description);
 		String numGamesString = "";
+		//Checks last 5 digits of bio for game counter.
 		for(int i =description.length()-1;i>=description.length()-5;i--){
 			if(Character.isDigit(description.charAt(i))){
 				numGamesString = description.charAt(i)+numGamesString;
@@ -197,6 +183,10 @@ public class TwitterStreamer {
 		return numGamesPlayed;
 	}
 	
+	/**
+	 * Increments the game counter on our bio on Twitter.
+	 * @throws TwitterException
+	 */
 	private static void incrementProfileGameCount() throws TwitterException{
 		int currentGameCount = getNumGamesPlayed();
 		currentGameCount++;
@@ -218,40 +208,6 @@ public class TwitterStreamer {
 		DeckOfCards d= new DeckOfCards();
 		GameOfPoker g = new GameOfPoker("FOAKPoker",t,d);
 		g.run();
-		/*
-		TwitterInteraction t = new TwitterInteraction(twitter, twitter.updateStatus("Testing splitting tweets in the next few tweets."),"PokerFOAK");
-
-		for(int i=0;i<10;i++){
-			System.out.println("getting here");
-			t.appendToCompoundTweet("Line "+i+" to check splitting tweets.");
-		}
-		t.postCompoundTweet();
-		 */
-		/*
-		TwitterInteraction t = new TwitterInteraction(twitter,(twitter.updateStatus("Testing Compound Tweets in the next two tweets.")), "PokerFOAK");
-		DeckOfCards d = new DeckOfCards();
-		HumanPokerPlayer p = new HumanPokerPlayer(d,t);
-		AutomatedPokerPlayer a = new AutomatedPokerPlayer(d,t);
-
-		Thread.sleep(15000);
-
-		t.appendToCompoundTweet("This is from the TwitterStreamer Class");
-		p.testAppendString();
-		a.testAppendString();
-		t.postCompoundTweet();
-
-		Thread.sleep(10000);
-
-		t.appendToCompoundTweet("Testing that first compound tweet has been cleared");
-		t.appendToCompoundTweet("Compounding second tweet.");
-		t.appendToCompoundTweet("Posting.");
-		t.postCompoundTweet();
-		 */
+		
 	}
-
-
-
-
-
-
 }

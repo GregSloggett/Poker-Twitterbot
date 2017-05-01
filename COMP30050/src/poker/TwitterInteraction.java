@@ -22,23 +22,16 @@ public class TwitterInteraction {
 	Status firstTweet;
 	String compoundTweet = "";
 
-	static int hashCode = 0;
 	public TwitterInteraction(Twitter t, Status tweet, String nick){
 		twitter = t;
 		firstTweet = tweet;
 		latestTweet = tweet;
 		username = nick;
-		hashCode = this.hashCode();
 	}
-
+	//Constructor which is only used for testing.
 	public TwitterInteraction(Twitter t){
 		twitter = t;
-		hashCode = this.hashCode();
 	}
-
-	//static Twitter twitter = TwitterFactory.getSingleton();
-	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
-	static Map<String, GameOfPoker> gamesOfPoker = new HashMap<String, GameOfPoker>();
 
 	/**
 	 * This method is just for displaying a String as a status.
@@ -46,19 +39,14 @@ public class TwitterInteraction {
 	 * @throws TwitterException
 	 */
 	public void updateStatus(String status) throws TwitterException{
-		System.out.println("getting 2");
 		StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+status);
 		replyStatus.setInReplyToStatusId(latestTweet.getId());
 		latestTweet = update(replyStatus);
-		System.out.println("getting 3");
 	}
 
 	public Status update(StatusUpdate a) throws TwitterException{
 		Status ret = latestTweet;
 		if(TwitterStreamer.outputMethod.compareTo("twitter")==0){
-			System.out.println("Thread is interrupted? "+ Thread.currentThread().isInterrupted());
-			System.out.println("User has quit? "+TwitterStreamer.userHasQuit(username));
-
 			ret =  twitter.updateStatus(a);
 		}
 
@@ -94,27 +82,15 @@ public class TwitterInteraction {
 	private void testStatusWithTextAndImage() throws IOException, TwitterException{
 		URL url = new URL("https://www.drupal.org/files/issues/sample_7.png");
 		BufferedImage image = ImageIO.read(url);
-		//File file = new File("image.png");
-		//ImageIO.write(image,"png",file);
-
 		updateStatusWithTextAndImage("Testing png",image);
 	}
 
 	public  String waitForTweet() throws TwitterException, InterruptedException{
 		while(!(TwitterStreamer.userHasQuit(username)) && TwitterStreamer.outputMethod.compareTo("twitter")==0){
-			System.out.println(Thread.currentThread().getId());
 			ArrayList<Status> replies = getDiscussion();
-			System.out.println(replies.size());
 
 			if(replies.size() > 0){
-				System.out.println("getting here");
-				for(int i=0;i<replies.size();i++){
-					System.out.println("reply "+i+": "+replies.get(i).getText());
-				}
 				Status latestReply = replies.get(replies.size()-1);
-				System.out.println("latest reply below");
-				System.out.println(latestReply.getText());
-				//latestTweet = latestReply;
 				String latestReplyString = latestReply.getText();
 				latestReplyString = stripAmpersandInfo(latestReplyString);
 				latestTweet = latestReply;
@@ -138,6 +114,11 @@ public class TwitterInteraction {
 		return null;
 	}
 
+	/**
+	 * Returns the a Tweet with the "@username" prefix removed
+	 * @param latestReplyString
+	 * @return
+	 */
 	private static String stripAmpersandInfo(String latestReplyString) {
 		int ampersandIndex = -1;
 		String returnString = latestReplyString;
@@ -147,13 +128,11 @@ public class TwitterInteraction {
 				break;
 			}
 		}
-		System.out.println("Ampersand index: "+ampersandIndex);
 		String toRemove = "";
 		if(ampersandIndex >=0){
 			for(int i=ampersandIndex;i<latestReplyString.length()-1;i++){
 				if(latestReplyString.charAt(i)!=' '){
 					toRemove+=latestReplyString.charAt(i);
-					System.out.println("toRemove = "+toRemove);
 				}
 				else{
 					break;
@@ -164,46 +143,44 @@ public class TwitterInteraction {
 		if(toRemove.length()>0){
 			returnString = returnString.replace(toRemove+" ", "");
 		}
-		System.out.println("return string is '"+returnString+"'");
 		return returnString;
 	}
 
+	/**
+	 * Gets latest Tweets for a user's timeline. Used for getting replies to Tweets.
+	 * @return
+	 * @throws TwitterException
+	 */
 	private ArrayList<Status> getDiscussion() throws TwitterException{
-		//Query query = new Query("from:PokerFOAK");
-		//QueryResult result = twitter.search(query);
-		//System.out.println("count : "+result.getTweets().size());
-		System.out.println("-------------------------------------------");
-		System.out.println("This is thread "+Thread.currentThread().getId());
-		System.out.println("Conversation with user: "+username);
-		System.out.println("This started with the tweet: "+firstTweet.getText());
-		System.out.println("Hashcode: "+hashCode);
-		System.out.println("Pot in this thread is at " + "#Had to edit this to remove static access#");
-		//System.out.println("Pot in this thread is at: "+HandOfPoker.pot);
-		System.out.println("-------------------------------------------");
 		List<Status> statuses = twitter.getUserTimeline(username);
 		ArrayList<Status> replies = new ArrayList<Status>();
-		System.out.println("latest tweet:"+latestTweet.getText());
 		for(Status s : statuses){
-			System.out.println("Status from user's timeline: "+s.getText());
-			System.out.println(s.getInReplyToStatusId() + " || " + latestTweet.getId());
 			if( s.getInReplyToStatusId() == latestTweet.getId()){
-				System.out.println("the reply is: " + s.getText());
 				replies.add(s);
 			}
 		}
-		System.out.println("num replies:" +statuses.size());
 		return replies;
 	}
 
+	/**
+	 * Adds strings to a compound string which is to be Tweeted at a later stage
+	 * @param string
+	 */
 	public void appendToCompoundTweet(String string){
 		compoundTweet += (string+"\n");
 	}
 
+	
+	/**
+	 * Posts the Tweet that has been compounded in the string. If Strings are too
+	 * long it divides the text up into smaller length strings within Twitter's
+	 * character limit and posts them consecutively.
+	 * @throws TwitterException
+	 */
 	public void postCompoundTweet() throws TwitterException{
 		if(compoundTweet.length()>0){
 			ArrayList<StatusUpdate> statusesToPost = new ArrayList<StatusUpdate>();
 
-			System.out.println("compound tweet: \n"+compoundTweet);
 			while(compoundTweet.length() > 120 && !(TwitterStreamer.userHasQuit(username))){
 				boolean foundLine = false;
 				int foundIndex=0;
@@ -215,7 +192,6 @@ public class TwitterInteraction {
 						foundIndex = i;
 					}
 					if(compoundTweet.charAt(i) == '\n' && i>120 && foundLine){
-						System.out.println("Substring which is becoming tweet: "+substr);
 						StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+substr);
 						statusesToPost.add(replyStatus);
 						compoundTweet = compoundTweet.substring(foundIndex+1,compoundTweet.length());
@@ -228,10 +204,8 @@ public class TwitterInteraction {
 			StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+compoundTweet);
 			replyStatus.setInReplyToStatusId(latestTweet.getId());
 			statusesToPost.add(replyStatus);
-			System.out.println(compoundTweet+"\n\n");
 
 			for(StatusUpdate status:statusesToPost){
-				//	System.out.println("\n\n------Status: "+status.toString()+"-------\n\n");
 				status.setInReplyToStatusId(latestTweet.getId());
 				latestTweet = update(status);
 			}
