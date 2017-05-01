@@ -429,6 +429,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 						this.inHandBet();
 					}
 				}
+				
+				
 			}else if(Answer.equalsIgnoreCase(FoldResponse)){
 				this.Fold();
 				currentBet = 0;
