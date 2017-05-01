@@ -460,4 +460,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 		 */
 	}
+
+	@Override
+	public boolean isHuman() {
+		
+		return false;
+	}
 }

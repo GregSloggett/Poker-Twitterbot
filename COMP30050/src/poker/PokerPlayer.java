@@ -113,6 +113,8 @@ public abstract class PokerPlayer {
 		}
 	}
 	
+	public abstract boolean isHuman();
+	
 	public abstract int getCall();
 	
 	public abstract int getBet() throws TwitterException;

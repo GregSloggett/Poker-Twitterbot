@@ -34,6 +34,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public boolean isSplitPot() {
 		return splitPot;
 	}
+	
+	
 
 	/**
 	 * Sets the value of the split pot
@@ -197,7 +199,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 					}
 
 				}else if(amountToDiscard == 2 || amountToDiscard == 3 ){
-					output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card ");
+					output.printout("which cards do you want to discard? 1 is the first card up to 5 the rightmost card in the format'123' ");
 					//twitter.updateStatus("Which cards do you want to discard? The cards are labelled 1 to 5 from left to right");
 					ArrayList<Integer> discardedCard = new ArrayList<Integer>();
 
@@ -552,6 +554,12 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		output.printout(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
 		output.printout("reply #FOAKLeave to leave or reply to continue..");
 		output.readInString();
+	}
+
+	@Override
+	public boolean isHuman() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }
