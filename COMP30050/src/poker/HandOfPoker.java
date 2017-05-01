@@ -27,7 +27,8 @@ public class HandOfPoker {
 	HumanPokerPlayer human;
 
 	PrintWriter writer;
-	final static boolean PRINT_TEST_FILE = true;
+	final static boolean PRINT_TEST_FILE = false;
+	final static boolean PRINT_BANKS_TO_UI_MORE = false;
 
 	/*
 	public HandOfPoker(ArrayList<PokerPlayer> players, int ante, DeckOfCards deck, OutputTerminal UI){
@@ -130,6 +131,7 @@ public class HandOfPoker {
 			writer.flush();
 		}
 	}
+	
 	private void testPrint(ArrayList<PokerPlayer> players, ArrayList<PokerPlayer> playersNotFolded, ArrayList<Integer> bettingRecord, String positionInfo) {
 		testPrint("\n\n>>>>>>>>>>>>>>>");
 		testPrint(positionInfo);
@@ -137,6 +139,14 @@ public class HandOfPoker {
 		testPrint("Players not Folded: " + playersNotFolded);
 		testPrint("Betting record: " + bettingRecord);
 		testPrint("\n\n");
+	}
+	
+	private void testShowBanks() throws TwitterException{
+		if (PRINT_BANKS_TO_UI_MORE){
+			UI.printout("\n\nzzzzzzz");
+			showBanks();
+			UI.printout("\n");
+		}
 	}
 
 
@@ -264,9 +274,7 @@ public class HandOfPoker {
 		pot += highBet;
 		//twitter.appendToCompoundTweet("Second Loop");
 		
-		UI.printout("\n\nzzzzzzz");
-		showBanks();/////////////////////////////////////////////////////////////
-		UI.printout("\n");
+		testShowBanks();
 		
 		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore second betting loop.");
 		
@@ -339,9 +347,7 @@ public class HandOfPoker {
 		//twitter.postCompoundTweet();
 		
 
-		UI.printout("\n\nzzzzzzz");
-		showBanks();/////////////////////////////////////////////////////////////
-		UI.printout("\n");
+		testShowBanks();
 		
 		testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore third loop swap.");
 		
@@ -403,10 +409,11 @@ public class HandOfPoker {
 			UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
 		}
 		
-		UI.printout("\n\nzzzzzzz");
-		showBanks();/////////////////////////////////////////////////////////////
-		UI.printout("\n");
-		human.currentBet = 0;
+		testShowBanks();
+		human.currentBet =0;
+		for (int i=0; i<players.size(); i++){
+			players.get(i).roundOverallBet = 0;
+		}
 	}
 	
 	private void showBanks() throws TwitterException {

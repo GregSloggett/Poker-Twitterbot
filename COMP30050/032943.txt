@@ -1,0 +1,137 @@
+The first line
+The second line
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before first betting loop.
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: []
+Betting record: []
+
+
+
+First Betting Loop: until someone raises
+player 0
+bet =4
+bet > 0. break 1st loop
+firstRaiserIndex = 0
+
+
+>>>>>>>>>>>>>>>
+player 0 finishes first loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before second betting loop.
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+player 1
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 1 finishes second loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+player 2
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 2 finishes second loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+player 3
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 3 finishes second loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+player 4
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 4 finishes second loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+player 5
+bet = 0
+bet == 0 ie folds
+
+
+>>>>>>>>>>>>>>>
+player 5 finishes second loop
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Before third loop swap.
+Players array:
+[FOAKPoker, Lee Dixon, Joe Hart, Paulo Ferreira, Danny Simpson, Gareth Barry]
+Players not Folded: [FOAKPoker]
+Betting record: [4]
+
+
+
+
+
+>>>>>>>>>>>>>>>
+After third loop swap.
+Players array:
+[FOAKPoker]
+Players not Folded: []
+Betting record: [4]
+
+
+
+lastRaiserIndex = 0
+palyers size = 1

@@ -90,6 +90,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.getCall();
 
 		}
+		playerPot = playerPot - (call -currentBet);
 		currentBet = call;
 		return call;
 
