@@ -27,7 +27,7 @@ public class HandOfPoker {
 	HumanPokerPlayer human;
 
 	PrintWriter writer;
-	final static boolean PRINT_TEST_FILE = false;
+	final static boolean PRINT_TEST_FILE = true;
 	final static boolean PRINT_BANKS_TO_UI_MORE = false;
 
 	/*
@@ -423,11 +423,13 @@ public class HandOfPoker {
 								+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 					}
 					else {
-						testPrint("bet = 0 so folds");
+						testPrint("bet = 0 so folds");						
+						UI.printout(players.get(i).playerName + " folds.");
 						betRecord.remove(i);
+						players.remove(i);
 						//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 						//twitter.postCompoundTweet();
-						UI.printout(players.get(i).playerName + " folds.");
+
 					}
 				}
 				else {
