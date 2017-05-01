@@ -32,6 +32,7 @@ public abstract class PokerPlayer {
 	public int truncateBet(int bet) {
 		if (bet > lowestPotBetLimit){
 			bet = lowestPotBetLimit;
+			bet = (lowestPotBetLimit < 0)? 0: lowestPotBetLimit; 
 			currentRound.printTruncatedBetPrompt(lowestPotPlayerName, bet);
 		}
 		return bet;

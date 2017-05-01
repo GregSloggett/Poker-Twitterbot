@@ -28,7 +28,7 @@ public class HandOfPoker {
 	HumanPokerPlayer human;
 
 	PrintWriter writer;
-	final static boolean PRINT_TEST_FILE = true;
+	final static boolean PRINT_TEST_FILE = false;
 	final static boolean PRINT_BANKS_TO_UI_MORE = false;
 	HashMap<PokerPlayer, Integer> betRecordz = new HashMap<PokerPlayer, Integer>();
 
