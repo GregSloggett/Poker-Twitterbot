@@ -373,7 +373,7 @@ public class HandOfPoker {
 			testPrint("size > 1");
 			testPrint("lastRaiserIndex  = " + lastRaiserIndex);
 			for (int i = (lastRaiserIndex+1)%players.size(); i != lastRaiserIndex; i = (i+1)%players.size()){
-				UI.printout("Player " + i);
+				//UI.printout("Player " + i);
 				if (!players.get(i).hasMatchedHighBet()){
 					int bet = players.get(i).getCall();
 					testPrint("bet = " + bet);
@@ -381,7 +381,7 @@ public class HandOfPoker {
 						testPrint("bet != 0");
 						playersNotFolded.add(players.get(i));
 						pot += highBet - betRecord.get(i);
-						players.get(i).subtractChips(highBet - betRecord.get(i));
+						//players.get(i).subtractChips(highBet - betRecord.get(i));
 						//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 						//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
 						//twitter.postCompoundTweet();

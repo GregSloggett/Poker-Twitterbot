@@ -31,6 +31,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	private static TwitterInteraction twitter;
 
 	OutputTerminal output = new OutputTerminal();
+	private int currentBet;
 
 	public AutomatedPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
@@ -174,7 +175,11 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	public int getCall(){
 		int betValue = getBetValueCalculation();
 
-		return see(betValue);
+		int returnValue = see(betValue);
+		
+		this.subtractChips(returnValue - currentBet);
+		
+		return returnValue;
 	}
 	
 	/**
@@ -231,6 +236,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			returnValue = see(betValue);
 		}
 		
+		currentBet = returnValue;
 		this.roundOverallBet+=returnValue;
 		this.subtractChips(returnValue);
 		return returnValue;
@@ -256,7 +262,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * a betting value for the hand: (PS * HGV) / (15 - PT)
 	 */
 	private int getBetValueCalculation(){
-		int betCalculationValue = 10;
+		int betCalculationValue = 13;
 		int handGameValue = this.hand.getGameValue()/100000000;	
 		int betValue = (int) ((playerPot*handGameValue)/(betCalculationValue-playerType));
 		return betValue;
