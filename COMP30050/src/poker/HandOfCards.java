@@ -70,7 +70,7 @@ public class HandOfCards {
 	
 	OutputTerminal out = new OutputTerminal();
 	
-	public int discard() throws InterruptedException{
+	public synchronized int discard() throws InterruptedException{
 		//out.printout("PT ==== " + playerType);
 		//out.printout("Hand =====  " + player.getHandType());
 		int numCardsDiscarded = 0;
@@ -127,7 +127,7 @@ public class HandOfCards {
 	/**
 	 * Uses a bubble sort to sort the cards by game value in the hand from high game value to low
 	 */
-	protected void sort(){
+	protected synchronized void sort(){
 		boolean swapped = true;
 		while (swapped) {
 			swapped = false;
