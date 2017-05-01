@@ -1,5 +1,7 @@
 package poker;
 
+import java.io.IOException;
+
 import twitter4j.TwitterException;
 
 public abstract class PokerPlayer {
@@ -106,6 +108,8 @@ public abstract class PokerPlayer {
 	public abstract boolean showCards(PokerPlayer handWinner);
 	
 	public abstract int getPlayerType();
+	
+	public abstract int discard() throws InterruptedException, TwitterException, IOException;
 	
 	public void awardChips(int amountWon) {
 		playerPot += amountWon;

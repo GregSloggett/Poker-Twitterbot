@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
+import twitter4j.TwitterException;
+
 
 public class AutomatedPokerPlayer extends PokerPlayer {
 	private int playerType;
@@ -421,5 +423,11 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 			HandOfPoker.highBet+=2;
 		}
 		 */
+	}
+
+	@Override
+	public int discard() throws InterruptedException, TwitterException, IOException {
+		int cards = hand.discard();
+		return cards;
 	}
 }
