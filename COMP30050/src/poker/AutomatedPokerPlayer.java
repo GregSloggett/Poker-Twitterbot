@@ -375,15 +375,15 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		boolean wonRound = didWinThisHand(handWinner);
 		
 		if(wonRound == true){
-			output.printout("here is my winning hand: " + this.hand + "\n");
+			twitter.appendToCompoundTweet("here is my winning hand: " + this.hand + "\n");
 			return true;
 		}
 		else if(wonRound == false){
-			output.printout("I did not win, I choose not to show my hand.\n");
+			twitter.appendToCompoundTweet("I did not win, I choose not to show my hand.\n");
 			return false;
 		}
 		else{
-			output.printout("here is my hand: \n" + this.hand + "\n");
+			twitter.appendToCompoundTweet("here is my hand: \n" + this.hand + "\n");
 			return true;
 		}
 	}
