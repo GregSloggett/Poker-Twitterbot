@@ -94,19 +94,28 @@ public class HandOfPoker {
 
 		twitter.postCompoundTweet();
 		System.out.println("number of players "+players.size());
-		if (players.size() > 1){
+		players.clear();
+		for (PokerPlayer name: betRecordz.keySet()){
+			players.add(name);
+		} 
+
+		UI.printout("players.size() is "+players.size());
+		UI.printout("betRecordz.size() is "+betRecordz.size());
+
+
+		if (betRecordz.size() > 1){
 			discardCards();
 			highBet = 0;
 			displayPot();
 			revisedTakeBets();
 			displayPot();
-			if (players.size() >1){
+			if (betRecordz.size() >1){
 				showCards();
 			}
 		}
 		System.out.println("game loop 4");
-		
-		
+
+
 		if(betRecordz.size() > 0){
 			awardWinner(calculateWinners());
 		}
@@ -114,16 +123,16 @@ public class HandOfPoker {
 			UI.printout("Everybody Folded!");
 			for (PokerPlayer name: betRecordz.keySet()){
 
-	            String key =name.toString();
-	            String value = betRecordz.get(name).toString();  
-	            UI.printout("KV" +key + " " + value);  
+				String key =name.toString();
+				String value = betRecordz.get(name).toString();  
+				UI.printout("KV" +key + " " + value);  
 
-	} 
+			} 
 		}
-		
+
 		//human.currentbet = 0;
 		human.replyForNextRound();
-		
+
 
 		if (PRINT_TEST_FILE){
 			writer.close();
@@ -274,9 +283,9 @@ public class HandOfPoker {
 		PokerPlayer lastRaiser = null;
 
 		//ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
-		
+
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
-	
+
 
 
 		//testPrint(players, playersNotFolded, betRecord, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\nBefore first betting loop.");
@@ -490,12 +499,12 @@ public class HandOfPoker {
 				}
 				for (PokerPlayer name: betRecordz.keySet()){
 
-		            String key =name.toString();
-		            String value = betRecordz.get(name).toString();  
-		            UI.printout("KV in loop: " +key + " " + value);  
+					String key =name.toString();
+					String value = betRecordz.get(name).toString();  
+					UI.printout("KV in loop: " +key + " " + value);  
 
-		} 
-				
+				} 
+
 				//testPrint(players, playersNotFolded, betRecord, "player " + i +  " finishes third loop");
 			}
 		}
@@ -592,10 +601,10 @@ public class HandOfPoker {
 	private ArrayList<PokerPlayer> calculateWinners() {
 		ArrayList<PokerPlayer> winnersCircle = new ArrayList<PokerPlayer>();
 
-		
-		 HashMap.Entry<PokerPlayer,Integer> entry=betRecordz.entrySet().iterator().next();
-		 PokerPlayer key= entry.getKey();
-		 Integer value=entry.getValue();
+
+		HashMap.Entry<PokerPlayer,Integer> entry=betRecordz.entrySet().iterator().next();
+		PokerPlayer key= entry.getKey();
+		Integer value=entry.getValue();
 		PokerPlayer winner = key;
 
 		// Look for highest scoring hand
@@ -604,14 +613,14 @@ public class HandOfPoker {
 				winner = players.get(i);
 			}
 		}*/
-		
+
 		for (PokerPlayer name: betRecordz.keySet()){
 
-            if(name.hand.getGameValue()>winner.hand.getGameValue()){
-            	winner = name;
-            }
+			if(name.hand.getGameValue()>winner.hand.getGameValue()){
+				winner = name;
+			}
 
-} 
+		} 
 
 		// Store winner
 		winnersCircle.add(winner);
