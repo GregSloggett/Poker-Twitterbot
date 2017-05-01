@@ -15,6 +15,7 @@ public class GameOfPoker implements Runnable{
 	boolean playerWin = false;
 	boolean playerLose = false;
 	boolean continueGame = true;
+	OutputTerminal a = new OutputTerminal();
 
 	public GameOfPoker(String username, TwitterInteraction t, DeckOfCards d) throws InterruptedException{
 		playerName = username;
@@ -40,6 +41,21 @@ public class GameOfPoker implements Runnable{
 		try {
 			while(!playerWin && !playerLose && continueGame && !(Thread.currentThread().isInterrupted())){
 				HandOfPoker handOfPoker = new HandOfPoker(players,ante,deck,twitter);
+				
+				
+				ArrayList<PokerPlayer> nextRoundPlayers = new ArrayList<PokerPlayer>();
+				for(int i=0;i<players.size();i++){
+					if(!(players.get(i).playerPot<=0)){
+						nextRoundPlayers.add(players.get(i));
+					}
+					else{
+						a.printout("---Player "+players.get(i).playerName+" is out of chips, and out of the game.---");
+					}
+				}
+				players = nextRoundPlayers;
+				
+				
+				
 				if(TwitterStreamer.gamesOfPoker.containsKey(playerName)){
 					if(TwitterStreamer.userHasQuit(playerName) == true){
 						break;
