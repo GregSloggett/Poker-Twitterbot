@@ -14,7 +14,9 @@ public class PictureOfHand {
 	;
 	
 
-	
+	/**
+	 * goes thru the users hand, will then find the reletive cards from the playingcard file and create the picture from that
+	 */
 	public BufferedImage createImage(HandOfCards inputtedHand) throws IOException {
 		
 

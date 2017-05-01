@@ -15,11 +15,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	public HumanPokerPlayer(DeckOfCards inputDeck, TwitterInteraction t) throws InterruptedException {
 		super(inputDeck);
-		System.out.println("human 1 -a");
 		twitter = t;
-		System.out.println("human 1 -b");
 		a = inputDeck;
-		System.out.println("human 1 -c");
 		this.playerName = t.username; 
 		// TODO Auto-generated constructor stub
 	}
@@ -37,6 +34,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	public boolean isSplitPot() {
 		return splitPot;
 	}
+	
+	/**
+	 * Sets the value of the split pot
+	 */
 
 	public void setSplitPot(boolean splitPot) {
 		this.splitPot = splitPot;
@@ -46,12 +47,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	 * Should return the value of the bet for the human player.
 	 */
 	public int getBet(){
-		System.out.println("getting human bet");
 		int ret = -1;
 		try {
-			System.out.println("getting inhandbet");
 			ret = inHandBet();
-			System.out.println("got inhand bet");
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,6 +65,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 
 
+	/**
+	 * If the player is the last in the betting cycle he has the option to call or fold on the hand brining an end to the betting cycle
+	 */
 	@Override
 	public int getCall() {
 
@@ -74,7 +75,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		String foldResponse = "Fold";
 		int call = 0;
 
-		//twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
+		//twitter.updateStatus("Do you want to call the betting or fold? \nTweet 'Call' to call or 'Fold' to fold\n");
 		output.printout("Do you want to call the betting or fold? \nTweet 'Call' to call or 'Fold' to fold\n");
 
 		String Answer = output.readInString();
@@ -137,6 +138,11 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	}
 
 	OutputTerminal output = new OutputTerminal();
+	
+	/**
+	 * This asks the player if he want to discard how many he wants to discard and which cards, 
+	 * if carries out the discard and sends an updated pic of the hand as a tweet.
+	 */
 
 	public int discard() throws InterruptedException, TwitterException, IOException {
 		PictureOfHand pic = new PictureOfHand();
@@ -146,10 +152,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		askToDiscard = true;
 		int amountToDiscard = 0;
 
-		System.out.println("getting here 1");
 		//twitter.updateStatusWithTextAndImage("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no", pic.createImage(this.hand)  );
 		output.printout("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no\n"+hand.toString());
-		System.out.println("getting here 2");
 		//String Answer = twitter.waitForTweet();
 		String Answer = output.readInString();
 
@@ -230,6 +234,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	}
 
 
+	/**
+	 * Tweets the initial had to the player as an image
+	 */
 	public void tweetInitialCards() throws TwitterException, IOException, InterruptedException {
 		pic = new PictureOfHand();
 		//twitter.updateStatusWithTextAndImage("These are your cards!", pic.createImage(this.hand)  );
@@ -239,6 +246,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	}
 
+	/**
+	 * this reads in multiple integers from the user. 
+	 */
 	public ArrayList<Integer> readinMultipleInt(String input){	
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		for(int i=0;i<input.length();i++){
@@ -255,6 +265,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		return numbers;
 	}
+	
+	/**
+	 * Returns true if the bet is below the player pot
+	 */
 
 	public boolean validBet(int bet){
 
@@ -266,7 +280,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		return validBet;
 	}
-
+	
+	/**
+	 * this returns the bet for the player wether he is the opening bet or or one of the subsequent bets
+	 */
 	public int getBet(String Bet) throws TwitterException{
 		boolean isNumber = false;
 		int finalBet = 0;
@@ -297,7 +314,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return finalBet;
 
 	}
-
+	/**
+	 * will either bet or check there as it is the opening bet
+	 */
 	public int openingBet() throws TwitterException, InterruptedException{
 		String betResponse = "Bet";
 		String checkResponse = "Check";
@@ -337,34 +356,37 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		return bet;
 	}
 
+	/**
+	 * returns the boolean for discarding
+	 */
 	public boolean isAskToDiscard() {
 		return askToDiscard;
 	}
 
+	/**
+	 * sets the boolean for discarding
+	 */
 	public void setAskToDiscard(boolean askToDiscard) {
 		this.askToDiscard = askToDiscard;
 	}
-
+	/**
+	 * Betting function used to allow the player to call raise or fold the betting in the middle of a hand
+	 * 
+	 */
 	public int inHandBet() throws TwitterException, InterruptedException{
 		int bet = 0;
 		String callResponse = "Call";
 		String raiseResponse = "Raise";
 		String FoldResponse = "Fold";
-		System.out.println("going into first if");
 		if(playerPot< currentRound.highBet){
 			output.printout("sorry you cannot take part as the bet is larger than your pot the pot will be split here and you can win up to this amount in the hand");
-			System.out.println("going to post sorry message");
 			//twitter.updateStatus("sorry you cannot take part as the bet is larger than your pot the pot will" 
 			//		+" be split here and you can win up to this amount in the hand");
-			System.out.println("posted sorry message");
 			splitPot = true;
 		}
 		if(currentRound.highBet == 0){
-			System.out.println("pot was 0");
 			this.openingBet();
-			System.out.println("ran opening bet");
 		}else{
-			System.out.println("got into else");
 			//twitter.updateStatus("The pot is at " + currentRound.pot + ". Reply with 'call', 'raise' or 'fold' to continue");
 			if((currentRound.highBet - currentBet) == 0){
 				output.printout("POT = " + currentRound.pot + "\nHighest Bet = " + currentRound.highBet + 
@@ -425,6 +447,10 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 		return bet;
 	}
+	
+	/**
+	 * returns if the player has folded or not
+	 */
 
 	public boolean Fold() throws TwitterException, InterruptedException {
 		String positiveResponse = "y";
@@ -461,10 +487,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		HumanPokerPlayer human = new HumanPokerPlayer(deck);
 
 		System.out.println(human.hand);
-		try {
-			System.out.println("discarding");
+		try {			
 			human.discard();
-			System.out.println("discarded");
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
