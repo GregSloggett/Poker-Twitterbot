@@ -15,7 +15,7 @@ public class GameOfPoker implements Runnable{
 	boolean playerWin = false;
 	boolean playerLose = false;
 	boolean continueGame = true;
-	OutputTerminal a = new OutputTerminal();
+
 
 	public GameOfPoker(String username, TwitterInteraction t, DeckOfCards d) throws InterruptedException{
 		playerName = username;
@@ -36,8 +36,6 @@ public class GameOfPoker implements Runnable{
 	//Runnable code segment
 	@Override
 	public void run() {
-		System.out.println("getting into run");
-
 		try {
 			while(!playerWin && !playerLose && continueGame && !(Thread.currentThread().isInterrupted())){
 				HandOfPoker handOfPoker = new HandOfPoker(players,ante,deck,twitter);
@@ -50,26 +48,33 @@ public class GameOfPoker implements Runnable{
 						nextRoundPlayers.add(players.get(i));
 					}
 					else{
-						a.printout("---Player "+players.get(i).playerName+" is out of chips, and out of the game.---");
+						twitter.appendToCompoundTweet("---Player "+players.get(i).playerName+" is out of chips, and out of the game.---");
+						//If the human is out of chips, leave the game.
 						if(players.get(i).isHuman()){
 							playerLose = true;
-							a.printout("Sorry, you are out of the game. Goodbye and thanks for playing!");
-							a.printout("To play again, Tweet with #FOAKDeal");
+							twitter.appendToCompoundTweet("Sorry, you are out of the game. Goodbye and thanks for playing!");
+							twitter.appendToCompoundTweet("To play again, Tweet with #FOAKDeal");
+							twitter.postCompoundTweet();
 							break;
 						}
 					}
 				}
+				
 				players = nextRoundPlayers;
 				
 				if(players.size()==1 && !playerLose){
+					//If the human player has won
 					if(players.get(0).isHuman()){
-						a.printout("You have beaten the bots and won the game! Congratulations!");
-						a.printout("To play another game, Tweet with #FOAKDeal !");
+						twitter.appendToCompoundTweet("You have beaten the bots and won the game! Congratulations!");
+						twitter.appendToCompoundTweet("To play another game, Tweet with #FOAKDeal !");
+						twitter.postCompoundTweet();
 						playerWin = true;
 					}
+					//If the human player has lost.
 					else{
-						a.printout("Hard luck, you have lost the game.");
-						a.printout("You can play again by Tweeting #FOAKDeal");
+						twitter.appendToCompoundTweet("Hard luck, you have lost the game.");
+						twitter.appendToCompoundTweet("You can play again by Tweeting #FOAKDeal");
+						twitter.postCompoundTweet();
 						playerLose = true;
 					}
 				}

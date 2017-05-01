@@ -21,6 +21,8 @@ public class TwitterInteraction {
 	String username;
 	Status firstTweet;
 	String compoundTweet = "";
+	//need to leave room for additional characters, so it's not the full 140.
+	final int SAFE_COMPOUND_TWEET_LENGTH = 120;
 
 	public TwitterInteraction(Twitter t, Status tweet, String nick){
 		twitter = t;
@@ -180,18 +182,18 @@ public class TwitterInteraction {
 	public void postCompoundTweet() throws TwitterException{
 		if(compoundTweet.length()>0){
 			ArrayList<StatusUpdate> statusesToPost = new ArrayList<StatusUpdate>();
-
-			while(compoundTweet.length() > 120 && !(TwitterStreamer.userHasQuit(username))){
+			
+			while(compoundTweet.length() > SAFE_COMPOUND_TWEET_LENGTH && !(TwitterStreamer.userHasQuit(username))){
 				boolean foundLine = false;
 				int foundIndex=0;
 				String substr = "";
 				for(int i=0;i<compoundTweet.length();i++){
-					if(compoundTweet.charAt(i)=='\n' && i<=120){
+					if(compoundTweet.charAt(i)=='\n' && i<=SAFE_COMPOUND_TWEET_LENGTH){
 						substr = compoundTweet.substring(0, i+1);
 						foundLine = true;
 						foundIndex = i;
 					}
-					if(compoundTweet.charAt(i) == '\n' && i>120 && foundLine){
+					if(compoundTweet.charAt(i) == '\n' && i>SAFE_COMPOUND_TWEET_LENGTH && foundLine){
 						StatusUpdate replyStatus = new StatusUpdate("@"+username+" "+substr);
 						statusesToPost.add(replyStatus);
 						compoundTweet = compoundTweet.substring(foundIndex+1,compoundTweet.length());
