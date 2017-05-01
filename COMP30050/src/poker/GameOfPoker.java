@@ -44,17 +44,33 @@ public class GameOfPoker implements Runnable{
 				
 				
 				ArrayList<PokerPlayer> nextRoundPlayers = new ArrayList<PokerPlayer>();
+				
 				for(int i=0;i<players.size();i++){
 					if(!(players.get(i).playerPot<=0)){
 						nextRoundPlayers.add(players.get(i));
 					}
 					else{
 						a.printout("---Player "+players.get(i).playerName+" is out of chips, and out of the game.---");
+						if(players.get(i).isHuman()){
+							playerLose = true;
+							a.printout("Sorry, you are out of the game. Goodbye and thanks for playing!");
+						}
 					}
 				}
 				players = nextRoundPlayers;
 				
-				
+				if(players.size()==1){
+					if(players.get(0).isHuman()){
+						a.printout("You have beaten the bots and won the game! Congratulations!");
+						a.printout("To play another game, Tweet #FOAKDeal !");
+						playerWin = true;
+					}
+					else{
+						a.printout("Hard luck, you have lost the game.");
+						a.printout("You can play again by Tweeting #FOAKDeal");
+						playerLose = true;
+					}
+				}
 				
 				if(TwitterStreamer.gamesOfPoker.containsKey(playerName)){
 					if(TwitterStreamer.userHasQuit(playerName) == true){
