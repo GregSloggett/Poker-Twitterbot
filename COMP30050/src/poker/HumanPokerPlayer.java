@@ -373,7 +373,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			}
 		}
 
-		this.subtractChips(bet);
+		//this.subtractChips(bet);
 		return bet;
 	}
 

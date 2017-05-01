@@ -214,7 +214,6 @@ public class HandOfPoker {
 
 		int firstRaiserIndex = -1;
 		PokerPlayer lastRaiser = null;
-		int lastCallerIndex = -1;
 		
 		ArrayList<Integer> betRecord = new ArrayList<Integer>(); // list for keeping track of bets,bet record[i] will represent player[i]'s bet
 		ArrayList<PokerPlayer> playersNotFolded = new ArrayList<PokerPlayer>();
@@ -244,10 +243,7 @@ public class HandOfPoker {
 				highBet = bet;
 				firstRaiserIndex = i;
 				lastRaiser = players.get(i);
-				lastCallerIndex = i;
 				testPrint("firstRaiserIndex = " + firstRaiserIndex);
-				//testPrint("lastRaiserIndex = " + lastRaiserIndex);
-				testPrint("lastCallerIndex = " + lastCallerIndex);
 				//twitter.appendToCompoundTweet(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
 				//twitter.postCompoundTweet();
 				UI.printout(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
@@ -288,14 +284,9 @@ public class HandOfPoker {
 				lastRaiser = players.get(i);
 				raiseMessage = true;
 				
-				lastCallerIndex = i;
-				//testPrint("lastRaiserIndex = " + lastRaiserIndex);
-				testPrint("lastCallerIndex = " + lastCallerIndex);
 			}
 			else if (bet == highBet){
 				testPrint ("bet == highbet: " + highBet);
-				lastCallerIndex = i;
-				testPrint("lastCallerIndex = " + lastCallerIndex);
 			}
 			
 			if (bet != 0){
@@ -321,9 +312,9 @@ public class HandOfPoker {
 					players.get(i).subtractChips(bet - betRecord.get(i));
 					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
 					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-					betRecord.set(i, bet);
 					UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
 							+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
+					betRecord.set(i, bet);
 					//twitter.postCompoundTweet();
 				}
 			}
@@ -333,15 +324,7 @@ public class HandOfPoker {
 					testPrint("i <= firstRaiser index " + firstRaiserIndex + " removing them.");
 					betRecord.remove(i);
 					playersNotFolded.remove(i);
-				}/*
-				if (i < lastRaiserIndex){
-					lastRaiserIndex--;
-					testPrint("lastRaiserIndex -- to :" + lastRaiserIndex);
 				}
-				if (i < lastCallerIndex){
-					lastCallerIndex--;
-					testPrint("lastCallerIndex -- to :" + lastCallerIndex);
-				}*/
 				//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
 				//twitter.postCompoundTweet();
 				UI.printout(players.get(i).playerName + " folds.");
@@ -376,7 +359,6 @@ public class HandOfPoker {
 		if (players.size() > 1){
 			testPrint("size > 1");
 			testPrint("lastRaiserIndex  = " + lastRaiserIndex);
-			testPrint("lastCallerIndex = " + lastCallerIndex);
 			for (int i = (lastRaiserIndex+1)%players.size(); i != lastRaiserIndex; i = (i+1)%players.size()){
 				testPrint("Player " + i);
 				if (!players.get(i).hasMatchedHighBet()){
