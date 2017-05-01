@@ -54,15 +54,17 @@ public class GameOfPoker implements Runnable{
 						if(players.get(i).isHuman()){
 							playerLose = true;
 							a.printout("Sorry, you are out of the game. Goodbye and thanks for playing!");
+							a.printout("To play again, Tweet with #FOAKDeal");
+							break;
 						}
 					}
 				}
 				players = nextRoundPlayers;
 				
-				if(players.size()==1){
+				if(players.size()==1 && !playerLose){
 					if(players.get(0).isHuman()){
 						a.printout("You have beaten the bots and won the game! Congratulations!");
-						a.printout("To play another game, Tweet #FOAKDeal !");
+						a.printout("To play another game, Tweet with #FOAKDeal !");
 						playerWin = true;
 					}
 					else{
