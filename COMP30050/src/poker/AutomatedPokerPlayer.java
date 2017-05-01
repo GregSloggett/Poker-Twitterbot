@@ -108,6 +108,13 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return quote;
 	}
 
+	/**
+	 * Retrieves a random line from a file.
+	 * Primarily to be used in text files with player quotes and player names
+	 * to take a random line from each file. 
+	 * @param filename
+	 * @return
+	 */
 	public String getRandomLineFromFile(String filename){
 		String out = "";
 		try{
@@ -172,13 +179,21 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		return rand.nextInt(range) + 1;
 	}
 
+	/**
+	 * Retrieves the call value for a player who can no longer raise the betting. 
+	 * Otherwise the player folds.
+	 */
 	public int getCall(){
 		int betValue = getBetValueCalculation();
-
-		int returnValue = see(betValue);
-		
+		int callValue = getCallValueCalculation(betValue);
+		int returnValue = 0;
+		if(betValue >= currentRound.highBet && callValue > currentRound.highBet){
+			returnValue = see(betValue);	
+		}
+		else{
+			returnValue = 0;
+		}
 		this.subtractChips(returnValue - currentBet);
-		
 		return returnValue;
 	}
 	
@@ -186,7 +201,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 * Retrieves the bet value the player wishes to bet.
 	 */
 	public int getBet(){
-		//output.printout("high bet in ai player class = " + currentRound.highBet);
+
 		int betValue = getBetValueCalculation();	//the value at which a player would bet up to 
 		int callValue = getCallValueCalculation(betValue);   //the value at which a player would call up to, based on the bet value and player type
 		boolean hasRaised = false;
@@ -287,16 +302,6 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	 */
 	private int raise(int betValue){
 		int raiseValue = betValue - currentRound.highBet;
-
-		//different types of betting to be implemented
-		
-		/*
-		 * if a player has a strong hand there's a number of betting strategies they can use:
-		 * - Slow Play = where player checks/bets low in order to tempt other players into betting
-		 * - Value Bet = player believes they have the strongest hand, & wants to bet without scaring other players into folding
-		 * - Over Bet = pressurize opponents into 
-		 * - All in Bet = pressurize opponents into 
-		 */
 		
 		if(playerType < 4){
 			twitter.appendToCompoundTweet(getPlayerQuote(CONSERVATIVE_RAISE) + "I raise " + raiseValue + " chips.");
@@ -347,6 +352,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		}
 	}
 
+	/**
+	 * Provides a player response for the player who wins the hand.
+	 */
 	public boolean showCards(PokerPlayer handWinner){
 		boolean wonRound = didWinThisHand(handWinner);
 
@@ -369,6 +377,10 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 	}
 
 	@Override
+	/**
+	 * Discard method calls discard method in HandOfCards class. 
+	 * Likelihood of discarding increases with the players risk aversion type.
+	 */
 	public int discard() throws InterruptedException, TwitterException, IOException {
 		int cards = hand.discard();
 		return cards;
