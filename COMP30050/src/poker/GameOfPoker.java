@@ -78,6 +78,10 @@ public class GameOfPoker implements Runnable{
 					}
 				}
 			}
+			if(playerWin || playerLose){
+				TwitterStreamer.usersPlayingGames.remove(playerName);
+				TwitterStreamer.gamesOfPoker.remove(playerName);
+			}
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

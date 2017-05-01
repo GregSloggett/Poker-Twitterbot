@@ -25,12 +25,12 @@ import twitter4j.User;
 public class TwitterStreamer {
 	static Twitter twitter = TwitterFactory.getSingleton();
 	//Stores simple boolean when user is in a game.
-	static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
+	public static Map<String, Boolean> usersPlayingGames = new HashMap<String, Boolean>();
 	
 	/* Stores Future objects of currently running game threads, allowing
 	 * them to be cancelled and interrupted when a user wants to quit
 	 */
-	static Map<String, Future<?>> gamesOfPoker = new HashMap<String, Future<?>>();
+	public static Map<String, Future<?>> gamesOfPoker = new HashMap<String, Future<?>>();
 	
 	//Sets the limit on the maximum number of concurrent games on our Twitter bot.
 	private static final int NUMTHREADS = 30;
