@@ -116,12 +116,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	OutputTerminal output = new OutputTerminal();
 
-	public void discard() throws InterruptedException, TwitterException, IOException {
+	public int discard() throws InterruptedException, TwitterException, IOException {
 		PictureOfHand pic = new PictureOfHand();
 
 		String positiveResponse = "y";
 		String negativeResponse = "n";
 		askToDiscard = true;
+		int amountToDiscard = 0;
 
 		System.out.println("getting here 1");
 		//twitter.updateStatusWithTextAndImage("Here are your cards! do you want to replace any!?\n If so tweet 'Y' for yes or 'N' for no", pic.createImage(this.hand)  );
@@ -134,7 +135,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			output.printout("OK how many cards do you need to change you can discard up to 3 cards");
 			//twitter.updateStatus("How many cards do you need to change? You can discard up to 3 cards.");
 			//int amountToDiscard = output.readInSingleInt();
-			int amountToDiscard = -1;
 			boolean gotNumber = false;
 			while(gotNumber == false){
 				try{
@@ -204,6 +204,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			else if (Answer.equals(null)){
 
 			}
+		return amountToDiscard;
 	}
 
 
