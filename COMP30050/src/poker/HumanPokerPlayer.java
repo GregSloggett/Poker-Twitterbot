@@ -268,15 +268,28 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 	}
 	
 	public int getBet(String Bet) throws TwitterException{
-		int bet = Integer.parseInt(Bet);
+		boolean isNumber = false;
 		int finalBet = 0;
+		
+		while(isNumber == false){
+		try{
+		int bet = Integer.parseInt(Bet);
+		
 		if(bet <= this.playerPot && bet >= 0 ){
 			 finalBet = bet;	
+			 isNumber =true;
+			 break;
 		}
 		else{
 			//twitter.updateStatus("Sorry this is an invalid bet");
 			output.printout("Sorry this is an invalid bet\n");
 			this.getBet();
+		}
+		}catch(NumberFormatException ex){
+			output.printout("sorry invalid input");
+			//twitter.updateStatus("Sorry Invalid Input");
+			this.getBet();
+		}
 		}
 		
 		output.printout("getBet(param)      " + this.playerPot);
