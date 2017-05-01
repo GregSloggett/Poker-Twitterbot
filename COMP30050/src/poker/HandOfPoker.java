@@ -656,7 +656,7 @@ public class HandOfPoker {
 	private void awardWinner(ArrayList<PokerPlayer> winners) throws TwitterException { 
 
 		if (winners.size() == 1){
-			//twitter.postCompoundTweet(); //Make sure compound tweet is clear
+			twitter.postCompoundTweet(); //Make sure compound tweet is clear
 			twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			twitter.appendToCompoundTweet(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
 			twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");

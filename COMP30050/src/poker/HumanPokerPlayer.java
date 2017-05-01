@@ -557,13 +557,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		};
 		Random rand = new Random();
 
-		//twitter.appendToCompoundTweet(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
-		//twitter.appendToCompoundTweet("Tweet #FOAKLeave to leave or reply to continue. . .");
-		//twitter.postCompoundTweet();
-		//twitter.waitForTweet();
-		output.printout(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
-		output.printout("reply #FOAKLeave to leave or reply to continue..");
-		output.readInString();
+		twitter.appendToCompoundTweet(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
+		twitter.appendToCompoundTweet("Tweet #FOAKLeave to leave or reply to continue. . .");
+		twitter.postCompoundTweet();
+		twitter.waitForTweet();
+		//output.printout(positiveResponses[rand.nextInt(positiveResponses.length)] + " Ready for the next round?");
+		//output.printout("reply #FOAKLeave to leave or reply to continue..");
+		//output.readInString();
 	}
 
 	@Override
