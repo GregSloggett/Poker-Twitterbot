@@ -119,7 +119,7 @@ public class HandOfPoker {
 	 */
 	public void setLowestPotBounds() {
 		//Get pot and name of lowest player
-		int lowestPot = players.get(0).playerPot;
+		int lowestPot = Integer.MAX_VALUE;
 		String lowestPotName = null;
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).playerPot < lowestPot){
