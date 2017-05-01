@@ -59,7 +59,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		this.roundOverallBet+=ret;
 
-		output.printout("getBet()      " + this.playerPot);
 		return ret;
 	}
 
@@ -108,16 +107,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		//playerPot = playerPot - (call -currentBet);
 		//currentBet = call;
 
-		output.printout("getCall()      " + this.playerPot);		
 		this.subtractChips(call - currentBet);
-		output.printout("getCall()      " + this.playerPot);
-
 		currentBet = currentRound.highBet;
-
 		return call;
-
-
-
 
 	}
 
@@ -309,8 +301,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			}
 		}
 
-		output.printout("getBet(param)      " + this.playerPot);
-
 		return finalBet;
 
 	}
@@ -349,9 +339,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		//playerPot = playerPot-bet;
 		this.roundOverallBet+=bet;
 
-		output.printout("getOpeningBet()      " + this.playerPot);
 		this.subtractChips(bet);
-		output.printout("getOpeningBet()      " + this.playerPot);
 
 		return bet;
 	}
@@ -442,11 +430,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 			}
 		}
-
-		output.printout("getInHandBet()      " + this.playerPot);
 		this.subtractChips(bet);
-		output.printout("getInHandBet()      " + this.playerPot);
-
 		return bet;
 	}
 	
