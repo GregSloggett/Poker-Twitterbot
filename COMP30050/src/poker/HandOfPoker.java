@@ -99,8 +99,8 @@ public class HandOfPoker {
 			players.add(name);
 		} 
 
-		UI.printout("players.size() is "+players.size());
-		UI.printout("betRecordz.size() is "+betRecordz.size());
+		//UI.printout("players.size() is "+players.size());
+		//UI.printout("betRecordz.size() is "+betRecordz.size());
 
 
 		if (betRecordz.size() > 1){
@@ -114,19 +114,21 @@ public class HandOfPoker {
 				showCards();
 			}
 		}
-		System.out.println("game loop 4");
+		//System.out.println("game loop 4");
 
 
 		if(betRecordz.size() > 0){
 			awardWinner(calculateWinners());
 		}
 		else{
-			UI.printout("Everybody Folded!");
+			twitter.appendToCompoundTweet("Everybody Folded!");
+			twitter.postCompoundTweet();
+			//UI.printout("Everybody Folded!");
 			for (PokerPlayer name: betRecordz.keySet()){
 
 				String key =name.toString();
 				String value = betRecordz.get(name).toString();  
-				UI.printout("KV" +key + " " + value);  
+				//UI.printout("KV" +key + " " + value);  
 
 			} 
 		}
@@ -162,7 +164,8 @@ public class HandOfPoker {
 	}
 
 	public void printTruncatedBetPrompt(String name, int bet){
-		UI.printout("Bet truncated to " + bet + " chips, " + name + " only has " +bet + "chips.");
+		twitter.appendToCompoundTweet("Bet truncated to " + bet + " chips, " + name + " only has " +bet + "chips.");
+		//UI.printout("Bet truncated to " + bet + " chips, " + name + " only has " +bet + "chips.");
 	}
 
 	private void setUpFilePrint() {
@@ -210,15 +213,15 @@ public class HandOfPoker {
 	 */
 	private void dealHandsUntilOpen() throws InterruptedException {
 		do {
-			System.out.println("got into dealhandsuntilopen");
-			System.out.println("checking if null");
-			System.out.println(deck==null);
+			//System.out.println("got into dealhandsuntilopen");
+			//System.out.println("checking if null");
+			//System.out.println(deck==null);
 			deck.shuffle();
-			System.out.println("deck was shuffled");
+			//System.out.println("deck was shuffled");
 			deck.reset();
-			System.out.println("deck was reset");
-			//twitter.appendToCompoundTweet("Dealing hands...");
-			UI.printout("Dealing hands...");
+			//System.out.println("deck was reset");
+			twitter.appendToCompoundTweet("Dealing hands...");
+			//UI.printout("Dealing hands...");
 			for (int i=0; i<players.size(); i++){
 				players.get(i).dealNewHand();
 			}
@@ -234,14 +237,14 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			if (players.get(i).hand.getGameValue() >= OPENING_HAND){
 				openingHand = true;
-				//twitter.appendToCompoundTweet("Player "+ players.get(i).playerName + " says I can open!\n");
-				UI.printout("Player "+ players.get(i).playerName + " says I can open!\n");
+				twitter.appendToCompoundTweet("Player "+ players.get(i).playerName + " says I can open!\n");
+				//UI.printout("Player "+ players.get(i).playerName + " says I can open!\n");
 				break;
 			}
 		}
 		if (!openingHand){
-			//twitter.appendToCompoundTweet("Nobody can open this round.");
-			UI.printout("Nobody can open this round.");
+			twitter.appendToCompoundTweet("Nobody can open this round.");
+			//UI.printout("Nobody can open this round.");
 		}
 		return openingHand;
 	}
@@ -255,8 +258,8 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			antesTotal += ante; 
 			players.get(i).subtractChips(ante);
-			//twitter.appendToCompoundTweet(players.get(i).playerName + " paid " + ante + " chips for deal.");
-			UI.printout(players.get(i).playerName + " paid " + ante + " chips for deal.");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " paid " + ante + " chips for deal.");
+			//UI.printout(players.get(i).playerName + " paid " + ante + " chips for deal.");
 		}
 		return antesTotal;
 	}
@@ -271,8 +274,8 @@ public class HandOfPoker {
 
 	private void revisedTakeBets() throws TwitterException, InterruptedException {
 
-		//twitter.appendToCompoundTweet("## Place your bets!\n");
-		UI.printout("## Place your bets!\n");
+		twitter.appendToCompoundTweet("## Place your bets!\n");
+		//UI.printout("## Place your bets!\n");
 		showBanks();
 		highBet = 0;
 		HashMap<PokerPlayer, Boolean> foldStatus = new HashMap<PokerPlayer, Boolean>();
@@ -317,15 +320,15 @@ public class HandOfPoker {
 				firstRaiserIndex = i;
 				lastRaiser = players.get(i);
 				testPrint("firstRaiserIndex = " + firstRaiserIndex);
-				//twitter.appendToCompoundTweet(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
-				//twitter.postCompoundTweet();
-				UI.printout(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
+				twitter.appendToCompoundTweet(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
+				twitter.postCompoundTweet();
+				//UI.printout(players.get(i).playerName + " makes the first bet of " + bet + " chips.");
 			}
 			else {
 				testPrint("bet !> 0. continue 1st loop");
-				//twitter.appendToCompoundTweet(players.get(i).playerName + " checks.");
-				//twitter.postCompoundTweet();
-				UI.printout(players.get(i).playerName + " checks.");
+				twitter.appendToCompoundTweet(players.get(i).playerName + " checks.");
+				twitter.postCompoundTweet();
+				//UI.printout(players.get(i).playerName + " checks.");
 			}
 			playersNotFolded.add(players.get(i));
 			foldStatus.put(players.get(i), false);
@@ -378,43 +381,45 @@ public class HandOfPoker {
 					betRecordz.put(players.get(i), bet);
 					//players.get(i).subtractChips(bet);
 					pot += bet;
-					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
-					//twitter.postCompoundTweet();
+					
 					if (raiseMessage) {
-						UI.printout(players.get(i).playerName + " raises the bet to " + highBet + " chips.");
+						//UI.printout(players.get(i).playerName + " raises the bet to " + highBet + " chips.");
+						twitter.appendToCompoundTweet(players.get(i).playerName + " raises the bet to " + highBet + " chips.");
 					}
 					else {
-						UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
+						//UI.printout(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
+						twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet + " chips.");
 					}
+					twitter.postCompoundTweet();
 				}
 				else {
 					testPrint("i <= firstRaiser index");
 					//pot += bet - betRecord.get(i);
 					pot+= bet - betRecordz.get(players.get(i));
 					//players.get(i).subtractChips(bet - betRecord.get(i));
-					//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
-					//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-					UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
-							+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
+					twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
+							+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))) + " chips.\n");
+					//UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
+					//		+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
 					//betRecord.set(i, bet);
 					betRecordz.replace(players.get(i), bet);
-					//twitter.postCompoundTweet();
+					twitter.postCompoundTweet();
 				}
 			}
 			else {
 				testPrint("bet == 0 ie folds");
-				UI.printout("fold");
+				//UI.printout("fold");
 				if (i <= firstRaiserIndex){
-					UI.printout("\n\n\n\nFOLDED\n\n\n\n");
+					//UI.printout("\n\n\n\nFOLDED\n\n\n\n");
 					testPrint("i <= firstRaiser index " + firstRaiserIndex + " removing them.");
 					//betRecord.remove(i);
 					betRecordz.remove(players.get(i));
 					foldStatus.put(players.get(i), true);
 					playersNotFolded.remove(i);
 				}
-				//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
-				//twitter.postCompoundTweet();
-				UI.printout(players.get(i).playerName + " folds.");
+				twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
+				twitter.postCompoundTweet();
+				//UI.printout(players.get(i).playerName + " folds.");
 				playersNotFolded.remove(players.get(i));
 				betRecordz.remove(players.get(i));
 				foldStatus.put(players.get(i), true);
@@ -469,29 +474,29 @@ public class HandOfPoker {
 					testPrint("bet = " + bet);
 					if (bet != 0){
 						testPrint("bet != 0");
-						UI.printout("Adding "+players.get(i).playerName + " to the playersnotfolded");
+						//UI.printout("Adding "+players.get(i).playerName + " to the playersnotfolded");
 						playersNotFolded.add(players.get(i));
 						foldStatus.put(players.get(i), false);
 						//pot += highBet - betRecord.get(i);
 						pot += highBet - betRecordz.get(players.get(i));
 						//players.get(i).subtractChips(highBet - betRecord.get(i));
-						//twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
-						//		+ " and throws in the additional " + (bet - betRecord.get(i)) + " chips.\n");
-						//twitter.postCompoundTweet();
-						UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
-								+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
+						twitter.appendToCompoundTweet(players.get(i).playerName + " sees the bet of " + highBet 
+								+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))) + " chips.\n");
+						twitter.postCompoundTweet();
+						//UI.printout(players.get(i).playerName + " sees the bet of " + highBet 
+						//		+ " and throws in the additional " + (bet - betRecordz.get(players.get(i))/*betRecord.get(i)*/) + " chips.\n");
 					}
 					else {
+						twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
+						twitter.postCompoundTweet();
 						testPrint("bet = 0 so folds");						
-						UI.printout(players.get(i).playerName + " folds.");
+						//UI.printout(players.get(i).playerName + " folds.");
 						//betRecord.remove(i);
 						betRecordz.remove(players.get(i));
 						//players.remove(i);
 						if(foldStatus.containsKey(players.get(i))){
 							foldStatus.remove(players.get(i));
 						}
-						//twitter.appendToCompoundTweet(players.get(i).playerName + " folds.");
-						//twitter.postCompoundTweet();
 
 					}
 				}
@@ -502,7 +507,7 @@ public class HandOfPoker {
 
 					String key =name.toString();
 					String value = betRecordz.get(name).toString();  
-					UI.printout("KV in loop: " +key + " " + value);  
+					//UI.printout("KV in loop: " +key + " " + value);  
 
 				} 
 
@@ -510,9 +515,9 @@ public class HandOfPoker {
 			}
 		}
 		else {
-			//twitter.appendToCompoundTweet("Everyone has folded but " + players.get(0).playerName + "!");
-			//twitter.postCompoundTweet();
-			UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
+			twitter.appendToCompoundTweet("Everyone has folded but " + players.get(0).playerName + "!");
+			twitter.postCompoundTweet();
+			//UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
 		}
 
 		//players.clear();
@@ -540,8 +545,8 @@ public class HandOfPoker {
 
 	private void showBanks() throws TwitterException {
 		for (int i=0; i< players.size(); i++){
-			//twitter.appendToCompoundTweet(players.get(i).playerName + " has " + players.get(i).playerPot + " chips");
-			UI.printout(players.get(i).playerName + " has " + players.get(i).playerPot + " chips");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " has " + players.get(i).playerPot + " chips");
+			//UI.printout(players.get(i).playerName + " has " + players.get(i).playerPot + " chips");
 		}
 		//twitter.postCompoundTweet();
 	}
@@ -559,12 +564,12 @@ public class HandOfPoker {
 		for (int i=0; i<players.size(); i++){
 			players.get(i).hand.passPlayerType(players.get(i));
 			int discardedCount = players.get(i).discard();
-			//twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
-			UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " discards " + discardedCount + "cards");
+			//UI.printout(players.get(i).playerName + " discards " + discardedCount + "cards");
 		}
-		//twitter.appendToCompoundTweet("\n\n## Players are redealt their cards.");
-		UI.printout("\n\n## Players are redealt their cards.");
-		//twitter.postCompoundTweet();
+		twitter.appendToCompoundTweet("\n\n## Players are redealt their cards.");
+		//UI.printout("\n\n## Players are redealt their cards.");
+		twitter.postCompoundTweet();
 	}
 
 	/**
@@ -576,8 +581,8 @@ public class HandOfPoker {
 		PokerPlayer handWinner = getHandWinner();
 
 		for (int i=0; i<players.size(); i++){
-			//twitter.appendToCompoundTweet(players.get(i).playerName + " says ");
-			UI.printout(players.get(i).playerName + " says ");
+			twitter.appendToCompoundTweet(players.get(i).playerName + " says ");
+			//UI.printout(players.get(i).playerName + " says ");
 			players.get(i).showCards(handWinner);
 		}
 	}
@@ -628,7 +633,7 @@ public class HandOfPoker {
 
 		// Store winner
 		winnersCircle.add(winner);
-		UI.printout("winner is "+winner.playerName);
+		//UI.printout("winner is "+winner.playerName);
 
 		players.remove(winner);
 
@@ -652,16 +657,16 @@ public class HandOfPoker {
 
 		if (winners.size() == 1){
 			//twitter.postCompoundTweet(); //Make sure compound tweet is clear
-			//twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			//twitter.appendToCompoundTweet(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
-			//twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
-			//twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			//twitter.postCompoundTweet();
+			twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			twitter.appendToCompoundTweet(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
+			twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			twitter.appendToCompoundTweet("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			twitter.postCompoundTweet();
 
-			UI.printout("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			UI.printout(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
-			UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
-			UI.printout("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			//UI.printout("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			//UI.printout(winners.get(0).playerName + " wins with a " + winners.get(0).getHandType());
+			//UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+			//UI.printout("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 
 			winners.get(0).awardChips(pot);
@@ -671,14 +676,14 @@ public class HandOfPoker {
 		else {
 
 			for (int i=0; i<winners.size(); i++){
-				//twitter.appendToCompoundTweet(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
-				UI.printout(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
+				twitter.appendToCompoundTweet(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
+				//UI.printout(winners.get(0).playerName + " ties with a " + winners.get(0).getHandType());
 			}
 
 			for (int i=0; i< winners.size(); i++){
 				winners.get(i).awardChips(pot/winners.size());
-				//twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
-				UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+				twitter.appendToCompoundTweet("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
+				//UI.printout("## " + winners.get(0).playerName + " gets " + pot/winners.size() + " chips. ##\n");
 
 			}
 		}
@@ -689,8 +694,8 @@ public class HandOfPoker {
 	 * Shows the pot to the interface
 	 */
 	private void displayPot(){
-		//twitter.appendToCompoundTweet("\nThe pot has " + pot + " chips to play for.\n");
-		UI.printout("\nThe pot has " + pot + " chips to play for.\n");
+		twitter.appendToCompoundTweet("\nThe pot has " + pot + " chips to play for.\n");
+		//UI.printout("\nThe pot has " + pot + " chips to play for.\n");
 	}
 
 	/*
