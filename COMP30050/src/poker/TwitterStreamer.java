@@ -39,8 +39,6 @@ public class TwitterStreamer {
 	static ExecutorService executor = Executors.newFixedThreadPool(NUMTHREADS);
 	public static final String outputMethod = "twitter";
 
-	public static PrintStream zo = System.out;
-
 	/**
 	 * Begins listening out on Twitter for our hashtags. When they are posted, 
 	 * it checks whether or not they are currently playing a running game and 
