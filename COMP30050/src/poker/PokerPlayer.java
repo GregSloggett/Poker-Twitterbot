@@ -116,11 +116,11 @@ public abstract class PokerPlayer {
 	
 	public abstract boolean isHuman();
 	
-	public abstract int getCall();
+	public abstract int getCall() throws TwitterException, InterruptedException;
 	
 	public abstract int getBet() throws TwitterException;
 	
-	public abstract boolean showCards(PokerPlayer handWinner);
+	public abstract boolean showCards(PokerPlayer handWinner) throws TwitterException;
 	
 	public abstract int getPlayerType();
 	

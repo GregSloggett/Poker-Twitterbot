@@ -569,8 +569,9 @@ public class HandOfPoker {
 
 	/**
 	 * Shows all hands remaining in the game
+	 * @throws TwitterException 
 	 */
-	private void showCards() {
+	private void showCards() throws TwitterException {
 		fillPlayers();
 		PokerPlayer handWinner = getHandWinner();
 
