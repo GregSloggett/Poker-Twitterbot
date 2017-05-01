@@ -91,10 +91,10 @@ public abstract class PokerPlayer {
 	public void dealNewHand() throws InterruptedException{
 		hand = new HandOfCards(deck);
 	}
-	
+		
 	public boolean hasMatchedHighBet(){
+
 		if(roundOverallBet == currentRound.highBet){
-			System.out.println("ROB " + roundOverallBet);
 			return true;
 		}
 		else{

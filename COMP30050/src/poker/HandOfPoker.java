@@ -373,7 +373,7 @@ public class HandOfPoker {
 			testPrint("size > 1");
 			testPrint("lastRaiserIndex  = " + lastRaiserIndex);
 			for (int i = (lastRaiserIndex+1)%players.size(); i != lastRaiserIndex; i = (i+1)%players.size()){
-				testPrint("Player " + i);
+				UI.printout("Player " + i);
 				if (!players.get(i).hasMatchedHighBet()){
 					int bet = players.get(i).getCall();
 					testPrint("bet = " + bet);

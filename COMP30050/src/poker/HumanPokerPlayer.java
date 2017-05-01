@@ -59,6 +59,7 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.roundOverallBet+=ret;
 
 		return ret;
 	}
@@ -90,8 +91,13 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.getCall();
 
 		}
+		
+		
 		playerPot = playerPot - (call -currentBet);
 		currentBet = call;
+		
+		this.roundOverallBet+=call;
+
 		return call;
 
 		
@@ -258,8 +264,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			this.getBet();
 		}
 		
-		this.roundOverallBet+=finalBet;
-
 		return finalBet;
 		
 	}
@@ -294,6 +298,8 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 		}
 		bet = currentBet;
 		playerPot = playerPot-bet;
+		this.roundOverallBet+=bet;
+
 		return bet;
 	}
 
@@ -375,7 +381,6 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 				this.inHandBet();
 			}
 		}
-
 		//this.subtractChips(bet);
 		return bet;
 	}
