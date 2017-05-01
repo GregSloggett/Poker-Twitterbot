@@ -331,7 +331,9 @@ public class HandOfPoker {
 			}
 			else {
 				testPrint("bet == 0 ie folds");
+				UI.printout("fold");
 				if (i <= firstRaiserIndex){
+					UI.printout("\n\n\n\nFOLDED\n\n\n\n");
 					testPrint("i <= firstRaiser index " + firstRaiserIndex + " removing them.");
 					betRecord.remove(i);
 					playersNotFolded.remove(i);
@@ -357,7 +359,7 @@ public class HandOfPoker {
 		// Call the bets back around to the last raiser if there are still enough players not folded
 		players.clear();
 		players.addAll(playersNotFolded);
-		playersNotFolded.clear();
+		
 		
 		testPrint(players, playersNotFolded, betRecord, "After third loop swap.");
 		int lastRaiserIndex = -1;
@@ -367,11 +369,13 @@ public class HandOfPoker {
 			}
 		}
 		testPrint("lastRaiserIndex = " + lastRaiserIndex);
-		
+		ArrayList<PokerPlayer> temp = new ArrayList<PokerPlayer>();
 		testPrint("palyers size = " + players.size());
 		if (players.size() > 1){
 			testPrint("size > 1");
 			testPrint("lastRaiserIndex  = " + lastRaiserIndex);
+			
+			playersNotFolded.clear();
 			for (int i = (lastRaiserIndex+1)%players.size(); i != lastRaiserIndex; i = (i+1)%players.size()){
 				//UI.printout("Player " + i);
 				if (!players.get(i).hasMatchedHighBet()){
@@ -379,6 +383,7 @@ public class HandOfPoker {
 					testPrint("bet = " + bet);
 					if (bet != 0){
 						testPrint("bet != 0");
+						UI.printout("Adding "+players.get(i).playerName + " to the playersnotfolded");
 						playersNotFolded.add(players.get(i));
 						pot += highBet - betRecord.get(i);
 						//players.get(i).subtractChips(highBet - betRecord.get(i));
@@ -408,6 +413,9 @@ public class HandOfPoker {
 			//twitter.postCompoundTweet();
 			UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
 		}
+		
+		players.clear();
+		players.addAll(playersNotFolded);
 		
 		testShowBanks();
 		human.currentBet =0;

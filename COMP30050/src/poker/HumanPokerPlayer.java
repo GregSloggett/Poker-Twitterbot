@@ -85,7 +85,17 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			call = currentRound.highBet;
 			
 		}else if(Answer.equalsIgnoreCase(foldResponse)){
+			
 			call =0;
+			try {
+				this.Fold();
+			} catch (TwitterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			output.printout("Sorry not a valid response");
 			//twitter.updateStatus("Sorry not a valid response");
@@ -356,7 +366,9 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 			System.out.println("getting reply");
 			//String Answer = twitter.waitForTweet();
 			String Answer = output.readInString();
-			
+			output.printout("-------------------\n\n\n\n");
+			output.printout("Answer was: "+Answer);
+			output.printout("--------------------\n\n\n");
 
 			//System.out.println("\n\n\n\n\n@@@@@@@@@@@@@@@@@@" + Answer + "\n\n\n");
 
