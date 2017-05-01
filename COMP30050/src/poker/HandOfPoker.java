@@ -570,6 +570,7 @@ public class HandOfPoker {
 	 * Shows all hands remaining in the game
 	 */
 	private void showCards() {
+		fillPlayers();
 		PokerPlayer handWinner = getHandWinner();
 
 		for (int i=0; i<players.size(); i++){
@@ -731,5 +732,15 @@ public class HandOfPoker {
 	}
 	public void setPot(int pots){
 		pot = pots;
+	}
+
+	public void fillPlayers(){
+		ArrayList<PokerPlayer> temp = new ArrayList<PokerPlayer>();
+		for (PokerPlayer name: betRecordz.keySet()){
+			temp.add(name);
+		} 
+		players.clear();
+		players.addAll(temp);
+
 	}
 }
