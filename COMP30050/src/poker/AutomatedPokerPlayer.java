@@ -187,7 +187,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		int betValue = getBetValueCalculation();
 		int callValue = getCallValueCalculation(betValue);
 		int returnValue = 0;
-		output.printout("\n\n                   pot before call: " + this.playerPot);		
+		//output.printout("\n\n                   pot before call: " + this.playerPot);		
 
 		if(betValue >= currentRound.highBet && callValue > currentRound.highBet){
 			returnValue = see(betValue);	
@@ -196,7 +196,7 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		else{
 			returnValue = 0;
 		}
-		output.printout("         pot after call: " + this.playerPot);		
+		//output.printout("         pot after call: " + this.playerPot);		
 
 		return returnValue;
 	}
@@ -264,9 +264,9 @@ public class AutomatedPokerPlayer extends PokerPlayer {
 		this.roundOverallBet+=returnValue;
 		
 		
-		output.printout("\n\n         pot before bet: " + this.playerPot);		
+		//output.printout("\n\n         pot before bet: " + this.playerPot);		
 		this.subtractChips(returnValue);
-		output.printout("         pot after bet: " + this.playerPot);
+		//output.printout("         pot after bet: " + this.playerPot);
 	
 		
 		return returnValue;
