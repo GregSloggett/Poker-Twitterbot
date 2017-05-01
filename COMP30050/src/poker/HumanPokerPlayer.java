@@ -67,8 +67,35 @@ public class HumanPokerPlayer extends PokerPlayer implements Runnable {
 
 	@Override
 	public int getCall() {
-		// TODO Auto-generated method stub
-		return currentRound.highBet-currentBet;
+		
+		String callResponse = "Call";
+		String foldResponse = "Fold";
+		int call = 0;
+
+		//twitter.updateStatus("Do you want to open betting? \nTweet 'Bet' to bet or 'Check' to check");
+		output.printout("Do you want to call the betting or fold? \nTweet 'Call' to call or 'Fold' to fold\n");
+
+		String Answer = output.readInString();
+		//String Answer = twitter.waitForTweet();
+		
+		if (Answer.equalsIgnoreCase(callResponse)){
+			
+			call = currentRound.highBet;
+			
+		}else if(Answer.equalsIgnoreCase(foldResponse)){
+			call =0;
+		}else{
+			output.printout("Sorry not a valid response");
+			//twitter.updateStatus("Sorry not a valid response");
+			this.getCall();
+
+		}
+		currentBet = call;
+		return call;
+
+		
+		
+		
 	}
 
 	@Override
