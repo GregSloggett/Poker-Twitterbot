@@ -87,6 +87,7 @@ public class HandOfPoker {
 		displayPot();
 		twitter.postCompoundTweet();
 		revisedTakeBets();
+		testPrint(players.toString());
 		twitter.postCompoundTweet();
 		
 		twitter.postCompoundTweet();
@@ -441,8 +442,8 @@ public class HandOfPoker {
 			UI.printout("Everyone has folded but " + players.get(0).playerName + "!");
 		}
 		
-		players.clear();
-		players.addAll(playersNotFolded);
+		//players.clear();
+		//players.addAll(playersNotFolded);
 		
 		testShowBanks();
 		human.currentBet =0;
@@ -579,9 +580,6 @@ public class HandOfPoker {
 		}
 	}
 	
-	private TwitterInteraction getTwitter(){
-		return twitter;
-	}
 	
 	/**
 	 * Shows the pot to the interface

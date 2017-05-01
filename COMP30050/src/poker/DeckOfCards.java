@@ -26,7 +26,7 @@ public class DeckOfCards {
 	 * Returns next non-dealt card and increments cardsDealt index
 	 * Uses the semaphore to lock down a critical section in case parallel access occurs
 	 */
-	public PlayingCard dealNext() throws InterruptedException{
+	public synchronized PlayingCard dealNext() throws InterruptedException{
 		dealerAvailable.acquire();
 		PlayingCard outputCard = null;
 		if (cardsDealt < 52){
@@ -42,7 +42,7 @@ public class DeckOfCards {
 	 * This is repeated by the size of the deck squared times to ensure the deck is thoroughly shuffled
 	 * Note: Do not shuffle without resetting
 	 */
-	public void shuffle(){
+	public synchronized void shuffle(){
 		System.out.println("got into shuffle");
 		Random rand = new Random(System.currentTimeMillis());
 		System.out.println("got rand");
@@ -64,7 +64,7 @@ public class DeckOfCards {
 	 * Returns a card to the bottom of the deck.
 	 * Uses semaphore to ensure parallel access is not an issue
 	 */
-	public void returnCard(PlayingCard discarded) throws InterruptedException{
+	public synchronized void returnCard(PlayingCard discarded) throws InterruptedException{
 		int previousIndex = 0;
 		dealerAvailable.acquire();
 		// Find previous index of card in the deck array
@@ -85,7 +85,7 @@ public class DeckOfCards {
 	 * Sets cards dealt to zero
 	 * Cards will need to be shuffled for a new game
 	 */
-	public void reset(){
+	public synchronized void reset(){
 		cardsDealt = 0;
 	}
 
